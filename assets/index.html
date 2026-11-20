@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neuromancer Desk</title>
+<style>
+:root{--ink:#000;--paper:#fff;--dim:#555}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font:12px/1.4 Geneva,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:none}
+#desk{position:fixed;inset:20px 0 0 0;background-image:radial-gradient(#000 26%,transparent 27%);background-size:2px 2px;background-color:#fff}
+#menu{position:fixed;left:0;right:0;top:0;height:20px;background:#fff;border-bottom:1px solid #000;display:flex;gap:16px;align-items:center;padding:0 10px;font-weight:bold;z-index:9999;font-family:Chicago,Charcoal,Geneva,sans-serif}
+#menu .r{margin-left:auto;font-weight:normal;font-variant-numeric:tabular-nums}
+.icons{position:absolute;inset:12px;display:grid;grid-template-columns:repeat(auto-fill,86px);grid-auto-rows:84px;gap:6px;align-content:start}
+.icon{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:default;user-select:none;-webkit-user-select:none;text-align:center}
+.icon .g{width:34px;height:34px;background:#fff;border:1px solid #000;position:relative;image-rendering:pixelated}
+.icon span{background:#fff;padding:0 3px;line-height:1.25;max-width:84px}
+.icon.sel .g{background:#000}.icon.sel span{background:#000;color:#fff}
+.icon.rej span{text-decoration:line-through}
+.win{position:absolute;background:#fff;border:1px solid #000;box-shadow:1px 1px 0 #000;display:flex;flex-direction:column;min-width:260px;min-height:160px}
+.tb{height:19px;border-bottom:1px solid #000;display:flex;align-items:center;position:relative;cursor:grab;touch-action:none;
+  background:linear-gradient(#fff 2px,transparent 2px) 0 3px/100% 2px,#fff;background-image:repeating-linear-gradient(#000 0 1px,#fff 1px 2px);background-size:100% 12px;background-position:0 3px;background-repeat:no-repeat}
+.tb b{margin:0 auto;background:#fff;padding:0 8px;font-family:Chicago,Charcoal,Geneva,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%}
+.tb .x{position:absolute;left:8px;top:3px;width:12px;height:12px;border:1px solid #000;background:#fff;cursor:pointer}
+.tb .o{position:absolute;right:8px;top:2px;font-size:11px;background:#fff;padding:0 4px;color:#000;text-decoration:underline}
+.inactive .tb{background:#fff}
+.body{flex:1;display:flex;min-height:0}
+.body iframe{flex:1;border:0;width:100%;height:100%;background:#000}
+.info{width:230px;border-left:1px solid #000;padding:10px;overflow:auto;flex:none}
+.info h3{margin:0 0 6px;font:bold 12px Chicago,Geneva,sans-serif}
+.info p{margin:0 0 8px}
+.tag{display:inline-block;border:1px solid #000;padding:0 4px;margin:0 4px 4px 0;font-size:10px}
+.tag.inv{background:#000;color:#fff}
+.grow{position:absolute;right:0;bottom:0;width:14px;height:14px;border-left:1px solid #000;border-top:1px solid #000;background:#fff;cursor:nwse-resize;touch-action:none}
+.list{padding:10px 12px;overflow:auto;flex:1}
+.list a{color:#000}
+.list li{margin:0 0 7px}
+@media (max-width:700px){.win{left:0!important;top:0!important;width:100%!important;height:100%!important}.info{display:none}}
+</style></head><body>
+<div id="menu"><span>&#63743;</span><span>File</span><span>Special</span><span class="r" id="clk"></span></div>
+<div id="desk"><div class="icons" id="icons"></div></div>
+<script>
+var B="../";
+/* everything made, with honest status */
+var MADE=[
+ {id:"jackin",name:"Phone Co. Hack",url:B+"jackin/",g:"term",what:"A fake 1996 phone-company login with real bugs: a password left in View Source, and a login that breaks when you type a single quote (SQL injection). Inside, a terminal: find the root password in a hidden history file, become root, switch incoming calls back on for 401 real LA payphones.",tags:["real web bugs","real CPUC data"],status:"Login and terminal built; ending not fully tested"},
+ {id:"line",name:"LINE",url:B+"line/",g:"bell",what:"A home-screen app that gets real iPhone notifications from a server on a timer: lines waking up, rings, a 1-bit message, a 10-minute transmission that erodes and melts, then NO CARRIER. A shared board to ask the others.",tags:["new: web push 2025","server clock"],status:"Server tested. Notifications on iPhone not yet tested. Open it full on your phone to install."},
+ {id:"static",name:"Dead Channel",url:B+"static/",g:"static",what:"TV static. A QR code shows for 1.4 s every 9 s, a word flashes for a few frames, and after one click the hiss carries a hidden data message (ggwave).",tags:["data in sound","QR in noise"],status:"QR decoded in 9 of 52 frames in Chrome. Sound message decoded in code."},
+ {id:"listen",name:"Listen",url:B+"listen/",g:"ear",what:"Decodes the message hidden in the static's sound through the microphone.",tags:["mic","ggwave"],status:"Not tested across two real devices"},
+ {id:"disk",name:"Dial-up + Disk",url:B+"disk/",g:"disk",what:"Click to connect (modem handshake), an early-2000s collage page, the floppy flies into a 1-bit Mac that reads a real disk image. After one read the server overwrites the file and the page becomes an Apache 404.",tags:["real erasing file","1-bit Mac"],status:"Tested end to end in Chrome"},
+ {id:"img",name:"NEUROMANCER.img",url:"https://neuromancer-read.jerryshi.workers.dev/disk.img",g:"file",what:"A real 1.44 MB floppy disk image. Double-click on a Mac and it mounts. First read: text. After that: overwritten with G A T C.",tags:["real file","erases"],status:"Mounted and verified on this Mac",download:true},
+ {id:"trick",name:"Incoming",url:B+"trick/",g:"phone",what:"Answer, the screen strobes, taps give haptic ticks, data-over-sound bursts, a base64 message any AI can read, then a contact card and a calendar invite for your phone.",tags:["haptics","contact + calendar"],status:"Runs in Chrome; phone sheets untested. You called the voice corny."},
+ {id:"call",name:"Payphone Call",url:B+"call/",g:"phone",what:"Simulation of walking past a payphone that rings. The real version needs a Twilio number.",tags:["simulation"],status:"Built; uses the voice you rejected"},
+ {id:"tap",name:"NFC Landing",url:B+"tap/",g:"tag",what:"What opens when someone taps an NFC sticker on a booth.",tags:["needs stickers"],status:"Page built; no stickers yet"},
+ {id:"read",name:"Read Once",url:B+"read/?level=4",g:"lock",what:"Code box with a clue that changes every 10 seconds; the fragment scrolls once, burns away, and is locked per device by the server.",tags:["server lock"],status:"Tested in Chrome"},
+ {id:"levels",name:"Lock Levels",url:B+"levels/",g:"lock",what:"Seven versions of 'can't read it twice', from no lock to one-read-per-code-worldwide.",tags:["test bench"],status:"Levels 4 and 5 tested"},
+ {id:"routes",name:"Routes",url:B+"routes/",g:"map",what:"The seven ways a stranger finds the game, with steps and a rating button for each.",tags:["hub"],status:"Built"},
+ {id:"poster",name:"Flyer",url:B+"poster/",g:"page",what:"Tear-off flyer whose address the iPhone camera turns into a link.",tags:["camera text"],status:"Built"},
+ {id:"book",name:"Book (rejected)",url:B+"book/",g:"book",rej:1,what:"The Agrippa book with drawn shapes. You hated it.",tags:["rejected"],status:"Kept for the record"},
+ {id:"home",name:"Business Site",url:B,g:"page",rej:1,what:"The first plain Neuromancer business page.",tags:["superseded"],status:"Live"},
+ {id:"refs",name:"References",g:"folder",folder:1}
+];
+var REFS=[
+ ["Private reference board: 300 references, 200 frames and screenshots (private to you)","https://claude.ai/artifact/6nXy1JD5HjDd5jAxip3ErD"],
+ ["The real Agrippa disk running in emulation","https://www.youtube.com/watch?v=41kZovcyHrU"],
+ ["The Agrippa Files archive","https://agrippa.english.ucsb.edu/"],
+ ["Working JS of the cracked Agrippa cipher","https://agrippa.english.ucsb.edu/wp-content/uploads/images/cracked-code/submissions/files/agrippa_in_action.html"],
+ ["William Gibson's site in 2003 (Wayback)","https://web.archive.org/web/20030322034731/http://www.williamgibsonbooks.com/"],
+ ["System 6 running live","https://system6.app/"],
+ ["HyperCard simulator","https://hcsimulator.com/"],
+ ["Pacific Bell 1997 (Wayback)","https://web.archive.org/web/1997/http://www.pacbell.com/"],
+ ["Olia Lialina, My Boyfriend Came Back From the War","http://www.teleportacia.org/war/"],
+ ["JODI","http://wwwwwwwww.jodi.org/"],
+ ["Payphone Directory (CPUC records)","https://payphone.directory/"],
+ ["ggwave, data over sound","https://github.com/ggerganov/ggwave"],
+ ["Adobe TrustMark invisible watermark","https://github.com/adobe/trustmark"],
+ ["StegaStamp: invisible hyperlinks in photos","https://github.com/tancik/StegaStamp"],
+ ["Declarative Web Push (Safari 18.4)","https://webkit.org/?p=16535"],
+ ["Rezmason Matrix rain","https://github.com/Rezmason/matrix"],
+ ["system.css","https://sakofchit.github.io/system.css/"],
+ ["98.css","https://jdan.github.io/98.css"],
+ ["Infinite Mac (embeddable real System 7)","https://infinitemac.org/"],
+ ["Gibberlink (staged demo)","https://en.wikipedia.org/wiki/Gibberlink"]
+];
+/* 1-bit glyphs drawn on canvas */
+var G={term:["........","XXXXXXXX","X......X","X.X....X","X..X...X","X.X..XXX","X......X","XXXXXXXX"],bell:["...XX...","..XXXX..",".XXXXXX.",".XXXXXX.",".XXXXXX.","XXXXXXXX","........","...XX..."],
+ static:["X.XX.X.X",".X.XX.XX","XX.X.X.X","X.X.XX..",".XX.X.XX","X.X..X.X","XX.XX.X.",".X.X.XX."],ear:["..XXXX..",".X....X.","X..XX..X","X.X..X.X","...X.X..","..X..X..",".X...X..","..XXX..."],
+ disk:["XXXXXXX.","X.XXX.XX","X.XXX..X","X......X","X.XXXX.X","X.X..X.X","X.XXXX.X","XXXXXXXX"],file:["XXXXX...","X...XX..","X...XXX.","X......X","X.XXXX.X","X......X","X.XXXX.X","XXXXXXXX"],
+ phone:["XXXXXXXX","X......X",".XXXXXX.","..X..X..",".X.XX.X.",".X.XX.X.",".X....X.",".XXXXXX."],tag:["XXXXXXXX","X......X","X.XXXX.X","X.X..X.X","X.X..X.X","X.XXXX.X","X......X","XXXXXXXX"],
+ lock:["..XXXX..",".X....X.",".X....X.","XXXXXXXX","XXX..XXX","XXX..XXX","XXXXXXXX","XXXXXXXX"],map:["X..X..X.","XX.XX.XX","X.XX.XX.","X..X..X.","X..X..X.","XX.XX.XX","X.XX.XX.","X..X..X."],
+ page:["XXXXX...","X...XX..","X.XX.XX.","X......X","X.XXXX.X","X......X","X.XXX..X","XXXXXXXX"],book:["XXXXXXXX","X.X....X","X.X.XX.X","X.X....X","X.X.XX.X","X.X....X","X.X....X","XXXXXXXX"],
+ folder:["........","XXX.....","X..XXXXX","X......X","X......X","X......X","X......X","XXXXXXXX"]};
+function glyph(k){var c=document.createElement("canvas");c.width=8;c.height=8;c.className="g";var x=c.getContext("2d");(G[k]||G.page).forEach(function(r,y){r.split("").forEach(function(ch,i){if(ch==="X"){x.fillRect(i,y,1,1)}})});return c}
+var z=10, icons=document.getElementById("icons");
+MADE.forEach(function(m,i){var d=document.createElement("div");d.className="icon"+(m.rej?" rej":"");d.tabIndex=0;d.appendChild(glyph(m.g));var s=document.createElement("span");s.textContent=m.name;d.appendChild(s);
+  var t=0;d.onclick=function(){[].forEach.call(icons.children,function(c){c.classList.remove("sel")});d.classList.add("sel");if(Date.now()-t<400||matchMedia("(pointer:coarse)").matches)open(m);t=Date.now()};
+  d.onkeydown=function(e){if(e.key==="Enter")open(m)};icons.appendChild(d)});
+var openW={};
+function open(m){ if(openW[m.id]){front(openW[m.id]);return}
+  var w=document.createElement("div");w.className="win";var n=Object.keys(openW).length;
+  var W=Math.min(innerWidth-40,m.folder?520:980),H=Math.min(innerHeight-60,m.folder?460:640);
+  w.style.width=W+"px";w.style.height=H+"px";w.style.left=(30+n*24)+"px";w.style.top=(30+n*24)+"px";
+  var tb=document.createElement("div");tb.className="tb";var x=document.createElement("span");x.className="x";x.title="close";tb.appendChild(x);var b=document.createElement("b");b.textContent=m.name;tb.appendChild(b);
+  if(m.url){var o=document.createElement("a");o.className="o";o.href=m.url;o.target="_blank";o.rel="noopener";o.textContent=m.download?"download":"open full";tb.appendChild(o)}
+  w.appendChild(tb);var body=document.createElement("div");body.className="body";
+  if(m.folder){var L=document.createElement("ol");L.className="list";REFS.forEach(function(r){var li=document.createElement("li");var a=document.createElement("a");a.href=r[1];a.target="_blank";a.rel="noopener";a.textContent=r[0];li.appendChild(a);L.appendChild(li)});body.appendChild(L)}
+  else if(m.download){var p=document.createElement("div");p.className="list";p.innerHTML="<p></p><p><a></a></p>";p.querySelector("p").textContent=m.what;var a=p.querySelector("a");a.href=m.url;a.textContent="Download NEUROMANCER.img";body.appendChild(p)}
+  else{var f=document.createElement("iframe");f.src=m.url;f.setAttribute("allow","microphone; autoplay; fullscreen; screen-wake-lock; vibrate");f.loading="lazy";body.appendChild(f)}
+  if(!m.folder){var info=document.createElement("div");info.className="info";info.innerHTML="<h3></h3><p class=w></p><div class=t></div><p class=s></p>";info.querySelector("h3").textContent=m.name;info.querySelector(".w").textContent=m.what;
+    (m.tags||[]).forEach(function(t,i){var s=document.createElement("span");s.className="tag"+(i===0?" inv":"");s.textContent=t;info.querySelector(".t").appendChild(s)});info.querySelector(".s").textContent="Status: "+m.status;body.appendChild(info)}
+  w.appendChild(body);var g=document.createElement("div");g.className="grow";w.appendChild(g);
+  document.getElementById("desk").appendChild(w);openW[m.id]=w;front(w);
+  x.onclick=function(e){e.stopPropagation();w.remove();delete openW[m.id]};
+  w.addEventListener("pointerdown",function(){front(w)});
+  drag(tb,function(dx,dy,s){w.style.left=(s.l+dx)+"px";w.style.top=Math.max(0,s.t+dy)+"px"},function(){return{l:w.offsetLeft,t:w.offsetTop}});
+  drag(g,function(dx,dy,s){w.style.width=Math.max(260,s.w+dx)+"px";w.style.height=Math.max(160,s.h+dy)+"px"},function(){return{w:w.offsetWidth,h:w.offsetHeight}});
+}
+function front(w){w.style.zIndex=++z;[].forEach.call(document.querySelectorAll(".win"),function(o){o.classList.toggle("inactive",o!==w)})}
+function drag(h,move,start){h.addEventListener("pointerdown",function(e){if(e.target.classList.contains("x")||e.target.tagName==="A")return;e.preventDefault();h.setPointerCapture(e.pointerId);var sx=e.clientX,sy=e.clientY,s=start();
+  [].forEach.call(document.querySelectorAll("iframe"),function(f){f.style.pointerEvents="none"});
+  function mv(ev){move(ev.clientX-sx,ev.clientY-sy,s)}function up(){h.removeEventListener("pointermove",mv);h.removeEventListener("pointerup",up);[].forEach.call(document.querySelectorAll("iframe"),function(f){f.style.pointerEvents=""})}
+  h.addEventListener("pointermove",mv);h.addEventListener("pointerup",up)})}
+setInterval(function(){document.getElementById("clk").textContent=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})},1000);
+</script></body></html>

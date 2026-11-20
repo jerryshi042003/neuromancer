@@ -127,11 +127,11 @@ async function lineRoutes(req, env, url) {
       const ipk = "B:rate:" + (await sha(req.headers.get("cf-connecting-ip") || "")).slice(0, 16);
       if (await env.NM.get(ipk)) return jsonAny({ error: "slow down" }, 429);
       await env.NM.put(ipk, "1", { expirationTtl: 60 });
-      const key = "B:" + String(9999999999999 - Date.now()).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 6);
+      const key = "B:p:" + String(9999999999999 - Date.now()).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 6);
       await env.NM.put(key, JSON.stringify({ t, at: Date.now(), by: "line-" + (await sha(req.headers.get("cf-connecting-ip") || "x")).slice(0, 4) }));
       return jsonAny({ ok: true });
     }
-    const l = await env.NM.list({ prefix: "B:0", limit: 60 });
+    const l = await env.NM.list({ prefix: "B:p:", limit: 60 });
     const posts = (await Promise.all(l.keys.map((k) => env.NM.get(k.name, "json")))).filter(Boolean);
     return jsonAny({ posts });
   }
