@@ -23,7 +23,7 @@ a{color:var(--ink)}
 #sum{font:13px "Courier New",monospace;white-space:pre-wrap;background:var(--sheet);border:1px dashed var(--ink);padding:12px}
 </style></head><body><div class="w">
 <div><h1>NEUROMANCER / ROUTES</h1>
-<p class="l">Six ways a stranger finds the game. Each one ends at the phone company site, where the hacking starts. Opening this page puts your device in tester mode, so you can replay the game as often as you want.</p></div>
+<p class="l">Seven ways a stranger finds the game. Each one ends at the phone company site, where the hacking starts. Opening this page puts your device in tester mode, so you can replay the game as often as you want.</p></div>
 <div id="list"></div>
 <div id="sum"></div>
 </div>
@@ -41,6 +41,8 @@ var R=[
   steps:["On a laptop, open the static page and click once for sound.","On your phone, open the listen page in Safari, tap LISTEN, allow the microphone.","Hold the phone near the laptop speaker for up to 12 seconds."],links:[["static (laptop)",B+"static/"],["listen (phone)",B+"listen/"]]},
  {id:"pause",name:"5. A word hidden in the static (pause the video)",tag:"classic · laptop",flow:"the static flashes a word for a split second → you pause or screenshot → you find the site",
   steps:["Open the static page and watch the bottom of the screen.","Every 9 seconds a word flashes for a few frames. Try to catch it, or screen-record and step through."],links:[["static",B+"static/"]]},
+ {id:"trick",name:"0. Your phone gets taken over (try this first)",tag:"new tech · your iPhone, sound on",flow:"you answer → the screen strobes and buzzes → the voice talks machine-to-machine → a coded message for any AI → it hands your phone a contact card and a calendar invite",
+  steps:["Open the incoming page on your iPhone, sound up, ringer on.","Tap ANSWER. Tap the screen during the flashes: each tap is a haptic tick on iPhone.","Copy the coded text and paste it into ChatGPT: ask what it says.","Tap MY NUMBER (adds The Voice to Contacts) and WHEN I CALL (a calendar invite for 5 PM tomorrow with an alert)."],links:[["try it",B+"trick/"]]},
  {id:"flyer",name:"6. A flyer your camera reads",tag:"new tech (iOS 15+) · print or show on screen",flow:"a tear-off flyer on a pole → point the normal camera at the address → tap the link",
   steps:["Open the flyer on your laptop, or print it.","Point your iPhone's normal Camera app at the address line. Tap the yellow link button."],links:[["flyer",B+"poster/"]]}
 ];
