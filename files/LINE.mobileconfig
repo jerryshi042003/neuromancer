@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>FullScreen</key>
+			<true/>
+			<key>Icon</key>
+			<data>
+			iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAAAAAAYplnuAAAEkUlE
+			QVR42u2ZwZLUQAxD9f8/LaiZdPvJ4UQVcEA6wO5M0lG7bVnOSkVR
+			FEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVR/Dfw30dJl3RJl3RJl3RJ
+			l3RJl3RJl3RJl/SfJP3HJ+eSLumSLumSLumSLumSLumSLumSLun/
+			nHRRFEVRFEVRFMU/x8/hxp9/PnPOZ9T5fvL54vuTnm8+c9C5+vuz
+			novOUs8qz0rf6+6Hzxx1v4kJi/+dx80ampvP4617ky65L2kLl+hy
+			DXJn7fntXHn3ebeYj3nueJYKMmfDJxo3mgjPueks8pDGfs6O57Fx
+			2wTSd+Nyjq/n+xOyJy4TemFpxmyWdDK+WwQZzWh8Fnn2dVPIImlP
+			ZgmfKfLlLHdPcaI9DO7KQpBvlkXCnQeA9yU3257LInFPeO05cWTS
+			cPVw1U0BT15Fis82kM73N8X5CDGYXMmFTrrek424I0ZzVLoPwrnF
+			8esqAEqR1+N7nI3m/E9YEYp7EsFEjBSEZbaDG4TYUkjE9J4YGpUa
+			la+IPIUGB5TX3I2z+m4R3JL3CvGUp5EtKHWetoQUsKnFiEtKV8Rs
+			JHUWC6k2FTJVlpEFY6dACRtFsaEKhxAT15Fyt0wmmkyU+eIGEwXG
+			1aZd7C2hOrjPeMiKGy4ezZok4F4VusaM2wW6iw3dg7U5Yj/iaqrZ
+			JJxZAtnII9WgjWxBpmibB+cRaUOQeZxsd2LvnoeINSG0nqmY28S4
+			Ixaa9IsI5vkhJiOdRvlAGmwkIlXfUxh2FGi6GGQztVVYmeIjNA+U
+			Hjs7Yi5kuR0HZe1WxBA6ai6Ok91x1SpEg8GLtrs+QVdYeQoHoOgi
+			pquAXmesnNZs201YmSl8Kmi4wBGCFFiFAcoyM+2hrOg0KZWGS0Cu
+			yFHCqIcJhCnAW7ySFLorekocc8iudv+22MLlNFRRX2JVMYBOz5M9
+			J2Q1M0hiI0ZhZw1nQi5pDEv3cgNpdhB7r5tCUDL4SxWR7fR6tP5M
+			eiS7Xw7QnFhga5aS0g3db1e9wzAq0sXb9UqvRgLnYTvLY0abNMg5
+			pjh6c6T027CZJb7cGvYd8h0TQ0jhxIxFLypnVEJ09jC9qHvF7IDR
+			AxY2YxXVGU2JDRb2D/5Y4QbXHIuizL8xQvTjONlzV4Hxj5YrR+fR
+			NKahXBRLxbiOYPOM/RbPbcxW4WBGoczLS+FuzdDwYJCF9oaP4AsD
+			/tEWRmZeHizjkxMmLKO3O0gfi7EhVZVdLUd6p1nIORQcFN0sXsew
+			1sMtoFXKmZrpWdbUCLXgRABdiNzPNhyZHLvgawlHZwlTZnkPW+H2
+			lSZY9Fyo9jUlYpgWJUHRfBxWWopNpnJyyqckvTuXdu9S7vDltSAe
+			72Fkj8hwQWk9aAmoOm/FZtvR6mnrTQ9TNN7rRMeblxbTEV6WkYnl
+			kJJoi+lA1s2pRRz/51Ep35A2zqHhhimFIMj3SfTR+TYvth4+lwbQ
+			0RrDI4df83pTCkMdufd6H6dlD6ZRrSCOvVYeZIrq66UsVe895JDJ
+			uKfobxz/c8LNHWXjQWYXRVEURVEURVEURVEURVEURVEUv48fKHL0
+			T/zm+zMAAAAASUVORK5CYII=
+			</data>
+			<key>IgnoreManifestScope</key>
+			<true/>
+			<key>IsRemovable</key>
+			<true/>
+			<key>Label</key>
+			<string>LINE</string>
+			<key>PayloadDisplayName</key>
+			<string>LINE</string>
+			<key>PayloadIdentifier</key>
+			<string>io.github.jerryshi042003.neuromancer.webclip</string>
+			<key>PayloadType</key>
+			<string>com.apple.webClip.managed</string>
+			<key>PayloadUUID</key>
+			<string>AAC75A59-B74E-4AE2-9CCB-D7CC2C58F463</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>Precomposed</key>
+			<true/>
+			<key>URL</key>
+			<string>https://jerryshi042003.github.io/neuromancer/signal/</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Southland Coin Telephone field maintenance line.</string>
+	<key>PayloadDisplayName</key>
+	<string>LINE 310-637-8714</string>
+	<key>PayloadIdentifier</key>
+	<string>io.github.jerryshi042003.neuromancer</string>
+	<key>PayloadOrganization</key>
+	<string>Southland Coin Telephone</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>1C8710C8-71F5-4533-88EE-B0E4A47A7782</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
