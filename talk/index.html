@@ -49,7 +49,7 @@ main{position:relative;z-index:1}
   <div id="end"></div>
 </main>
 <script>
-var API="https://neuromancer-read.jerryshi.workers.dev/talk/", t0=performance.now(), history=[], token=null;
+var API="https://neuromancer-read.jerryshi.workers.dev/talk/", t0=performance.now(), convo=[], token=null;
 var nc=document.getElementById("noise"),nx=nc.getContext("2d"),ni=nx.createImageData(90,160);
 (function f(){for(var i=0;i<ni.data.length;i+=4){var v=Math.random()*255;ni.data[i]=ni.data[i+1]=ni.data[i+2]=v;ni.data[i+3]=255}nx.putImageData(ni,0,0);setTimeout(function(){requestAnimationFrame(f)},50)})();
 setInterval(function(){document.getElementById("clk").textContent=new Date().toLocaleTimeString("en-US",{hour12:false})},500);
@@ -79,7 +79,7 @@ async function turn(i,who,final){
   row.appendChild(lab);row.appendChild(tx);document.getElementById("log").appendChild(row);
   if(i===3||i===4)row.classList.add("glitch");
   try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
-  var r=await fetch(API+"turn",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:token,history:history})}).catch(function(){return null});
+  var r=await fetch(API+"turn",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:token,history:convo})}).catch(function(){return null});
   if(!r||!r.ok||!r.body){tx.classList.remove("cur");tx.textContent="[no carrier]";return false}
   lab.textContent=who+" · "+(r.headers.get("x-model")||"");
   var rd=r.body.getReader(),dec=new TextDecoder(),buf="",full="";
@@ -87,7 +87,7 @@ async function turn(i,who,final){
     while((n=buf.indexOf("\n"))>=0){var ln=buf.slice(0,n).trim();buf=buf.slice(n+1);if(ln.indexOf("data:")!==0)continue;var d=ln.slice(5).trim();if(d==="[DONE]")continue;
       try{var c=JSON.parse(d).choices[0].delta.content||"";if(c){full+=c;tx.textContent=full;window.scrollTo(0,document.body.scrollHeight)}}catch(e){}}}
   tx.classList.remove("cur");row.classList.remove("glitch");
-  full=full.trim();history.push({who:who,text:full});
+  full=full.trim();convo.push({who:who,text:full});
   var ws=b64words(full).filter(tryDecode);
   if(ws.length){var b=el("button","dec","DECODE");b.onclick=function(){var out=ws.map(tryDecode).join(" ");var d=el("span","decoded",out);row.appendChild(d);b.remove()};row.appendChild(b)}
   return true;
