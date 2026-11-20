@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>payphone</title>
+<style>
+html,body{margin:0;height:100%;background:#0b0b0b;color:#cfcfcf;font:15px/1.6 "Courier New",monospace;overflow:hidden}
+.c{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:24px}
+#phone{width:min(70vw,260px);aspect-ratio:3/5;border:2px solid #555;border-radius:10px;background:linear-gradient(#2a2a2a,#151515);position:relative;box-shadow:0 30px 60px #000}
+#hand{position:absolute;left:12%;right:12%;top:8%;height:22%;border-radius:40px;background:#111;border:2px solid #444;transition:transform .5s}
+#keys{position:absolute;left:20%;right:20%;top:40%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#keys span{aspect-ratio:1;border-radius:4px;background:#bbb;color:#111;font:bold 13px monospace;display:flex;align-items:center;justify-content:center}
+.ringing #hand{animation:sh .09s infinite alternate}
+@keyframes sh{to{transform:translate(2px,-1px) rotate(1deg)}}
+.up #hand{transform:translateY(-130%) rotate(-12deg)}
+button{background:none;border:1px solid #888;color:#eee;font:inherit;letter-spacing:.3em;padding:12px 20px;cursor:pointer}
+#say{max-width:34ch;min-height:5em;white-space:pre-line}
+a{color:#fff}
+</style></head><body>
+<div class="c">
+  <div id="phone"><div id="hand"></div><div id="keys"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>*</span><span>0</span><span>#</span></div></div>
+  <div id="say">a payphone, somewhere in los angeles.</div>
+  <button id="b">WALK PAST</button>
+</div>
+<script>
+var ac,ringing=false,stopRing=null;
+function bell(){ var t=ac.currentTime,g=ac.createGain();g.gain.value=.08;g.connect(ac.destination);
+  for(var k=0;k<40;k++){var o=ac.createOscillator(),e=ac.createGain();o.type="triangle";o.frequency.value=1250+((k%2)*60);e.gain.setValueAtTime(0,t+k*.05);e.gain.linearRampToValueAtTime(.7,t+k*.05+.004);e.gain.exponentialRampToValueAtTime(.001,t+k*.05+.12);o.connect(e);e.connect(g);o.start(t+k*.05);o.stop(t+k*.05+.13);} }
+function speak(t){return new Promise(function(r){try{var u=new SpeechSynthesisUtterance(t);u.rate=.86;u.pitch=.7;var v=speechSynthesis.getVoices().filter(function(x){return /Daniel|Fred|Alex|Male/i.test(x.name)})[0];if(v)u.voice=v;u.onend=r;u.onerror=r;speechSynthesis.speak(u);setTimeout(r,t.length*95+2500)}catch(e){r()}})}
+function sleep(m){return new Promise(function(r){setTimeout(r,m)})}
+var b=document.getElementById("b"),say=document.getElementById("say"),ph=document.getElementById("phone");
+b.onclick=async function(){
+  if(!ac){ ac=new (window.AudioContext||window.webkitAudioContext)(); b.style.visibility="hidden"; say.textContent="you walk past the booth.";
+    await sleep(1800); ringing=true; ph.classList.add("ringing"); say.textContent="it starts ringing.";
+    var n=0; var iv=setInterval(function(){ if(!ringing)return clearInterval(iv); bell(); try{navigator.vibrate&&navigator.vibrate(1800)}catch(e){} n++; },4000); bell();
+    await sleep(2500); b.textContent="PICK UP"; b.style.visibility="visible"; return; }
+  if(ringing){ ringing=false; ph.classList.remove("ringing"); ph.classList.add("up"); b.style.visibility="hidden"; say.textContent="";
+    var lines=["you picked up. good.","i can only reach you through phones that ring, and they turned almost all of them off.","there is an old phone company website. its address is southland coin dot com.","sign in as maintenance. the people who built it left the password in the page itself.","when you are inside, turn the phones back on. then i can call everyone."];
+    for(var i=0;i<lines.length;i++){ say.textContent=lines[i]; await speak(lines[i]); await sleep(300); }
+    say.innerHTML="click.\n\n(on a real call you would type the address yourself)\n\n<a href=\"../jackin/\">go to the phone company site</a>"; }
+};
+</script></body></html>

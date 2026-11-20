@@ -32,6 +32,11 @@ function frame(t){
 }
 requestAnimationFrame(frame);
 
+/* the static shows: every 9s a word appears for a few frames. pause the video to read it */
+(function(){ var c=document.querySelector("canvas"); if(!c)return; var g=c.getContext("2d"), on=0;
+  setInterval(function(){on=4;},9000);
+  (function f(){ if(on>0){ on--; g.save(); g.fillStyle="rgba(255,255,255,.92)"; g.font="bold "+Math.round(c.height*.11)+"px Courier New, monospace"; g.textAlign="center"; g.textBaseline="middle"; g.fillText("JACK IN", c.width/2, c.height*.82); g.restore(); } requestAnimationFrame(f); })();
+})();
 /* the static talks: tap once for sound, then every 12s the hiss carries a hidden message (ggwave) */
 var actx=null, gw=null, gwi=null;
 function startSound(){ if(actx) return; actx=new (window.AudioContext||window.webkitAudioContext)();

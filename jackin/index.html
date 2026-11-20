@@ -85,6 +85,7 @@ Forgot your password? Contact the system administrator.</p>
 <script src="payphones.js"></script>
 <script type="text/javascript">
 var API="https://neuromancer-read.jerryshi.workers.dev", LEVEL=8, CODE="incoming";
+var TESTER=false; try{TESTER=localStorage.getItem("nm_tester")==="1"}catch(e){} if(TESTER)LEVEL=0;
 function $(id){return document.getElementById(id)}
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
 
@@ -94,7 +95,7 @@ var FP="";
 var fpReady=import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@5.3.0/+esm").then(function(m){return m.default.load()}).then(function(a){return a.get()}).then(function(r){FP=r.visitorId}).catch(function(){});
 function api(path,extra){return fpReady.then(function(){return fetch(API+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(Object.assign({level:LEVEL,did:did(),fp:FP},extra))})}).then(function(r){return r.json()})}
 var spent=false;
-var statusReady=api("/status",{}).then(function(r){spent=!!r.read}).catch(function(){});
+var statusReady=TESTER?Promise.resolve():api("/status",{}).then(function(r){spent=!!r.read}).catch(function(){});
 statusReady.then(function(){ if(spent) closed("This account has been disabled.\n\nThe voice already called you once.\nIt does not call twice."); });
 function closed(msg){ var d=$("dead"); d.textContent=msg; d.style.display="flex"; $("gate").style.display="none"; document.title="Connection closed"; }
 
