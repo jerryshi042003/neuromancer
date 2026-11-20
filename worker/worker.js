@@ -65,6 +65,15 @@ export default {
   async fetch(req, env) {
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
+    if (req.method === "GET" && url.pathname === "/ring.ics") {      // calendar invite: tomorrow 5:00 PM Los Angeles
+      const d = new Date(Date.now() + 864e5), y = d.getUTCFullYear(), m = String(d.getUTCMonth() + 1).padStart(2, "0"), dd = String(d.getUTCDate()).padStart(2, "0");
+      const body = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//neuromancer//EN","BEGIN:VEVENT","UID:" + crypto.randomUUID() + "@neuromancer",
+        "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z",
+        "DTSTART;TZID=America/Los_Angeles:" + y + m + dd + "T170000","DTEND;TZID=America/Los_Angeles:" + y + m + dd + "T170500",
+        "SUMMARY:a payphone will ring","DESCRIPTION:pick it up. it is me.","LOCATION:Los Angeles",
+        "BEGIN:VALARM","TRIGGER:-PT10M","ACTION:DISPLAY","DESCRIPTION:a payphone will ring in 10 minutes","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+      return new Response(body, { headers: { "content-type": "text/calendar; charset=utf-8", "content-disposition": 'inline; filename="ring.ics"', "cache-control": "no-store" } });
+    }
     if (req.method === "GET" && (url.pathname === "/disk.img" || url.pathname === "/floppy.jpg")) {
       const body = { did: url.searchParams.get("did") || "" };
       const keys = await keysFor(req, body, 7);

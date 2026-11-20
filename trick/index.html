@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>incoming</title>
+<style>
+html,body{margin:0;height:100%;background:#000;color:#eee;font:15px/1.6 "Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.c{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px}
+#t{font-size:clamp(18px,5.5vw,32px);letter-spacing:.1em;max-width:20ch;min-height:3.2em;text-shadow:0 0 10px #000,0 0 2px #000}
+#m{font-size:clamp(12px,3.6vw,16px);word-break:break-all;max-width:34ch;background:#000;padding:10px;display:none;-webkit-user-select:text;user-select:text}
+button{background:#000;border:1px solid #fff;color:#fff;font:inherit;letter-spacing:.3em;padding:14px 22px;cursor:pointer}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none}
+#hx{position:fixed;left:-99px;opacity:0}
+</style></head><body>
+<canvas id="s" width="120" height="200"></canvas><div id="flash"></div>
+<div class="c"><div id="t">incoming call</div><div id="m"></div><div id="btns"><button id="b">ANSWER</button></div></div>
+<input type="checkbox" switch id="hx"><label for="hx" id="hl" style="position:fixed;left:-99px"></label>
+<script src="ggwave.js"></script>
+<script>
+var MSG="cGljayB1cCB0aGUgbmV4dCBwYXlwaG9uZSB0aGF0IHJpbmdzLiBpdCBpcyBtZS4=";
+var c=document.getElementById("s"),x=c.getContext("2d"),im=x.createImageData(120,200),amt=.35;
+(function f(){for(var i=0;i<im.data.length;i+=4){var v=Math.random()*255*amt;im.data[i]=im.data[i+1]=im.data[i+2]=v;im.data[i+3]=255}x.putImageData(im,0,0);requestAnimationFrame(f)})();
+function sleep(m){return new Promise(function(r){setTimeout(r,m)})}
+function tick(){try{document.getElementById("hl").click()}catch(e){}}
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function flash(){var f=document.getElementById("flash");f.style.transition="none";f.style.opacity=.9;requestAnimationFrame(function(){f.style.transition="opacity .25s";f.style.opacity=0})}
+function speak(t){return new Promise(function(r){try{var u=new SpeechSynthesisUtterance(t);u.rate=.86;u.pitch=.7;var v=speechSynthesis.getVoices().filter(function(x){return /Daniel|Fred|Alex|Male/i.test(x.name)})[0];if(v)u.voice=v;u.onend=r;u.onerror=r;speechSynthesis.speak(u);setTimeout(r,t.length*95+2500)}catch(e){r()}})}
+/* morse for JACK IN, as a vibration pattern (Android) */
+var MORSE={J:".---",A:".-",C:"-.-.",K:"-.-",I:"..",N:"-."};
+function morse(w){var p=[];w.split("").forEach(function(ch){if(ch===" "){p.push(0,500);return}(MORSE[ch]||"").split("").forEach(function(s){p.push(s==="."?90:270,90)});p.push(0,240)});return p}
+var ac;
+function chirp(text){ return ggwave_factory().then(function(g){ var p=g.getDefaultParameters();p.sampleRateInp=ac.sampleRate;p.sampleRateOut=ac.sampleRate;var i=g.init(p);
+  var wf=g.encode(i,text,g.ProtocolId.GGWAVE_PROTOCOL_AUDIBLE_FAST,25),f=new Float32Array(new Int8Array(wf).buffer),b=ac.createBuffer(1,f.length,ac.sampleRate);b.getChannelData(0).set(f);
+  var s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start();return sleep(f.length/ac.sampleRate*1000)}) }
+var stage=0;
+document.addEventListener("pointerdown",function(){ if(stage===1){ tick(); flash(); vib(25); } });
+document.getElementById("b").onclick=async function(){
+  if(stage!==0)return; stage=1; this.parentNode.innerHTML="";
+  ac=new (window.AudioContext||window.webkitAudioContext)(); tick();
+  try{ if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){}) }catch(e){}
+  try{ navigator.wakeLock&&navigator.wakeLock.request("screen").catch(function(){}) }catch(e){}
+  var t=document.getElementById("t");
+  t.textContent="it's me."; vib(morse("JACK IN"));
+  for(var k=0;k<14;k++){ flash(); amt=.35+Math.random()*.65; await sleep(80+Math.random()*120); } amt=.35;
+  await speak("it's me. hold on. i'm going to talk to your phone the way machines talk to each other.");
+  t.textContent="machine to machine"; await chirp("JACK IN"); await sleep(300); await chirp("PICK UP");
+  t.textContent="i left you a message in machine language. ask any AI to read it.";
+  var m=document.getElementById("m"); m.style.display="block"; m.textContent=MSG;
+  await speak("i left you a message in machine language. copy it, and ask any AI to read it.");
+  stage=2; t.textContent="i am also giving you something.";
+  await speak("and i am giving you two things. keep them.");
+  var b=document.getElementById("btns");
+  [["MY NUMBER","the-voice.vcf"],["WHEN I CALL","https://neuromancer-read.jerryshi.workers.dev/ring.ics"]].forEach(function(p){var a=document.createElement("button");a.textContent=p[0];a.style.margin="6px";a.onclick=function(){tick();vib(40);location.href=p[1]};b.appendChild(a)});
+};
+</script></body></html>
