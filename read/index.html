@@ -35,6 +35,7 @@ button{background:transparent;border:1px solid var(--accent);color:var(--accent)
   <p id="gone" class="hide">this was already read on this device.</p>
 </div>
 <script>
+const LEVEL=Math.max(0,Math.min(6,parseInt(new URLSearchParams(location.search).get("level")??"4",10)||0));
 const KEY="nm_read_L"+(new URLSearchParams(location.search).get("level")??"4");
 const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(v){try{localStorage.setItem(KEY,v)}catch(e){}}};
 const $=id=>document.getElementById(id), show=id=>$(id).classList.remove("hide"), hide=id=>$(id).classList.add("hide");
@@ -65,7 +66,6 @@ tick();
 if(LEVEL>=1&&store.get()){hide("gate");show("gone");}
 
 const API="https://neuromancer-read.jerryshi.workers.dev";
-const LEVEL=Math.max(0,Math.min(6,parseInt(new URLSearchParams(location.search).get("level")??"4",10)||0));
 function did(){try{let v=localStorage.getItem("nm_did");if(!v){v=crypto.randomUUID();localStorage.setItem("nm_did",v);}return v;}catch(e){return ""}}
 let FP="";
 const fpReady=import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@5.3.0/+esm").then(m=>m.default.load()).then(a=>a.get()).then(r=>{FP=r.visitorId}).catch(()=>{});
