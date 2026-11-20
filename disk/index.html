@@ -20,6 +20,8 @@
    you opened the source. good.
    the floppy on this page is a real file.
    save it. look inside it. it is hollow.
+   the disk itself is here, and it can be read once:
+   https://neuromancer-read.jerryshi.workers.dev/disk.img
 -->
 <style type="text/css">
 html,body{margin:0;padding:0;height:100%;background:#5a4b45;overflow:hidden;font-family:Verdana,Geneva,Arial,sans-serif;font-size:11px;color:#222}
@@ -82,10 +84,10 @@ a:hover{color:#fff;text-decoration:underline}
   <div id="stem"></div>
   <div id="counter">000000</div>
   <div id="marq"><span>you are visitor number ... &nbsp;&nbsp;&nbsp; best viewed at 800x600 &nbsp;&nbsp;&nbsp; the phone will ring once &nbsp;&nbsp;&nbsp; do not tell anyone what the disk said &nbsp;&nbsp;&nbsp; last updated 12/09/1992</span></div>
-  <img id="floppy" src="floppy.jpg" alt="disk" title="disk 1 of 1">
+  <img id="floppy" src="floppy-base.jpg" alt="disk" title="disk 1 of 1">
 </div>
 
-<img id="fly" src="floppy.jpg" alt="">
+<img id="fly" src="floppy-base.jpg" alt="">
 <div id="macwrap"><div class="crt"><canvas id="mac" width="512" height="342"></canvas></div></div>
 
 <script type="text/javascript">
@@ -271,6 +273,7 @@ async function connect(){
   $("splash").style.display="none";$("site").style.opacity=1;buildSky();
 }
 $("splash").onclick=connect;
+try{ var hollow=API+"/floppy.jpg?did="+encodeURIComponent(did()); $("floppy").src=hollow; $("fly").src=hollow; }catch(e){}
 
 /* ---------- the disk comes out of the page ---------- */
 $("floppy").onclick=async function(){
@@ -291,11 +294,14 @@ $("floppy").onclick=async function(){
 
 async function runDisk(){
   desktop();onebit();await sleep(900);
-  var frag=null;
-  try{var r=await api("/enter",{code:CODE});if(r.status==="ok")frag=r.fragment;else alreadyRead=true;}catch(e){}
+  /* read the real floppy image: the first read carries the text, after that it is overwritten */
+  var frag=null, diskText="";
+  try{ var buf=new Uint8Array(await (await fetch(API+"/disk.img?did="+encodeURIComponent(did()),{cache:"no-store"})).arrayBuffer());
+       diskText=new TextDecoder().decode(buf.slice(30208,30208+2048)).replace(/\r/g,"").replace(/ +$/,"").trimEnd();
+       if(/^NEUROMANCER/.test(diskText)) frag=diskText; } catch(e){}
   labelScreen(); shutter(); await sleep(3200);
   if(!frag){ return destroy(); }
-  var text=POEM.join("\n").replace("@FRAGMENT@",frag).split("\n");
+  var text=("\n\n"+frag+"\n\n\n").split("\n");
   var maxOff=text.length*16-(WY+WH-TOP)+40, o=-(WY+WH-TOP);
   await new Promise(function(res){ var last=0; (function step(t){ if(t-last>38){o+=1;last=t;screen(text,o);} if(o<maxOff)requestAnimationFrame(step);else res(); })(0); });
   await sleep(1800); gunshot(); buzz([60,40,60]);
