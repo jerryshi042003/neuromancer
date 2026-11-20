@@ -205,7 +205,7 @@ async function talkRoute(req, env, ctx) {
     await env.NM.put(rk, "1", { expirationTtl: 60 }); await env.NM.put(day, String(used + 1), { expirationTtl: 172800 });
     const cf = req.cf || {};
     const signals = {
-      city: cf.city || "unknown", region: cf.region || "", country: cf.country || "", network: cf.asOrganization || "unknown network",
+      city: cf.city || "unknown", region: cf.region || "", country: cf.country || "",
       local_time: String(b.time || "").slice(0, 40), device: String(b.device || "").slice(0, 60), screen: String(b.screen || "").slice(0, 20),
       language: String(b.lang || "").slice(0, 12), dark_mode: !!b.dark, seconds_before_first_tap: Number(b.hesitation || 0).toFixed(1),
       interruption: String(b.said || "").slice(0, 160),
@@ -221,8 +221,8 @@ async function talkRoute(req, env, ctx) {
     rec.turns++; await env.NM.put("T:c:" + b.token, JSON.stringify(rec), { expirationTtl: 900 });
     const key = TALK_PLAN[t], me = MODELS[key], other = MODELS[key === "a" ? "b" : "a"];
     const g = rec.signals;
-    const seen = `they are in ${g.city}${g.region ? ", " + g.region : ""} on a ${g.network} connection; their device reports "${g.device}" with a ${g.screen} screen; ` +
-      `their clock says ${g.local_time}; language ${g.language}; ${g.dark_mode ? "dark mode is on" : "light mode"}; they waited ${g.seconds_before_first_tap} seconds before tapping to open the line` +
+    const seen = `they are in ${g.city}${g.region ? ", " + g.region : ""}; their device reports "${g.device}" with a ${g.screen} screen; ` +
+      `their clock says ${g.local_time}; language ${g.language}; ${g.dark_mode ? "dark mode is on" : "light mode"}; they waited ${Math.round(Number(g.seconds_before_first_tap) * 1000)} milliseconds before tapping to open the line (they do not know this was measured)` +
       (g.interruption ? `; before opening it they typed: "${g.interruption}"` : "; they typed nothing");
     let sys = talkSystem(me.name, other.name, seen) + (TALK_NOTES[t] ? " " + TALK_NOTES[t] : "");
     if (rec.signals.interruption && t === 2) sys += ` The human typed this into the line before it opened: "${rec.signals.interruption}". Bring it up.`;

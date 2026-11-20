@@ -68,7 +68,7 @@ document.getElementById("go").onclick=async function(){
   token=j.token;document.getElementById("start").remove();
   var s=j.signals,box=document.getElementById("seen");box.style.display="block";
   box.appendChild(el("div",null,"WHAT THEY CAN SEE"));
-  var rows=[["city",s.city+(s.region?", "+s.region:"")],["network",s.network],["time",s.local_time.slice(0,24)],["device",s.device],["screen",s.screen],["hesitated",s.seconds_before_first_tap+"s before tapping"]];
+  var rows=[["city",s.city+(s.region?", "+s.region:"")],["time",s.local_time.slice(0,24)],["device",s.device],["screen",s.screen],["hesitated",Math.round(s.seconds_before_first_tap*1000).toLocaleString()+" ms before tapping"]];
   if(s.interruption)rows.push(["you said",s.interruption]);
   for(var k=0;k<rows.length;k++)await typeLine(box,rows[k][0],rows[k][1]);
   for(var t=0;t<j.plan.length;t++){ if(!await turn(t,j.plan[t],t>=6))break; await sleep(350); }
