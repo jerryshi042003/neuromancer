@@ -1,11 +1,11 @@
 // Neuromancer read-once backend. One read per device: blocked if the browser id,
 // the device fingerprint, or the same network+browser (24h) has already read.
 const ORIGIN = "https://jerryshi042003.github.io";
-const CODES = { jackin: true };           // shared code for levels 0-4, checked here, never shipped to the page
+const CODES = { jackin: true, agrippa: true };           // shared code for levels 0-4, checked here, never shipped to the page
 // level 5/6 test codes: each works exactly once, for everyone
 const ONE_TIME = ["static-01","static-02","static-03","static-04","static-05","static-06","static-07","static-08","static-09","static-10"];
 // what each level remembers about a reader
-const LEVELS = { 0:[], 1:[], 2:["d"], 3:["d","f"], 4:["d","f","n"], 5:[], 6:["d","f","n"] };
+const LEVELS = { 0:[], 1:[], 2:["d"], 3:["d","f"], 4:["d","f","n"], 5:[], 6:["d","f","n"], 7:["d","f","n"] };
 const FRAG_DAY = [
   "fragment 1 of 5: the first number is the year the book came out.",
   "fragment 2 of 5: the phone that rings is near water.",
@@ -44,14 +44,14 @@ export default {
     const url = new URL(req.url);
     if (req.method !== "POST") return json({ error: "method" }, 405);
     let body = {}; try { body = await req.json(); } catch {}
-    const level = Math.max(0, Math.min(6, parseInt(body.level ?? 4, 10) || 0));
+    const level = Math.max(0, Math.min(7, parseInt(body.level ?? 4, 10) || 0));
     const keys = await keysFor(req, body, level);
 
     if (url.pathname === "/status") return json({ read: await seen(env, keys) });
 
     if (url.pathname === "/enter") {
       const code = String(body.code || "").trim().toLowerCase();
-      const oneTime = level >= 5;
+      const oneTime = level === 5 || level === 6;
       if (oneTime ? !ONE_TIME.includes(code) : !CODES[code]) return json({ status: "wrong" });
       if (await seen(env, keys)) return json({ status: "read" });
       if (oneTime && await env.NM.get("L" + level + ":c:" + code)) return json({ status: "taken" });
