@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><title>&#8203;</title>
+<style>html,body{margin:0;height:100%;background:#000;color:#9a9a9a;font:14px/1.7 Menlo,"Courier New",monospace}
+body{display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}</style></head><body><div id="m">connecting&hellip;</div>
+<script>
+var API="https://neuromancer-read.jerryshi.workers.dev", k=new URLSearchParams(location.search).get("k")||"";
+var TO={signal:"../signal/",disk:"../disk/",jackin:"../jackin/",line:"../line/"};
+fetch(API+"/once/open",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({k:k})}).then(function(r){return r.json()}).then(function(r){
+  if(r.ok){ location.replace(TO[r.to]||TO.signal); return; }
+  document.title="NO CARRIER";
+  document.getElementById("m").textContent=r.why==="used"?("NO CARRIER\n\nthis line was opened at "+new Date(r.used).toLocaleTimeString("en-US",{hour12:false})+".\nit does not open twice."):"NO CARRIER";
+  document.getElementById("m").style.whiteSpace="pre-line";
+}).catch(function(){document.getElementById("m").textContent="NO CARRIER"});
+</script></body></html>

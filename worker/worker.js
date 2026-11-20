@@ -36,7 +36,7 @@ async function keysFor(req, body, level) {
   if (want.includes("n")) k.push({ key: p + "n:" + await sha(ip + "|" + ua), ttl: 86400 });
   return k;
 }
-async function seen(env, keys) { for (const k of keys) if (await env.NM.get(k.key)) return true; return false; }
+async function seen(env, keys) { if (env.DEMO === "1") return false; for (const k of keys) if (await env.NM.get(k.key)) return true; return false; }
 
 
 // ---------- real files that erase ----------
@@ -103,6 +103,21 @@ async function advance(env, id, rec, now) {
 const jsonAny = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "cache-control": "no-store" } });
 async function lineRoutes(req, env, url) {
   if (req.method === "OPTIONS") return new Response(null, { headers: { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "access-control-allow-methods": "GET,POST" } });
+  if (url.pathname === "/once/new" && req.method === "POST") {
+    const b = await req.json().catch(() => ({})); const to = String(b.to || "signal");
+    if (!/^[a-z]{2,12}$/.test(to)) return jsonAny({ error: "bad target" }, 400);
+    const k = crypto.randomUUID().replace(/-/g, "").slice(0, 10);
+    await env.NM.put("O:" + k, JSON.stringify({ to, made: Date.now() }), { expirationTtl: 30 * 86400 });
+    return jsonAny({ k, url: "https://jerryshi042003.github.io/neuromancer/once/?k=" + k });
+  }
+  if (url.pathname === "/once/open" && req.method === "POST") {
+    const b = await req.json().catch(() => ({})); const k = String(b.k || "").slice(0, 16);
+    const rec = await env.NM.get("O:" + k, "json");
+    if (!rec) return jsonAny({ ok: false, why: "unknown" }, 404);
+    if (rec.used) return jsonAny({ ok: false, why: "used", used: rec.used, to: rec.to }, 410);
+    rec.used = Date.now(); await env.NM.put("O:" + k, JSON.stringify(rec), { expirationTtl: 30 * 86400 });
+    return jsonAny({ ok: true, to: rec.to });
+  }
   if (url.pathname === "/line/key") return jsonAny({ key: env.VAPID_PUBLIC });
   if (url.pathname === "/line/sub" && req.method === "POST") {
     const b = await req.json(); if (!b.sub || !b.sub.endpoint) return jsonAny({ error: "no subscription" }, 400);
@@ -117,8 +132,9 @@ async function lineRoutes(req, env, url) {
   if (url.pathname === "/line/transmission") {   // the server decides when the recording is gone
     const step = Number(url.searchParams.get("step")); const e = rec && rec.events.find((x) => x.step === step);
     if (!e || !e.expires) return jsonAny({ error: "no transmission" }, 404);
+    if (env.DEMO === "1") { const st = Date.now(); return jsonAny({ gone: false, demo: true, start: st, expires: st + 120e3, now: st, phone: e.phone, address: e.address, city: e.city, lon: e.lon, lat: e.lat }); }
     if (Date.now() > e.expires) return jsonAny({ gone: true, expired: e.expires }, 410);
-    return jsonAny({ gone: false, expires: e.expires, now: Date.now(), phone: e.phone, address: e.address, city: e.city, lon: e.lon, lat: e.lat });
+    return jsonAny({ gone: false, start: e.expires - 600e3, expires: e.expires, now: Date.now(), phone: e.phone, address: e.address, city: e.city, lon: e.lon, lat: e.lat });
   }
   if (url.pathname === "/line/board") {            // a shared place to ask about it
     if (req.method === "POST") {
@@ -147,7 +163,7 @@ async function lineRoutes(req, env, url) {
 
 export default {
   async fetch(req, env) {
-    { const u = new URL(req.url); if (u.pathname.startsWith("/line/")) return lineRoutes(req, env, u); }
+    { const u = new URL(req.url); if (u.pathname.startsWith("/line/") || u.pathname.startsWith("/once/")) return lineRoutes(req, env, u); }
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/ring.ics") {      // calendar invite: tomorrow 5:00 PM Los Angeles

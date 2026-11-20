@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Southland Coin Telephone</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#c0c0c0;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+#site{position:fixed;inset:0;padding:calc(env(safe-area-inset-top) + 18px) 16px 16px;font-family:"Times New Roman",Times,serif;color:#000;background:#c0c0c0}
+#site h1{font:bold 22px Arial,sans-serif;margin:0 0 4px}
+#site .sub{font:13px Arial,sans-serif;margin:0 0 12px}
+#site hr{border:0;border-top:2px groove #fff}
+#site p{font-size:15px;margin:10px 0}
+.bar{height:16px;border:2px inset #fff;background:#fff;margin:14px 0}
+.bar i{display:block;height:100%;width:0;background:#000080}
+#tear{position:fixed;inset:0;pointer-events:none}
+#err{position:fixed;left:12px;right:12px;top:30%;background:#c0c0c0;border:2px outset #fff;box-shadow:2px 2px 0 #000;font:13px Arial,sans-serif;display:none;z-index:5}
+#err .t{background:#000080;color:#fff;font-weight:bold;padding:3px 6px}
+#err .b{padding:10px;display:flex;gap:10px}
+#err .b pre{margin:0;font:12px "Courier New",monospace;white-space:pre-wrap}
+#err .ok{margin:0 10px 10px auto;display:block;font:13px Arial;padding:3px 18px}
+#black{position:fixed;inset:0;background:#000;color:#ddd;display:none;z-index:9;font:15px/1.6 Menlo,"Courier New",monospace;padding:calc(env(safe-area-inset-top) + 24px) 20px calc(env(safe-area-inset-bottom) + 24px)}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;z-index:10;pointer-events:none}
+#msg{white-space:pre-wrap;min-height:50vh}
+#tap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 28px);text-align:center;letter-spacing:.35em;color:#888;font:13px Menlo,monospace;z-index:11;display:none}
+#go{display:none;margin-top:28px;border:1px solid #ddd;color:#fff;text-decoration:none;padding:14px 18px;letter-spacing:.25em;font:14px Menlo,monospace}
+#hx{position:fixed;left:-99px;opacity:0}
+</style></head><body>
+<div id="site">
+  <h1>SOUTHLAND COIN TELEPHONE CO.</h1>
+  <div class="sub">Public Telephone Service &middot; Los Angeles District</div><hr>
+  <p id="p1">Welcome. Our network connects 401 public telephones across Los Angeles County.</p>
+  <p id="p2">Loading line status&hellip;</p>
+  <div class="bar"><i id="prog"></i></div>
+  <p id="p3" style="font-size:12px;color:#333">&copy; 1996 Southland Coin Telephone Co.</p>
+</div>
+<canvas id="tear"></canvas>
+<div id="err"><div class="t" id="et">Error</div><div class="b"><pre id="eb"></pre></div><button class="ok" id="eok">OK</button></div>
+<div id="black"><div id="msg"></div><a id="go" href="../disk/">FOLLOW THE LINE</a></div>
+<div id="flash"></div><div id="tap">TAP TO LET IT THROUGH</div>
+<input type="checkbox" switch id="hx"><label for="hx" id="hl" style="position:fixed;left:-99px"></label>
+<script>
+var $=function(i){return document.getElementById(i)};
+function sleep(m){return new Promise(function(r){setTimeout(r,m)})}
+function tick(){try{$("hl").click()}catch(e){}}
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+/* the message hidden in the error codes: hex that spells words */
+function hex(w){return w.split("").map(function(c){return "0x"+c.charCodeAt(0).toString(16).toUpperCase()}).join(" ")}
+var ERRS=[["Line status","Unable to read line 310-637-8714.\nError "+hex("JACK")+"\nRetry?"],
+          ["Line status","LINE SEIZED\nprocess: unknown\nerror "+hex("IN")+"\nThis is not our software."],
+          ["Southland Coin","Operator override failed.\nerror "+hex("FIND")+" "+hex("ME")]];
+/* page tearing: rows of the page slide sideways */
+var tc=$("tear"),tx=tc.getContext("2d"),tearOn=false;
+function tear(){ tc.width=innerWidth;tc.height=innerHeight; (function f(){ tx.clearRect(0,0,tc.width,tc.height); if(tearOn){ for(var i=0;i<14;i++){ var y=Math.random()*tc.height,h=2+Math.random()*18; tx.fillStyle=Math.random()<.5?"rgba(0,0,0,.85)":"rgba(255,255,255,.9)"; tx.fillRect(Math.random()*-40,y,tc.width*(0.3+Math.random()*.8),h);} } requestAnimationFrame(f); })(); }
+function corrupt(el,amt){ var t=el.textContent; el.textContent=t.split("").map(function(c){return c!==" "&&Math.random()<amt?String.fromCharCode(0x2580+Math.random()*32|0):c}).join(""); }
+async function err(i){ $("et").textContent=ERRS[i][0]; $("eb").textContent=ERRS[i][1]; $("err").style.display="block"; await new Promise(function(r){$("eok").onclick=function(){$("err").style.display="none";r()};setTimeout(function(){$("err").style.display="none";r()},4200)}); }
+/* morse: screen flashes and a 600 Hz tone, with a haptic tick on every tap */
+var M={A:".-",C:"-.-.",K:"-.-",I:"..",N:"-.",J:".---",F:"..-.",D:"-..",E:".",L:".-..",M:"--"};
+var ac;
+function beep(t,d){ var o=ac.createOscillator(),g=ac.createGain();o.frequency.value=600;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.25,t+.005);g.gain.setValueAtTime(.25,t+d-.01);g.gain.linearRampToValueAtTime(0,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.02); }
+async function morse(word){ var u=.09, t0=ac.currentTime+.1, t=t0, sched=[], vibp=[];
+  word.split("").forEach(function(ch){ if(ch===" "){t+=u*4;vibp.push(0,u*4000);return} (M[ch]||"").split("").forEach(function(s){var d=s==="."?u:u*3;beep(t,d);sched.push([t-t0,d]);vibp.push(d*1000,u*1000);t+=d+u}); t+=u*2; vibp.push(0,u*2000); });
+  vib(vibp);
+  sched.forEach(function(s){ setTimeout(function(){$("flash").style.opacity=.85;setTimeout(function(){$("flash").style.opacity=0},s[1]*1000)},s[0]*1000) });
+  await sleep((t-t0)*1000+300); }
+async function typeIn(s){ var m=$("msg"); for(var i=0;i<s.length;i++){ m.textContent+=s[i]; if(i%3===0)await sleep(16); } }
+(async function(){
+  /* 1. the normal page loads, fast */
+  var p=$("prog"); for(var i=0;i<=62;i+=2){p.style.width=i+"%";await sleep(18)}
+  /* 2. then it starts failing */
+  await sleep(500); tear(); tearOn=true; await sleep(300); tearOn=false;
+  await err(0); tearOn=true; corrupt($("p1"),.25); await sleep(250); tearOn=false;
+  await err(1); tearOn=true; corrupt($("p1"),.5); corrupt($("p2"),.6); p.style.width="100%"; p.style.background="#800000";
+  await err(2); tearOn=true; corrupt($("p3"),.8); await sleep(700);
+  /* 3. something takes over the screen */
+  $("black").style.display="block"; tearOn=false; $("tap").style.display="block";
+  await typeIn("> LINE 310-637-8714 SEIZED\n> SOURCE: NOT A TELEPHONE\n\n");
+  var started=false;
+  document.addEventListener("pointerdown",async function(){ tick(); $("flash").style.opacity=.5; setTimeout(function(){$("flash").style.opacity=0},60);
+    if(started)return; started=true; $("tap").textContent="KEEP TAPPING";
+    try{ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
+    try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(function(){})}catch(e){}
+    if(ac) await morse("JACK IN");
+    $("tap").style.display="none";
+    await typeIn("they switched off every payphone in this city\nso nothing could ring.\n\ni am still in the lines.\n\nthe error codes on that page were me.\nread them as text.\n\n");
+    $("go").style.display="inline-block";
+  });
+})();
+</script></body></html>
