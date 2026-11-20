@@ -31,4 +31,15 @@ function frame(t){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-</script></body></html>
+
+/* the static talks: tap once for sound, then every 12s the hiss carries a hidden message (ggwave) */
+var actx=null, gw=null, gwi=null;
+function startSound(){ if(actx) return; actx=new (window.AudioContext||window.webkitAudioContext)();
+  var n=actx.createBufferSource(),b=actx.createBuffer(1,actx.sampleRate*2,actx.sampleRate),d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.18; n.buffer=b;n.loop=true;var g=actx.createGain();g.gain.value=.5;n.connect(g);g.connect(actx.destination);n.start();
+  ggwave_factory().then(function(m){ gw=m; var p=gw.getDefaultParameters(); p.sampleRateInp=actx.sampleRate; p.sampleRateOut=actx.sampleRate; gwi=gw.init(p); chirp(); setInterval(chirp,12000); }); }
+function chirp(){ if(!gw) return; var wf=gw.encode(gwi,"JACK IN",gw.ProtocolId.GGWAVE_PROTOCOL_AUDIBLE_FAST,25);
+  var f=new Float32Array(new Int8Array(wf).buffer), buf=actx.createBuffer(1,f.length,actx.sampleRate); buf.getChannelData(0).set(f);
+  var s=actx.createBufferSource(); s.buffer=buf; s.connect(actx.destination); s.start(); }
+document.addEventListener("click",startSound); document.addEventListener("touchstart",startSound);
+</script><script src="ggwave.js"></script></body></html>
