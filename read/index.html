@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuromancer</title>
+<style>
+:root{--bg:#050607;--fg:#d7dde2;--dim:#6b747c;--accent:#4fe3c1}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:18px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:100%;max-width:560px}
+.clue{color:var(--dim);margin-bottom:24px}
+input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--dim);color:var(--accent);font:inherit;padding:8px 0;outline:none;letter-spacing:.2em}
+#err{color:#e36b4f;min-height:1.7em;margin-top:12px;font-size:14px}
+#scroll{height:60vh;overflow:hidden;position:relative;display:none}
+#text{position:absolute;left:0;right:0;top:100%;white-space:pre-wrap}
+#gone{display:none;color:var(--dim)}
+</style></head><body><div class="box">
+<div id="gate">
+  <p class="clue">The static had a word in it. Type it.</p>
+  <input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="code">
+  <p id="err"></p>
+</div>
+<div id="scroll"><div id="text"></div></div>
+<p id="gone">This page has already been read.</p>
+</div>
+<script>
+const HASH="eb08c8f36a6259215a0c507a10338841d067c3c66814449593bfd98f0adc010a";
+const FRAGS=["fragment 1 of 5: the first number is the year the book came out.","fragment 2 of 5: the phone that rings is near water.","fragment 3 of 5: listen for the third word, not the first.","fragment 4 of 5: the time is the sky's color, not the clock's.","fragment 5 of 5: bring someone. one person cannot hear it all."];
+const KEY="nm_read_v1";
+const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(){try{localStorage.setItem(KEY,"1")}catch(e){}}};
+const $=id=>document.getElementById(id);
+if(store.get()){ $("gate").style.display="none"; $("gone").style.display="block"; }
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+$("code").addEventListener("keydown",async e=>{
+  if(e.key!=="Enter")return;
+  if(await sha(e.target.value.trim().toLowerCase())!==HASH){$("err").textContent="no.";return;}
+  store.set();
+  const frag=FRAGS[Math.floor(Math.random()*FRAGS.length)];
+  $("gate").style.display="none"; $("scroll").style.display="block";
+  const t=$("text"); t.textContent="you are reading this once.\n\n"+frag+"\n\nremember it. it will not come back.";
+  const h=$("scroll").clientHeight, total=h+t.offsetHeight, ms=total*35;
+  t.animate([{transform:"translateY(0)"},{transform:"translateY(-"+total+"px)"}],{duration:ms,easing:"linear",fill:"forwards"}).onfinish=()=>{t.textContent="";$("scroll").style.display="none";$("gone").style.display="block";};
+});
+</script></body></html>
