@@ -3,48 +3,109 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neuromancer</title>
-<meta name="description" content="Neuromancer is a game played on the payphones of Los Angeles.">
+<title>Neuromancer | Payphone games in Los Angeles</title>
+<meta name="description" content="Neuromancer runs real-world games on the payphones of Los Angeles. Find a payphone, answer the call, follow the voice.">
+<meta property="og:title" content="Neuromancer">
+<meta property="og:description" content="Real-world games on the payphones of Los Angeles.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Neuromancer","description":"Real-world games played on the payphones of Los Angeles.","areaServed":"Los Angeles, CA"}
+</script>
 <style>
-:root{--bg:#050607;--fg:#d7dde2;--dim:#6b747c;--accent:#4fe3c1}
+:root{--bg:#050607;--panel:#0b0e10;--fg:#d7dde2;--dim:#7a838b;--line:#1b2126;--accent:#4fe3c1}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{background:var(--bg);color:var(--fg);font:16px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:flex;flex-direction:column;min-height:100vh}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
-main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:760px;margin:0 auto;padding:64px 20px}
-h1{font-size:clamp(40px,11vw,96px);letter-spacing:.08em;font-weight:600;line-height:1}
-h1 span{color:var(--accent)}
-.lede{margin-top:24px;font-size:clamp(17px,2.6vw,22px);color:var(--fg)}
-.ring{margin-top:48px;color:var(--accent);font-size:clamp(18px,3vw,24px);min-height:1.6em}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;background:rgba(5,6,7,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:2}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--accent)}
+nav{display:flex;gap:24px;font-size:14px;color:var(--dim)}
+nav a{text-decoration:none}nav a:hover{color:var(--fg)}
+@media(max-width:640px){nav a:not(:last-child){display:none}}
+.hero{padding:120px 0 96px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:ui-monospace,Menlo,monospace;font-size:clamp(40px,9vw,88px);letter-spacing:.08em;line-height:1;font-weight:600}
+.hero h1 span{color:var(--accent)}
+.hero p{margin-top:24px;font-size:clamp(18px,2.4vw,22px);max-width:560px}
+.ring{margin-top:40px;color:var(--accent);font-size:clamp(17px,2.4vw,21px);min-height:1.6em}
 .ring:after{content:"_";animation:b 1s steps(1) infinite}
 @keyframes b{50%{opacity:0}}
-ol{margin-top:56px;list-style:none;display:grid;gap:14px;counter-reset:s}
-li{counter-increment:s;display:flex;gap:16px;color:var(--fg)}
-li:before{content:"0" counter(s);color:var(--dim)}
-footer{padding:24px 20px;text-align:center;color:var(--dim);font-size:13px}
-@media (prefers-reduced-motion:reduce){.ring:after{animation:none}}
+.btn{display:inline-block;margin-top:40px;padding:12px 22px;border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-family:ui-monospace,Menlo,monospace;font-size:14px;letter-spacing:.08em}
+.btn:hover{background:var(--accent);color:var(--bg)}
+section{padding:88px 0;border-bottom:1px solid var(--line)}
+h2{font-family:ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.2em;color:var(--accent);font-weight:500;margin-bottom:28px}
+h3{font-size:22px;font-weight:600;margin-bottom:10px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.steps div:before{display:block;font-family:ui-monospace,Menlo,monospace;color:var(--dim);margin-bottom:12px}
+.steps div:nth-child(1):before{content:"01"}.steps div:nth-child(2):before{content:"02"}.steps div:nth-child(3):before{content:"03"}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+@media(max-width:760px){.steps,.two{grid-template-columns:1fr;gap:32px}}
+p.body{color:var(--fg);max-width:520px}
+dl div{padding:22px 0;border-top:1px solid var(--line)}
+dl div:last-child{border-bottom:1px solid var(--line)}
+dt{font-weight:600}dd{color:var(--dim);margin-top:6px;max-width:680px}
+footer{padding:40px 0;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){.ring:after{animation:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<header><div class="wrap">
+  <a class="logo" href="#">NEURO<span>MANCER</span></a>
+  <nav><a href="#how">How it works</a><a href="#venues">Venues</a><a href="#faq">FAQ</a><a href="#legal">Legal</a></nav>
+</div></header>
+
 <main>
+<div class="hero"><div class="wrap">
   <h1>NEURO<span>MANCER</span></h1>
-  <p class="lede">A game played on the payphones of Los Angeles.</p>
-  <p class="ring" id="ring"></p>
-  <ol>
-    <li>Find a payphone.</li>
-    <li>Wait for it to ring.</li>
-    <li>Answer. Follow the voice.</li>
-  </ol>
+  <p>Real-world games played on the payphones of Los Angeles.</p>
+  <p class="ring mono" id="ring"></p>
+  <a class="btn" href="#how">HOW IT WORKS</a>
+</div></div>
+
+<section id="how"><div class="wrap">
+  <h2>HOW IT WORKS</h2>
+  <div class="steps">
+    <div><h3>Find a payphone</h3><p>Each game starts at a payphone somewhere in Los Angeles.</p></div>
+    <div><h3>Answer the call</h3><p>At the scheduled time, the phone rings. Pick it up.</p></div>
+    <div><h3>Follow the voice</h3><p>The voice on the line gives you the next clue and the next location.</p></div>
+  </div>
+</div></section>
+
+<section id="venues"><div class="wrap two">
+  <div><h2>FOR PLAYERS</h2><h3>The city is the board.</h3><p class="body">Games run across neighborhoods, landmarks and trailheads. No app. No account. Just a phone that rings when you get there.</p></div>
+  <div><h2>FOR VENUES</h2><h3>Host a phone.</h3><p class="body">Bars, galleries, shops and event spaces can host a Neuromancer phone. It rings on a schedule and brings players through your door.</p></div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <h2>FAQ</h2>
+  <dl>
+    <div><dt>Is it free to play?</dt><dd>Yes. Playing a game costs nothing.</dd></div>
+    <div><dt>Do I need an app?</dt><dd>No. Every game is played on a payphone.</dd></div>
+    <div><dt>Where are the phones?</dt><dd>Locations are revealed as part of each game.</dd></div>
+    <div><dt>Is the voice a real person?</dt><dd>The voice on the line is an automated system.</dd></div>
+  </dl>
+</div></section>
+
+<section id="legal"><div class="wrap two">
+  <div><h2>PRIVACY</h2><p class="body">This website does not use cookies, does not run analytics and does not collect personal information.</p></div>
+  <div><h2>TERMS</h2><p class="body">Play at your own risk. Respect the property where phones are located, obey local laws and never trespass to reach a phone.</p></div>
+</div></section>
 </main>
-<footer>&copy; 2026 Neuromancer &middot; Los Angeles, CA</footer>
+
+<footer><div class="wrap"><span>&copy; 2026 Neuromancer</span><span>Los Angeles, California</span></div></footer>
+
 <script>
 const lines=["the phone is ringing.","answer it.","jack in."];
 const el=document.getElementById("ring");
 const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let i=0;
-async function type(t){el.textContent="";for(const c of t){el.textContent+=c;await new Promise(r=>setTimeout(r,still?0:70));}}
-async function loop(){for(;;){await type(lines[i]);await new Promise(r=>setTimeout(r,2200));i=(i+1)%lines.length;}}
-loop();
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function type(t){el.textContent="";for(const c of t){el.textContent+=c;await wait(still?0:70);}}
+(async()=>{for(;;){await type(lines[i]);await wait(2200);i=(i+1)%lines.length;}})();
 </script>
 </body>
 </html>
