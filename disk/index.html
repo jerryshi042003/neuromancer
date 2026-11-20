@@ -32,7 +32,8 @@ a:hover{color:#fff;text-decoration:underline}
 #dial{white-space:pre;color:#5f5;font-size:11px;letter-spacing:0;min-height:5em;text-align:left}
 #site{position:fixed;inset:0;opacity:0;transition:opacity 1.6s}
 #sky{position:absolute;left:0;top:0;right:0;height:72%;background:#d9d9d6;overflow:hidden}
-.layer{position:absolute;background:#bdbdb8;mix-blend-mode:multiply;opacity:.55}
+.layer{position:absolute;background-image:url(floppy.jpg);background-repeat:no-repeat;filter:grayscale(1) contrast(1.15) brightness(1.05);mix-blend-mode:multiply;opacity:.5;transition:opacity 3s,transform 12s linear}
+.static{position:absolute;mix-blend-mode:multiply;opacity:.35;image-rendering:pixelated}
 .word{position:absolute;font:28px/1 "Courier New",Courier,monospace;color:#7d7d78;white-space:nowrap;opacity:0;transition:opacity 2.4s,transform 9s linear}
 .word.on{opacity:.75}
 .word.big{font-size:44px;color:#9fb6c3;text-shadow:0 0 6px rgba(160,190,210,.8)}
@@ -233,8 +234,18 @@ const POEM=[
 var WORDS=["jack in","the static","payphone","los angeles","1992","the sky","no carrier","dead channel","the voice","disk 1 of 1"];
 function buildSky(){
   var s=$("sky"), w=s.clientWidth, h=s.clientHeight, i;
-  for(i=0;i<9;i++){var l=document.createElement("div");l.className="layer";
-    l.style.left=(Math.random()*w*.8)+"px";l.style.top=(Math.random()*h*.7)+"px";l.style.width=(80+Math.random()*w*.35)+"px";l.style.height=(30+Math.random()*h*.4)+"px";s.appendChild(l);}
+  /* layered, scaled crops of the real floppy photo (shutter, label lines, hub, corner) */
+  var crops=[[180,"0% 0%"],[420,"60% 8%"],[300,"30% 80%"],[650,"45% 30%"],[260,"95% 95%"],[520,"10% 55%"],[380,"75% 60%"]];
+  for(i=0;i<crops.length;i++){var l=document.createElement("div");l.className="layer";
+    var lw=120+Math.random()*w*.32, lh=40+Math.random()*h*.42;
+    l.style.left=(w*.12+Math.random()*w*.66)+"px";l.style.top=(Math.random()*h*.6)+"px";l.style.width=lw+"px";l.style.height=lh+"px";
+    l.style.backgroundSize=crops[i][0]+"%";l.style.backgroundPosition=crops[i][1];l.style.opacity=.25+Math.random()*.45;s.appendChild(l);}
+  setInterval(function(){var ls=s.querySelectorAll(".layer");var l=ls[Math.random()*ls.length|0];if(!l)return;
+    l.style.opacity=.15+Math.random()*.5;l.style.transform="translateX("+((Math.random()-.5)*60)+"px)";},1800);
+  /* two strips of live tv static */
+  [[.18,.5,.22,.07],[.58,.12,.3,.05]].forEach(function(r){var c=document.createElement("canvas");c.className="static";c.width=160;c.height=40;
+    c.style.left=(r[0]*100)+"%";c.style.top=(r[1]*100)+"%";c.style.width=(r[2]*100)+"%";c.style.height=(r[3]*100)+"%";s.appendChild(c);
+    var x=c.getContext("2d"),im=x.createImageData(160,40);(function f(){for(var k=0;k<im.data.length;k+=4){var v=Math.random()*255;im.data[k]=im.data[k+1]=im.data[k+2]=v;im.data[k+3]=255;}x.putImageData(im,0,0);setTimeout(function(){requestAnimationFrame(f)},60);})();});
   for(i=0;i<6;i++){var b=document.createElement("div");b.className="scan";b.style.top=(h*.55+i*7+Math.random()*20)+"px";b.style.opacity=.4+Math.random()*.6;s.appendChild(b);}
   var big=document.createElement("div");big.className="word big on";big.textContent="NEUROMANCER";big.style.left="40%";big.style.top="44%";s.appendChild(big);
   var navs=[["source","#"],["transmissions","#"],["links","#"],["guestbook","#"]];
