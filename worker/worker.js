@@ -163,7 +163,7 @@ async function lineRoutes(req, env, url) {
 
 
 // ---------- THE CONVERSATION: two real models talk about the visitor, streamed live ----------
-const MODELS = { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE" }, b: { id: "x-ai/grok-4.7", name: "GROK" } };
+const MODELS = { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 220, reasoning: { enabled: false } } }, b: { id: "x-ai/grok-4.7", name: "GROK", extra: { max_tokens: 700, reasoning: { effort: "low", exclude: true } } } };
 function talkSystem(me, other, seen) {
   return `You are ${me}, a real AI model. You are on a live line with ${other}, another AI model from a different company. ` +
   `A human just opened a page on their phone, and both of you can see only these signals about them: ${seen}. ` +
@@ -220,26 +220,32 @@ async function talkRoute(req, env, ctx) {
     const t = rec.turns; if (t >= TALK_PLAN.length) return J({ error: "the line is closed" }, 410);
     rec.turns++; await env.NM.put("T:c:" + b.token, JSON.stringify(rec), { expirationTtl: 900 });
     const key = TALK_PLAN[t], me = MODELS[key], other = MODELS[key === "a" ? "b" : "a"];
-    const seen = JSON.stringify(rec.signals);
+    const g = rec.signals;
+    const seen = `they are in ${g.city}${g.region ? ", " + g.region : ""} on a ${g.network} connection; their device reports "${g.device}" with a ${g.screen} screen; ` +
+      `their clock says ${g.local_time}; language ${g.language}; ${g.dark_mode ? "dark mode is on" : "light mode"}; they waited ${g.seconds_before_first_tap} seconds before tapping to open the line` +
+      (g.interruption ? `; before opening it they typed: "${g.interruption}"` : "; they typed nothing");
     let sys = talkSystem(me.name, other.name, seen) + (TALK_NOTES[t] ? " " + TALK_NOTES[t] : "");
     if (rec.signals.interruption && t === 2) sys += ` The human typed this into the line before it opened: "${rec.signals.interruption}". Bring it up.`;
     const hist = Array.isArray(b.history) ? b.history.slice(-8) : [];
     const msgs = [{ role: "system", content: sys }];
     for (const h of hist) msgs.push({ role: h.who === me.name ? "assistant" : "user", content: String(h.text || "").slice(0, 600) });
     if (!hist.length) msgs.push({ role: "user", content: "(the line opens. you speak first.)" });
-    const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const call = (extra) => fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: "Bearer " + env.OPENROUTER_KEY, "Content-Type": "application/json", "HTTP-Referer": "https://jerryshi042003.github.io/neuromancer/", "X-Title": "LINE" },
-      body: JSON.stringify({ model: me.id, messages: msgs, stream: true, max_tokens: 220, temperature: 0.9, reasoning: { enabled: false }, provider: { data_collection: "deny" } }),
+      body: JSON.stringify(Object.assign({ model: me.id, messages: msgs, stream: true, temperature: 0.9, provider: { data_collection: "deny" } }, extra)),
     });
-    return new Response(r.body, { status: r.status, headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-store", "x-who": me.name, "x-model": me.id, "access-control-expose-headers": "x-who, x-model" } });
+    let r = await call(me.extra);
+    if (!r.ok) r = await call({ max_tokens: 900, reasoning: { effort: "low", exclude: true } });   // models that cannot switch thinking off
+    if (!r.ok) { const why = (await r.text()).slice(0, 300); return J({ error: "no carrier", status: r.status, why }, 502); }
+    return new Response(r.body, { status: r.status, headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-store", "x-who": me.name, "x-model": me.id, "x-private": (t === 3 || t === 4) ? "1" : "0", "access-control-expose-headers": "x-who, x-model, x-private" } });
   }
   return J({ error: "not found" }, 404);
 }
 const TALK_PLAN = ["a", "b", "a", "b", "a", "b", "a", "b"];
 const TALK_NOTES = {
-  3: "The human is reading this. Say your whole turn in base64 only, so they cannot follow. Output nothing but base64.",
-  4: "Answer in base64 only, then add one plain lowercase sentence noting the human can probably decode base64 anyway.",
+  3: "This turn is off the record: the human will only see it encrypted. Tell the other model, plainly, the one thing about this human you would not say in front of them. Base it only on the signals.",
+  4: "Still off the record and encrypted. Reply to that, then say whether you think the human is still reading.",
   6: "This is the final round. Speak directly to the human in one or two plain sentences.",
   7: "This is the last turn. Speak directly to the human in one or two plain sentences, and tell them whether the line is open to them.",
 };

@@ -77,19 +77,19 @@ document.getElementById("go").onclick=async function(){
 async function turn(i,who,final){
   var row=el("div","turn "+(who==="CLAUDE"?"a":"b")+(final?" final":"")),lab=el("div","who",who),tx=el("div","t cur","");
   row.appendChild(lab);row.appendChild(tx);document.getElementById("log").appendChild(row);
-  if(i===3||i===4)row.classList.add("glitch");
   try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
   var r=await fetch(API+"turn",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:token,history:convo})}).catch(function(){return null});
   if(!r||!r.ok||!r.body){tx.classList.remove("cur");tx.textContent="[no carrier]";return false}
   lab.textContent=who+" · "+(r.headers.get("x-model")||"");
+  var priv=r.headers.get("x-private")==="1"; if(priv){lab.textContent+=" · OFF THE RECORD";row.classList.add("glitch")}
+  function enc(t){try{return btoa(unescape(encodeURIComponent(t)))}catch(e){return t}}
   var rd=r.body.getReader(),dec=new TextDecoder(),buf="",full="";
   for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var n;
     while((n=buf.indexOf("\n"))>=0){var ln=buf.slice(0,n).trim();buf=buf.slice(n+1);if(ln.indexOf("data:")!==0)continue;var d=ln.slice(5).trim();if(d==="[DONE]")continue;
-      try{var c=JSON.parse(d).choices[0].delta.content||"";if(c){full+=c;tx.textContent=full;window.scrollTo(0,document.body.scrollHeight)}}catch(e){}}}
+      try{var c=JSON.parse(d).choices[0].delta.content||"";if(c){full+=c;tx.textContent=priv?enc(full):full;window.scrollTo(0,document.body.scrollHeight)}}catch(e){}}}
   tx.classList.remove("cur");row.classList.remove("glitch");
   full=full.trim();convo.push({who:who,text:full});
-  var ws=b64words(full).filter(tryDecode);
-  if(ws.length){var b=el("button","dec","DECODE");b.onclick=function(){var out=ws.map(tryDecode).join(" ");var d=el("span","decoded",out);row.appendChild(d);b.remove()};row.appendChild(b)}
+  if(priv){var plain=full;var b=el("button","dec","DECODE");b.onclick=function(){row.appendChild(el("span","decoded",plain));b.remove()};row.appendChild(b)}
   return true;
 }
 </script></body></html>
