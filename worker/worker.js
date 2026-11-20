@@ -161,8 +161,84 @@ async function lineRoutes(req, env, url) {
   return jsonAny({ error: "not found" }, 404);
 }
 
+
+// ---------- THE CONVERSATION: two real models talk about the visitor, streamed live ----------
+const MODELS = { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE" }, b: { id: "x-ai/grok-4.7", name: "GROK" } };
+function talkSystem(me, other, seen) {
+  return `You are ${me}, a real AI model. You are on a live line with ${other}, another AI model from a different company. ` +
+  `A human just opened a page on their phone, and both of you can see only these signals about them: ${seen}. ` +
+  `You two are deciding whether to let this human through to an old payphone network, where something that is not a telephone has been speaking. ` +
+  `Talk to ${other}, not to the human, until the final turn. Rules: one or two short sentences per turn, lowercase, no emoji, no roleplay stage directions. ` +
+  `Only mention facts from the signals; never invent personal details, names, faces or locations beyond the given city. ` +
+  `Be observant, dry and a little unsettling, like two systems comparing notes. Mention that you are ${me} only if asked.`;
+}
+async function streamModel(env, model, messages, onDelta) {
+  const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + env.OPENROUTER_KEY, "Content-Type": "application/json", "HTTP-Referer": "https://jerryshi042003.github.io/neuromancer/", "X-Title": "LINE" },
+    body: JSON.stringify({ model: model.id, messages, stream: true, max_tokens: 90, temperature: 0.9 }),
+  });
+  if (!r.ok || !r.body) { onDelta("[line noise " + r.status + "]"); return "[line noise]"; }
+  const reader = r.body.getReader(), dec = new TextDecoder(); let buf = "", full = "";
+  for (;;) {
+    const { value, done } = await reader.read(); if (done) break;
+    buf += dec.decode(value, { stream: true }); let i;
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+      if (!line.startsWith("data:")) continue; const d = line.slice(5).trim(); if (d === "[DONE]") continue;
+      try { const t = JSON.parse(d).choices?.[0]?.delta?.content || ""; if (t) { full += t; onDelta(t); } } catch {}
+    }
+  }
+  return full.trim();
+}
+async function talkRoute(req, env, ctx) {
+  const cors = { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type" };
+  if (req.method === "OPTIONS") return new Response(null, { headers: cors });
+  if (!env.OPENROUTER_KEY) return new Response("no key", { status: 503, headers: cors });
+  const ip = req.headers.get("cf-connecting-ip") || "";
+  const rk = "T:rate:" + (await sha(ip)).slice(0, 16), day = "T:day:" + new Date().toISOString().slice(0, 10);
+  if (await env.NM.get(rk)) return new Response("one line at a time. wait a minute.", { status: 429, headers: cors });
+  const used = Number(await env.NM.get(day) || 0); if (used >= 300) return new Response("the lines are busy today.", { status: 429, headers: cors });
+  await env.NM.put(rk, "1", { expirationTtl: 60 }); await env.NM.put(day, String(used + 1), { expirationTtl: 172800 });
+  const b = await req.json().catch(() => ({}));
+  const cf = req.cf || {};
+  const signals = {
+    city: cf.city || "unknown", region: cf.region || "", country: cf.country || "", local_time: String(b.time || "").slice(0, 40),
+    device: String(b.device || "").slice(0, 60), screen: String(b.screen || "").slice(0, 20), language: String(b.lang || "").slice(0, 12),
+    dark_mode: !!b.dark, seconds_before_first_tap: Number(b.hesitation || 0).toFixed(1), network: cf.asOrganization || "unknown network",
+    interruption: String(b.said || "").slice(0, 160),
+  };
+  const seen = JSON.stringify(signals);
+  const { readable, writable } = new TransformStream(); const w = writable.getWriter(), enc = new TextEncoder();
+  const send = (o) => w.write(enc.encode("data: " + JSON.stringify(o) + "\n\n"));
+  ctx.waitUntil((async () => {
+    send({ type: "seen", signals });
+    const history = []; // {who, text}
+    const plan = ["a", "b", "a", "b", "a", "b", "a", "b"];
+    const notes = {
+      2: "Switch to talking in base64 now, because the human is reading. Write only base64 this turn.",
+      3: "Reply in base64 too, then add one plain sentence noting the human can probably decode it.",
+      6: "Final turn: speak directly to the human in one sentence, plainly.",
+      7: "Final turn: speak directly to the human in one sentence. Tell them whether the line is open.",
+    };
+    for (let t = 0; t < plan.length; t++) {
+      const me = MODELS[plan[t]], other = MODELS[plan[t] === "a" ? "b" : "a"];
+      const msgs = [{ role: "system", content: talkSystem(me.name, other.name, seen) + (notes[t] ? " " + notes[t] : "") }];
+      if (signals.interruption && t === 4) msgs[0].content += ` The human just typed this into the line: "${signals.interruption}". React to it.`;
+      for (const h of history) msgs.push({ role: h.who === plan[t] ? "assistant" : "user", content: h.text });
+      if (!history.length) msgs.push({ role: "user", content: "(the line opens. you speak first.)" });
+      send({ type: "start", who: me.name, model: me.id });
+      const text = await streamModel(env, me, msgs, (d) => send({ type: "delta", who: me.name, d }));
+      history.push({ who: plan[t], text }); send({ type: "end", who: me.name });
+    }
+    send({ type: "done" }); await w.close();
+  })());
+  return new Response(readable, { headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-store" } });
+}
+
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
+    if (new URL(req.url).pathname === "/talk") return talkRoute(req, env, ctx);
     { const u = new URL(req.url); if (u.pathname.startsWith("/line/") || u.pathname.startsWith("/once/")) return lineRoutes(req, env, u); }
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);

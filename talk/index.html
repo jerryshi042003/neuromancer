@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LINE</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#000;color:#e9e9e9;font:15px/1.5 Menlo,"SF Mono",ui-monospace,monospace;overscroll-behavior:none}
+body{padding:calc(env(safe-area-inset-top) + 16px) max(16px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 30px) max(16px,env(safe-area-inset-left))}
+.hdr{display:flex;justify-content:space-between;color:#777;font-size:11px;letter-spacing:.25em;margin-bottom:18px}
+#seen{border:1px solid #222;padding:12px;font-size:12px;color:#9a9a9a;display:none;margin-bottom:18px}
+#seen b{color:#fff;font-weight:500}
+#seen .k{color:#666}
+.turn{margin:0 0 16px;max-width:88%}
+.turn .who{font-size:10px;letter-spacing:.3em;color:#666;margin-bottom:3px}
+.turn .t{white-space:pre-wrap;word-break:break-word}
+.turn.b{margin-left:auto;text-align:right}
+.turn.b .t{color:#ff4d5e}
+.turn.final .t{font-size:18px;color:#fff}
+.cur::after{content:"█";animation:bl .8s steps(1) infinite;margin-left:1px}
+@keyframes bl{50%{opacity:0}}
+.b64{display:inline-block;margin-top:4px;font-size:10px;letter-spacing:.2em;color:#555;border:1px solid #333;padding:2px 6px;cursor:pointer;background:none;color:#888;font-family:inherit}
+#start{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;justify-content:center;padding:0 24px;gap:18px;z-index:5}
+#start h1{font-size:28px;margin:0;letter-spacing:.08em}
+#start p{color:#8a8a8a;margin:0}
+#say{background:#000;border:1px solid #333;color:#fff;font:inherit;padding:12px}
+#go{background:#fff;color:#000;border:0;padding:16px;font:600 15px Menlo,monospace;letter-spacing:.25em}
+#err{color:#ff4d5e;font-size:12px;min-height:1em}
+#end{display:none;margin-top:24px;color:#777;font-size:12px}
+</style></head><body>
+<div id="start">
+  <h1>LINE</h1>
+  <p>two AI models from two different companies are on this line. they can see a little about you. they will talk about it.</p>
+  <input id="say" maxlength="160" placeholder="say something into the line (optional)" autocomplete="off">
+  <button id="go">OPEN THE LINE</button>
+  <div id="err"></div>
+</div>
+<div class="hdr"><span>LINE · LIVE</span><span id="clk"></span></div>
+<div id="seen"></div>
+<div id="log"></div>
+<div id="end">the line went quiet.</div>
+<script>
+var API="https://neuromancer-read.jerryshi.workers.dev/talk", t0=performance.now();
+setInterval(function(){document.getElementById("clk").textContent=new Date().toLocaleTimeString("en-US",{hour12:false})},1000);
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function isB64(s){s=s.replace(/\s/g,"");return s.length>16&&/^[A-Za-z0-9+/]+=*$/.test(s)}
+var cur=null, curText=null, curWho=null, turns=0;
+document.getElementById("go").onclick=async function(){
+  var b=this; b.disabled=true; b.textContent="DIALING";
+  var payload={time:new Date().toString(),device:navigator.userAgent.replace(/\(([^)]*)\).*/,"$1"),screen:screen.width+"x"+screen.height,lang:navigator.language,
+    dark:matchMedia("(prefers-color-scheme: dark)").matches,hesitation:(performance.now()-t0)/1000,said:document.getElementById("say").value};
+  try{
+    var r=await fetch(API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
+    if(!r.ok){document.getElementById("err").textContent=(await r.text())||("line busy "+r.status);b.disabled=false;b.textContent="OPEN THE LINE";return}
+    document.getElementById("start").remove();
+    var rd=r.body.getReader(),dec=new TextDecoder(),buf="";
+    for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var i;
+      while((i=buf.indexOf("\n\n"))>=0){var ln=buf.slice(0,i);buf=buf.slice(i+2);if(ln.indexOf("data:")!==0)continue;handle(JSON.parse(ln.slice(5)))}}
+  }catch(e){document.getElementById("err").textContent="no carrier"}
+};
+function handle(m){
+  if(m.type==="seen"){var s=m.signals,box=document.getElementById("seen");box.style.display="block";
+    box.innerHTML="<div class=k>WHAT THEY CAN SEE</div>";
+    [["city",s.city+(s.region?", "+s.region:"")],["network",s.network],["local time",s.local_time.slice(0,24)],["device",s.device],["screen",s.screen],["language",s.language],["you hesitated",s.seconds_before_first_tap+" s"]].forEach(function(p){var d=el("div");d.appendChild(el("span","k",p[0]+"  "));d.appendChild(el("b",null,p[1]));box.appendChild(d)});
+    if(s.interruption){var d2=el("div");d2.appendChild(el("span","k","you said  "));d2.appendChild(el("b",null,s.interruption));box.appendChild(d2)}}
+  if(m.type==="start"){turns++;cur=el("div","turn "+(m.who==="CLAUDE"?"a":"b")+(turns>=7?" final":""));cur.appendChild(el("div","who",m.who+" · "+m.model));curText=el("div","t cur","");cur.appendChild(curText);document.getElementById("log").appendChild(cur);curWho=m.who;
+    try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}}
+  if(m.type==="delta"&&curText){curText.textContent+=m.d;window.scrollTo(0,document.body.scrollHeight)}
+  if(m.type==="end"&&curText){curText.classList.remove("cur");var words=curText.textContent.split(/\s+/).filter(isB64);
+    if(words.length){var btn=el("button","b64","DECODE");btn.onclick=function(){var t=curText.textContent;words.forEach(function(w){try{t=t.replace(w,"["+decodeURIComponent(escape(atob(w)))+"]")}catch(e){}});this.previousSibling.textContent=t;this.remove()};cur.appendChild(btn)}}
+  if(m.type==="done"){document.getElementById("end").style.display="block";window.scrollTo(0,document.body.scrollHeight)}
+}
+</script></body></html>
