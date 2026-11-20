@@ -5,3 +5,9 @@ compatibility_date = "2026-11-01"
 [[kv_namespaces]]
 binding = "NM"
 id = "b5affd84a68640e0a18107d472a6f503"
+
+[vars]
+VAPID_PUBLIC = "BMvIbWuh2neOv0NhwT3DBMihn5ySBwdCiUBEC_d82ej4vlTlDFzOR0zPT2eYPujidC8SAMOFPf2XtyQSfSMVFFw"
+
+[triggers]
+crons = ["* * * * *"]

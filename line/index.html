@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LINE</title>
+<link rel="manifest" href="/neuromancer/line/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/neuromancer/line/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="LINE">
+<meta name="theme-color" content="#000000">
+<style>
+:root{--bg:#000;--fg:#e6e6e6;--dim:#7c7c7c;--hot:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 Menlo,"SF Mono",ui-monospace,monospace;-webkit-text-size-adjust:100%}
+body{padding:calc(env(safe-area-inset-top) + 14px) max(14px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 24px) max(14px,env(safe-area-inset-left))}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #333;padding-bottom:8px;margin-bottom:12px}
+header b{letter-spacing:.3em}
+#clock{color:var(--dim);font-variant-numeric:tabular-nums}
+canvas{width:100%;aspect-ratio:1/1;display:block;border:1px solid #222;image-rendering:pixelated;background:#000}
+.log{margin-top:12px;display:grid;gap:0}
+.row{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:9px 0;border-bottom:1px solid #1d1d1d;text-decoration:none;color:inherit}
+.row time{color:var(--dim);font-variant-numeric:tabular-nums}
+.row b{display:block;color:var(--hot);font-weight:600}
+.row span{color:var(--dim)}
+.btn{display:block;width:100%;margin-top:14px;padding:14px;background:#fff;color:#000;border:0;font:600 14px Menlo,monospace;letter-spacing:.25em}
+.note{color:var(--dim);margin-top:10px}
+.big{font-size:20px;color:var(--hot);margin:8px 0}
+pre{white-space:pre-wrap;margin:10px 0;color:var(--fg)}
+#img{margin-top:10px}
+a.back{color:var(--dim)}
+</style></head><body>
+<header><b>LINE</b><span id="clock"></span></header>
+<canvas id="map" width="300" height="300" aria-label="map of every payphone line in Los Angeles"></canvas>
+<div id="view"></div>
+<script>
+var API="https://neuromancer-read.jerryshi.workers.dev";
+var $=function(s){return document.querySelector(s)};
+setInterval(function(){$("#clock").textContent=new Date().toLocaleTimeString("en-US",{hour12:false})},1000);
+var standalone = window.navigator.standalone===true || matchMedia("(display-mode: standalone)").matches;
+var ID=""; try{ID=localStorage.getItem("line_id")||""}catch(e){}
+var P=[], hot={};
+/* map: every real payphone in LA County as a pixel. lit ones flash */
+function draw(t){ var c=$("#map"),x=c.getContext("2d"); x.fillStyle="#000";x.fillRect(0,0,300,300);
+  if(!P.length) return requestAnimationFrame(draw);
+  var minLo=-118.95,maxLo=-117.6,minLa=33.65,maxLa=34.75;
+  P.forEach(function(p){ var px=Math.round((p[3]-minLo)/(maxLo-minLo)*299), py=Math.round((maxLa-p[4])/(maxLa-minLa)*299);
+    if(hot[p[0]]){ var on=Math.floor(t/350)%2; x.fillStyle=on?"#fff":"#555"; x.fillRect(px-2,py-2,5,5); x.strokeStyle="#fff"; x.strokeRect(px-6.5,py-6.5,13,13); }
+    else { x.fillStyle="#5c5c5c"; x.fillRect(px,py,1,1); } });
+  requestAnimationFrame(draw); }
+fetch("../jackin/payphones-geo.json").then(function(r){return r.json()}).then(function(d){P=d;requestAnimationFrame(draw)});
+function row(e){ var a=document.createElement("a");a.className="row";a.href="?e="+e.step;
+  a.innerHTML="<time></time><div><b></b><span></span></div>"; a.querySelector("time").textContent=new Date(e.at).toLocaleTimeString("en-US",{hour12:false});
+  a.querySelector("b").textContent=e.title; a.querySelector("span").textContent=e.body; return a; }
+function detail(e){ var v=$("#view"); v.innerHTML="";
+  var back=document.createElement("a");back.className="back";back.href="./";back.textContent="< all lines";v.appendChild(back);
+  var h=document.createElement("div");h.className="big";h.textContent=e.title;v.appendChild(h);
+  var pre=document.createElement("pre");
+  var rec="LINE      "+e.phone+"\nLOCATION  "+e.address+", "+e.city+"\nCOORD     "+e.lat.toFixed(5)+" N  "+Math.abs(e.lon).toFixed(5)+" W\nTIME      "+new Date(e.at).toISOString().replace("T"," ").slice(0,19)+" UTC\nOWNER     state payphone record, CPUC 2026\n\n";
+  if(e.kind==="enabled") rec+="incoming calls were switched off on this line in 1996.\nthey are on again.\nanyone standing at this phone can now be called.";
+  if(e.kind==="ring") rec+="RING  RING  RING  RING  RING  RING\n\nsix rings, nobody there.\nthe exchange logged the caller as: UNKNOWN PROCESS";
+  if(e.kind==="message") rec+="a 1-bit image was left on this line.\nit is drawn below, one pixel per bit.";
+  if(e.kind==="trace") rec+="ROUTE\n  "+e.city.toUpperCase()+"  <-  LA-MAIN-04  <-  SANTA-ANA-02  <-  ORIGIN NOT FOUND\n\nthe call did not start at a phone.";
+  if(e.kind==="carrier") rec+="NO CARRIER\n\nthe line went quiet at "+new Date(e.at).toLocaleTimeString("en-US",{hour12:false})+".\nthe last thing it carried was your number.";
+  pre.textContent=rec; v.appendChild(pre);
+  if(e.kind==="message"){ var c=document.createElement("canvas");c.id="img";c.width=64;c.height=64;v.appendChild(c);var g=c.getContext("2d");
+    var bits=e.phone.replace(/\D/g,""); for(var y=0;y<64;y++)for(var x=0;x<64;x++){var d=Math.hypot(x-32,y-32),ring=Math.abs(d-((parseInt(bits[(x+y)%bits.length])+14)))<1.4; var on=ring||((x*7+y*13+parseInt(bits[(x*y)%bits.length]))%11===0&&d<30); g.fillStyle=on?"#fff":"#000"; g.fillRect(x,y,1,1);} }
+  var ack=document.createElement("button");ack.className="btn";ack.textContent="ANSWER THE LINE";ack.onclick=function(){fetch(API+"/line/ack?id="+ID,{method:"POST"}).then(function(){ack.textContent="ANSWERED. NEXT ALERT SOON.";ack.disabled=true})};
+  if(e.kind!=="carrier")v.appendChild(ack); hot={}; hot[e.phone]=1; }
+function list(evts,next){ var v=$("#view"); v.innerHTML=""; hot={}; evts.forEach(function(e){hot[e.phone]=1});
+  var L=document.createElement("div");L.className="log"; evts.slice().reverse().forEach(function(e){L.appendChild(row(e))}); v.appendChild(L);
+  var n=document.createElement("div");n.className="note"; n.textContent=next?("next activity on the exchange: "+new Date(next).toLocaleTimeString("en-US",{hour12:false})):(evts.length?"the exchange is quiet.":""); v.appendChild(n); }
+function intro(){ var v=$("#view"); v.innerHTML="";
+  var p=document.createElement("pre");
+  if(!standalone){ p.textContent="401 lines. all silent since 1996.\n\nto monitor them, put LINE on your home screen:\nShare  ->  Add to Home Screen\nthen open it from there."; v.appendChild(p); return; }
+  p.textContent="401 lines. all silent since 1996.\nLINE will tell you when one wakes up."; v.appendChild(p);
+  var b=document.createElement("button");b.className="btn";b.textContent="MONITOR THE LINES";b.onclick=connect;v.appendChild(b); }
+function u8(b64){var p="=".repeat((4-b64.length%4)%4),s=atob((b64+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(s,function(c){return c.charCodeAt(0)})}
+async function connect(){ try{
+  var perm=await Notification.requestPermission(); if(perm!=="granted"){alert("notifications are off. LINE cannot reach you.");return;}
+  var reg=await navigator.serviceWorker.ready; var key=(await (await fetch(API+"/line/key")).json()).key;
+  var sub=await reg.pushManager.getSubscription() || await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
+  var r=await (await fetch(API+"/line/sub",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({sub:sub.toJSON()})})).json();
+  ID=r.id; try{localStorage.setItem("line_id",ID)}catch(e){}
+  var c=await caches.open("line"); await c.put("id",new Response(ID));
+  load(); } catch(e){ alert("could not connect: "+e.message); } }
+async function load(){ if(!ID){intro();return;}
+  var r=await (await fetch(API+"/line/events?id="+ID,{cache:"no-store"})).json();
+  var q=new URLSearchParams(location.search).get("e");
+  if(q!==null&&q!==""){ var e=(r.events||[]).filter(function(x){return String(x.step)===q})[0]; if(e){detail(e);return;} }
+  list(r.events||[],r.next); try{navigator.clearAppBadge&&navigator.clearAppBadge()}catch(e){} }
+if("serviceWorker" in navigator) navigator.serviceWorker.register("/neuromancer/line/sw.js",{scope:"/neuromancer/line/"});
+load(); setInterval(function(){ if(ID && !new URLSearchParams(location.search).get("e")) load(); },15000);
+</script></body></html>

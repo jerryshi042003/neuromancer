@@ -61,8 +61,70 @@ const DISK = (frag) => "NEUROMANCER / DISK 1 OF 1\n\nthe screen was grey before 
 async function getBytes(url) { const r = await fetch(url, { cf: { cacheTtl: 300 } }); return new Uint8Array(await r.arrayBuffer()); }
 const fileHeaders = (type, name) => ({ "content-type": type, "cache-control": "no-store", "access-control-allow-origin": "*", ...(name ? { "content-disposition": 'attachment; filename="' + name + '"' } : {}) });
 
+
+// ---------- line alerts: real web push to installed phones ----------
+const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+let vapidKey = null;
+async function vapidJWT(env, endpoint) {
+  if (!vapidKey) vapidKey = await crypto.subtle.importKey("jwk", JSON.parse(env.VAPID_PRIVATE_JWK), { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+  const aud = new URL(endpoint).origin, enc = (o) => b64u(new TextEncoder().encode(JSON.stringify(o)));
+  const unsigned = enc({ typ: "JWT", alg: "ES256" }) + "." + enc({ aud, exp: Math.floor(Date.now() / 1000) + 12 * 3600, sub: "https://jerryshi042003.github.io/neuromancer/" });
+  const sig = await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, vapidKey, new TextEncoder().encode(unsigned));
+  return unsigned + "." + b64u(sig);
+}
+async function sendPush(env, sub) {           // no payload: the phone fetches the message itself
+  const jwt = await vapidJWT(env, sub.endpoint);
+  const r = await fetch(sub.endpoint, { method: "POST", headers: { Authorization: "vapid t=" + jwt + ", k=" + env.VAPID_PUBLIC, TTL: "86400", Urgency: "high", "Content-Length": "0" } });
+  return r.status;
+}
+let PHONES = null;
+async function phones() { if (!PHONES) PHONES = await (await fetch("https://jerryshi042003.github.io/neuromancer/jackin/payphones-geo.json")).json(); return PHONES; }
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const STEPS = [                                // [delay after previous, builder]
+  [20e3,  (p) => ({ kind: "enabled", title: "LINE " + p[0], body: "INCOMING ENABLED · " + p[1].toUpperCase() + ", " + p[2].toUpperCase() })],
+  [90e3,  (p) => ({ kind: "ring", title: "LINE " + p[0] + " · RING DETECTED", body: "6 RINGS · NO ANSWER · " + p[2].toUpperCase() })],
+  [180e3, (p) => ({ kind: "message", title: "MESSAGE WAITING", body: "a 1-bit image was left on line " + p[0] + ". open to read it." })],
+  [300e3, (p) => ({ kind: "trace", title: "TRACE COMPLETE", body: "call routed through 4 exchanges. last hop: " + p[2].toUpperCase() })],
+  [600e3, (p) => ({ kind: "carrier", title: "NO CARRIER", body: "line " + p[0] + " went quiet. open for the last record." })],
+];
+async function advance(env, id, rec, now) {
+  const step = rec.step; if (step >= STEPS.length) return;
+  const all = await phones(); const p = step === 0 ? (all.find((x) => x[0] === "310-637-8714") || pick(all)) : pick(all);
+  const ev = Object.assign(STEPS[step][1](p), { step, phone: p[0], address: p[1], city: p[2], lon: p[3], lat: p[4], at: new Date(now).toISOString() });
+  rec.events = (rec.events || []).concat([ev]); rec.step = step + 1;
+  rec.next = rec.step < STEPS.length ? now + STEPS[rec.step][0] : null;
+  await env.NM.put("S:" + id, JSON.stringify(rec));
+  const st = await sendPush(env, rec.sub).catch(() => 0);
+  if (st === 404 || st === 410) await env.NM.delete("S:" + id);   // subscription gone
+  return st;
+}
+const jsonAny = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "cache-control": "no-store" } });
+async function lineRoutes(req, env, url) {
+  if (req.method === "OPTIONS") return new Response(null, { headers: { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "access-control-allow-methods": "GET,POST" } });
+  if (url.pathname === "/line/key") return jsonAny({ key: env.VAPID_PUBLIC });
+  if (url.pathname === "/line/sub" && req.method === "POST") {
+    const b = await req.json(); if (!b.sub || !b.sub.endpoint) return jsonAny({ error: "no subscription" }, 400);
+    const id = (await sha(b.sub.endpoint)).slice(0, 20);
+    const old = await env.NM.get("S:" + id, "json");
+    const rec = old || { sub: b.sub, step: 0, events: [], next: Date.now() + STEPS[0][0] };
+    rec.sub = b.sub; await env.NM.put("S:" + id, JSON.stringify(rec));
+    return jsonAny({ id, step: rec.step, next: rec.next });
+  }
+  const id = url.searchParams.get("id") || "";
+  const rec = id ? await env.NM.get("S:" + id, "json") : null;
+  if (url.pathname === "/line/events") return jsonAny({ events: rec ? rec.events : [], next: rec ? rec.next : null });
+  if (url.pathname === "/line/latest") { const e = rec && rec.events.length ? rec.events[rec.events.length - 1] : null; return jsonAny({ event: e, count: rec ? rec.events.length : 0, total: STEPS.length }); }
+  if (url.pathname === "/line/ack" && req.method === "POST" && rec) {          // answering pulls the next alert forward
+    if (rec.next) { rec.next = Math.min(rec.next, Date.now() + 15e3); await env.NM.put("S:" + id, JSON.stringify(rec)); }
+    return jsonAny({ next: rec.next });
+  }
+  if (url.pathname === "/line/now" && req.method === "POST" && rec) { const st = await advance(env, id, rec, Date.now()); return jsonAny({ push: st, step: rec.step }); }
+  return jsonAny({ error: "not found" }, 404);
+}
+
 export default {
   async fetch(req, env) {
+    { const u = new URL(req.url); if (u.pathname.startsWith("/line/")) return lineRoutes(req, env, u); }
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/ring.ics") {      // calendar invite: tomorrow 5:00 PM Los Angeles
@@ -116,5 +178,15 @@ export default {
       return json({ status: "ok", fragment });
     }
     return json({ error: "not found" }, 404);
+  },
+  async scheduled(event, env, ctx) {
+    const now = Date.now(); let cursor;
+    do {
+      const page = await env.NM.list({ prefix: "S:", cursor }); cursor = page.list_complete ? null : page.cursor;
+      for (const k of page.keys) {
+        const rec = await env.NM.get(k.name, "json");
+        if (rec && rec.next && rec.next <= now + 30e3) ctx.waitUntil(advance(env, k.name.slice(2), rec, now));
+      }
+    } while (cursor);
   },
 };
