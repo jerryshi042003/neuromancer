@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Neuromancer Play</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:#e8e8e8;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif}
+body{padding:calc(env(safe-area-inset-top) + 20px) max(18px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 40px) max(18px,env(safe-area-inset-left))}
+.w{max-width:560px;margin:0 auto}
+h1{font:600 13px Menlo,monospace;letter-spacing:.35em;margin:0 0 26px;color:#9a9a9a}
+.step{border-top:1px solid #2a2a2a;padding:20px 0;display:grid;gap:10px}
+.n{font:12px Menlo,monospace;color:#777;letter-spacing:.2em}
+h2{margin:0;font-size:20px;font-weight:600}
+p{margin:0;color:#a8a8a8}
+.go{display:block;text-align:center;background:#fff;color:#000;text-decoration:none;font:600 15px Menlo,monospace;letter-spacing:.15em;padding:15px;border-radius:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sm{background:none;border:1px solid #444;color:#ddd;font:12px Menlo,monospace;letter-spacing:.1em;padding:9px 12px;border-radius:2px;cursor:pointer}
+.qr{background:#fff;padding:10px;width:max-content;border-radius:2px}
+.out{font:12px Menlo,monospace;color:#bbb;word-break:break-all;display:none;gap:10px}
+.note{font:12px Menlo,monospace;color:#777;margin-top:30px;border-top:1px solid #2a2a2a;padding-top:18px;line-height:1.7}
+</style></head><body><div class="w">
+<h1>NEUROMANCER / PLAY ON YOUR PHONE</h1>
+<div id="steps"></div>
+<div class="note" id="note"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var BASE="https://jerryshi042003.github.io/neuromancer/", API="https://neuromancer-read.jerryshi.workers.dev";
+var S=[
+ {to:"signal",n:"01  ARRIVAL",t:"The page that breaks",d:"A normal 1996 phone company page loads, then fails. Error boxes, the page tears, something takes the screen. Tap: the screen flashes and beeps in Morse and your phone ticks. The error codes are a message in hex.",url:BASE+"signal/"},
+ {to:"disk",n:"02  THE SITE",t:"The official site, dial-up and disk",d:"Click to connect: modem handshake, then the layered early-2000s author-site collage. The floppy in the corner flies into a 1-bit Mac that reads a real disk file.",url:BASE+"disk/"},
+ {to:"jackin",n:"03  THE HACK",t:"Break into the phone company",d:"Type a single quote into the login and watch it break, then get in. A terminal: find the root password in a hidden file and switch incoming calls back on for every real payphone in LA.",url:BASE+"jackin/"},
+ {to:"line",n:"04  YOUR PHONE",t:"LINE: alerts on your lock screen",d:"Share, Add to Home Screen, open LINE, tap MONITOR THE LINES, allow notifications. Real alerts arrive on a timer. One is a transmission that erodes and melts in front of you.",url:BASE+"line/"},
+ {n:"05  THE FILE",t:"A real floppy disk",d:"NEUROMANCER.img. Open on a Mac and it mounts as a disk. In the real version the file overwrites itself after one read.",url:API+"/disk.img",noOnce:1}
+];
+var root=document.getElementById("steps");
+S.forEach(function(s){ var d=document.createElement("section");d.className="step";
+  d.innerHTML='<div class="n"></div><h2></h2><p></p><a class="go" target="_self">OPEN</a><div class="row"><button class="sm qb">SHOW QR</button></div><div class="qr" style="display:none"></div><div class="out"></div>';
+  d.querySelector(".n").textContent=s.n;d.querySelector("h2").textContent=s.t;d.querySelector("p").textContent=s.d;d.querySelector(".go").href=s.url;
+  var qrBox=d.querySelector(".qr"), out=d.querySelector(".out");
+  function showQR(u){qrBox.innerHTML="";new QRCode(qrBox,{text:u,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});qrBox.style.display="block"}
+  d.querySelector(".qb").onclick=function(){ if(qrBox.style.display==="block"&&!out.textContent){qrBox.style.display="none";return} out.style.display="none";out.textContent="";showQR(s.url) };
+  if(!s.noOnce){ var b=document.createElement("button");b.className="sm";b.textContent="ONE-TIME LINK";d.querySelector(".row").appendChild(b);
+    b.onclick=async function(){ b.disabled=true; try{ var r=await (await fetch(API+"/once/new",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({to:s.to})})).json();
+      out.style.display="grid"; out.innerHTML=""; var a=document.createElement("a");a.href=r.url;a.textContent=r.url;a.style.color="#fff";out.appendChild(a);
+      var c=document.createElement("button");c.className="sm";c.textContent="COPY";c.onclick=function(){navigator.clipboard&&navigator.clipboard.writeText(r.url).then(function(){c.textContent="COPIED"}).catch(function(){})};out.appendChild(c);
+      showQR(r.url); }catch(e){ out.style.display="block"; out.textContent="could not make a link"; } b.disabled=false; }; }
+  root.appendChild(d); });
+document.getElementById("note").textContent="Everything replays for now; nothing deletes. A ONE-TIME LINK opens the experience once; open it again and you get NO CARRIER. Make a new one to replay. QR vs link: scan the QR with the iPhone camera, or tap OPEN. Same destination.";
+</script></body></html>
