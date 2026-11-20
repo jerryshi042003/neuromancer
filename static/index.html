@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuromancer</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated}</style>
+</head><body><canvas id="c"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const URL_="https://jerryshi042003.github.io/neuromancer/read/";
+const holder=document.createElement("div");
+new QRCode(holder,{text:URL_,width:256,height:256,correctLevel:QRCode.CorrectLevel.H});
+const c=document.getElementById("c"),x=c.getContext("2d");
+const W=320,H=240; c.width=W;c.height=H;
+const img=x.createImageData(W,H);
+let qr=null;
+function loadQR(){const q=holder.querySelector("canvas");if(!q)return setTimeout(loadQR,50);
+  const s=document.createElement("canvas");s.width=s.height=150;const sx=s.getContext("2d");
+  sx.fillStyle="#fff";sx.fillRect(0,0,150,150);sx.imageSmoothingEnabled=false;sx.drawImage(q,11,11,128,128);
+  qr=sx.getImageData(0,0,150,150).data;}
+loadQR();
+const PERIOD=9000, SHOW=1400;
+function frame(t){
+  const phase=t%PERIOD, reveal=qr&&phase<SHOW;
+  const ox=(W-150)>>1, oy=(H-150)>>1;
+  const d=img.data;
+  for(let y=0;y<H;y++){const roll=Math.random()<.02?60:0;for(let X=0;X<W;X++){
+    let v=Math.random()*255*(.55+.45*Math.random())+roll;
+    if(reveal&&X>=ox&&X<ox+150&&y>=oy&&y<oy+150){
+      const q=qr[((y-oy)*150+(X-ox))*4]; v = q<128 ? v*.12 : 175+v*.3; }
+    const i=(y*W+X)*4;d[i]=d[i+1]=d[i+2]=v>255?255:v;d[i+3]=255;}}
+  x.putImageData(img,0,0);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script></body></html>

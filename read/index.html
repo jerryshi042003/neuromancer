@@ -1,42 +1,90 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Neuromancer</title>
+<link rel="manifest" href="/neuromancer/manifest.webmanifest">
+<meta name="theme-color" content="#050607"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Neuromancer">
+<link rel="icon" href="/neuromancer/icon.svg">
 <style>
-:root{--bg:#050607;--fg:#d7dde2;--dim:#6b747c;--accent:#4fe3c1}
+:root{--bg:#050607;--fg:#d7dde2;--dim:#6b747c;--accent:#4fe3c1;--err:#e36b4f}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--fg);font:18px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+body{background:var(--bg);color:var(--fg);font:18px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden}
 .box{width:100%;max-width:560px}
-.clue{color:var(--dim);margin-bottom:24px}
-input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--dim);color:var(--accent);font:inherit;padding:8px 0;outline:none;letter-spacing:.2em}
-#err{color:#e36b4f;min-height:1.7em;margin-top:12px;font-size:14px}
-#scroll{height:60vh;overflow:hidden;position:relative;display:none}
+.clue{color:var(--dim);margin-bottom:28px;white-space:pre-line}
+.row{display:flex;gap:12px}
+input{flex:1;min-width:0;background:transparent;border:0;border-bottom:1px solid var(--dim);color:var(--accent);font:inherit;padding:8px 0;outline:none;letter-spacing:.2em}
+button{background:transparent;border:1px solid var(--accent);color:var(--accent);font:inherit;font-size:14px;letter-spacing:.15em;padding:8px 16px;cursor:pointer}
+#err{color:var(--err);min-height:1.7em;margin-top:12px;font-size:14px}
+.hide{display:none!important}
+#count{font-size:clamp(64px,22vw,160px);color:var(--accent);text-align:center;line-height:1}
+#countlbl{text-align:center;color:var(--dim);margin-top:16px}
+#scroll{height:62vh;overflow:hidden;position:relative;-webkit-mask:linear-gradient(transparent,#000 15%,#000 85%,transparent)}
 #text{position:absolute;left:0;right:0;top:100%;white-space:pre-wrap}
-#gone{display:none;color:var(--dim)}
-</style></head><body><div class="box">
-<div id="gate">
-  <p class="clue">The static had a word in it. Type it.</p>
-  <input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="code">
-  <p id="err"></p>
-</div>
-<div id="scroll"><div id="text"></div></div>
-<p id="gone">This page has already been read.</p>
+#burn{position:fixed;inset:0;pointer-events:none}
+#gone{color:var(--dim);text-align:center}
+</style></head><body>
+<canvas id="burn"></canvas>
+<div class="box">
+  <div id="gate">
+    <p class="clue" id="clue"></p>
+    <div class="row"><input id="code" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="code" placeholder="_"><button id="go">ENTER</button></div>
+    <p id="err"></p>
+  </div>
+  <div id="countdown" class="hide"><div id="count">10</div><p id="countlbl">find something to write with.</p></div>
+  <div id="scroll" class="hide"><div id="text"></div></div>
+  <p id="gone" class="hide">this was already read on this device.</p>
 </div>
 <script>
 const HASH="eb08c8f36a6259215a0c507a10338841d067c3c66814449593bfd98f0adc010a";
-const FRAGS=["fragment 1 of 5: the first number is the year the book came out.","fragment 2 of 5: the phone that rings is near water.","fragment 3 of 5: listen for the third word, not the first.","fragment 4 of 5: the time is the sky's color, not the clock's.","fragment 5 of 5: bring someone. one person cannot hear it all."];
 const KEY="nm_read_v1";
-const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(){try{localStorage.setItem(KEY,"1")}catch(e){}}};
-const $=id=>document.getElementById(id);
-if(store.get()){ $("gate").style.display="none"; $("gone").style.display="block"; }
+const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(v){try{localStorage.setItem(KEY,v)}catch(e){}}};
+const $=id=>document.getElementById(id), show=id=>$(id).classList.remove("hide"), hide=id=>$(id).classList.add("hide");
+
+// LA sunset (NOAA sunrise equation), minutes from local midnight
+function laSunset(d){const lat=34.05,lng=-118.24,rad=Math.PI/180;
+  const n=Math.floor(d/864e5-10957.5+0.0008), J=n-lng/360, M=(357.5291+0.98560028*J)%360,
+  C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad), L=(M+C+282.9372)%360,
+  Jt=2451545+J+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*L*rad), dec=Math.asin(Math.sin(L*rad)*Math.sin(23.44*rad)),
+  w=Math.acos((Math.sin(-0.833*rad)-Math.sin(lat*rad)*Math.sin(dec))/(Math.cos(lat*rad)*Math.cos(dec)))/rad,
+  set=new Date((Jt+w/360-2440587.5)*864e5);
+  return set;}
+const now=new Date(), sunset=laSunset(now), mins=(now-sunset)/6e4;
+const atSunset=Math.abs(mins)<=30, night=mins>30;
+
+$("clue").textContent = atSunset
+  ? "the sky is the color of the static now.\nthe word is the way in."
+  : night
+  ? "the city is asleep. the word still works.\ncome back when the sky turns grey."
+  : "the static had a word in it.\ncome back at sunset for more.";
+
+const FRAG_DAY=["fragment 1 of 5: the first number is the year the book came out.","fragment 2 of 5: the phone that rings is near water.","fragment 3 of 5: listen for the third word, not the first.","fragment 4 of 5: the time is the sky's color, not the clock's.","fragment 5 of 5: bring someone. one person cannot hear it all."];
+const FRAG_SUNSET="sunset fragment: tonight, a phone rings. the place is the number you put together.";
+
+if(store.get()){hide("gate");show("gone");}
+
 async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-$("code").addEventListener("keydown",async e=>{
-  if(e.key!=="Enter")return;
-  if(await sha(e.target.value.trim().toLowerCase())!==HASH){$("err").textContent="no.";return;}
-  store.set();
-  const frag=FRAGS[Math.floor(Math.random()*FRAGS.length)];
-  $("gate").style.display="none"; $("scroll").style.display="block";
-  const t=$("text"); t.textContent="you are reading this once.\n\n"+frag+"\n\nremember it. it will not come back.";
-  const h=$("scroll").clientHeight, total=h+t.offsetHeight, ms=total*35;
-  t.animate([{transform:"translateY(0)"},{transform:"translateY(-"+total+"px)"}],{duration:ms,easing:"linear",fill:"forwards"}).onfinish=()=>{t.textContent="";$("scroll").style.display="none";$("gone").style.display="block";};
-});
+async function tryCode(){
+  if(await sha($("code").value.trim().toLowerCase())!==HASH){$("err").textContent="no.";return;}
+  store.set(new Date().toISOString());
+  const frag = atSunset ? FRAG_SUNSET : FRAG_DAY[Math.floor(Math.random()*FRAG_DAY.length)];
+  hide("gate");show("countdown");
+  let n=10;$("count").textContent=n;
+  const iv=setInterval(()=>{n--; $("count").textContent=n; if(n<=0){clearInterval(iv);hide("countdown");play(frag);}},1000);
+}
+$("go").addEventListener("click",tryCode);
+$("code").addEventListener("keydown",e=>{if(e.key==="Enter")tryCode();});
+
+function play(frag){
+  show("scroll");
+  const t=$("text"); t.textContent="you are reading this once.\n\n"+frag+"\n\nwrite it down.\nit will not come back.";
+  const total=$("scroll").clientHeight+t.offsetHeight;
+  t.animate([{transform:"translateY(0)"},{transform:"translateY(-"+total+"px)"}],{duration:total*38,easing:"linear",fill:"forwards"})
+   .onfinish=()=>{burn(()=>{t.textContent="";hide("scroll");show("gone");});};
+}
+function burn(done){
+  const c=$("burn"),x=c.getContext("2d");c.width=innerWidth/4|0;c.height=innerHeight/4|0;c.style.width="100vw";c.style.height="100vh";c.style.imageRendering="pixelated";
+  const img=x.createImageData(c.width,c.height);let f=0;
+  (function step(){const a=f<40?f/40:Math.max(0,1-(f-40)/40);
+    for(let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=a*255;}
+    x.putImageData(img,0,0); if(f===40)done(); if(++f<80)requestAnimationFrame(step); else x.clearRect(0,0,c.width,c.height);})();
+}
 </script></body></html>
