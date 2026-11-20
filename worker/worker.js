@@ -84,6 +84,7 @@ const STEPS = [                                // [delay after previous, builder
   [20e3,  (p) => ({ kind: "enabled", title: "LINE " + p[0], body: "INCOMING ENABLED · " + p[1].toUpperCase() + ", " + p[2].toUpperCase() })],
   [90e3,  (p) => ({ kind: "ring", title: "LINE " + p[0] + " · RING DETECTED", body: "6 RINGS · NO ANSWER · " + p[2].toUpperCase() })],
   [180e3, (p) => ({ kind: "message", title: "MESSAGE WAITING", body: "a 1-bit image was left on line " + p[0] + ". open to read it." })],
+  [120e3, (p) => ({ kind: "transmission", title: "TRANSMISSION · 10:00", body: "a recording was left on line " + p[0] + ". it erases itself in ten minutes.", ttl: 600e3 })],
   [300e3, (p) => ({ kind: "trace", title: "TRACE COMPLETE", body: "call routed through 4 exchanges. last hop: " + p[2].toUpperCase() })],
   [600e3, (p) => ({ kind: "carrier", title: "NO CARRIER", body: "line " + p[0] + " went quiet. open for the last record." })],
 ];
@@ -91,6 +92,7 @@ async function advance(env, id, rec, now) {
   const step = rec.step; if (step >= STEPS.length) return;
   const all = await phones(); const p = step === 0 ? (all.find((x) => x[0] === "310-637-8714") || pick(all)) : pick(all);
   const ev = Object.assign(STEPS[step][1](p), { step, phone: p[0], address: p[1], city: p[2], lon: p[3], lat: p[4], at: new Date(now).toISOString() });
+  if (ev.ttl) { ev.expires = now + ev.ttl; delete ev.ttl; }
   rec.events = (rec.events || []).concat([ev]); rec.step = step + 1;
   rec.next = rec.step < STEPS.length ? now + STEPS[rec.step][0] : null;
   await env.NM.put("S:" + id, JSON.stringify(rec));
@@ -112,6 +114,27 @@ async function lineRoutes(req, env, url) {
   }
   const id = url.searchParams.get("id") || "";
   const rec = id ? await env.NM.get("S:" + id, "json") : null;
+  if (url.pathname === "/line/transmission") {   // the server decides when the recording is gone
+    const step = Number(url.searchParams.get("step")); const e = rec && rec.events.find((x) => x.step === step);
+    if (!e || !e.expires) return jsonAny({ error: "no transmission" }, 404);
+    if (Date.now() > e.expires) return jsonAny({ gone: true, expired: e.expires }, 410);
+    return jsonAny({ gone: false, expires: e.expires, now: Date.now(), phone: e.phone, address: e.address, city: e.city, lon: e.lon, lat: e.lat });
+  }
+  if (url.pathname === "/line/board") {            // a shared place to ask about it
+    if (req.method === "POST") {
+      const b = await req.json().catch(() => ({})); const t = String(b.text || "").replace(/\s+/g, " ").trim().slice(0, 240);
+      if (!t) return jsonAny({ error: "empty" }, 400);
+      const ipk = "B:rate:" + (await sha(req.headers.get("cf-connecting-ip") || "")).slice(0, 16);
+      if (await env.NM.get(ipk)) return jsonAny({ error: "slow down" }, 429);
+      await env.NM.put(ipk, "1", { expirationTtl: 60 });
+      const key = "B:" + String(9999999999999 - Date.now()).padStart(13, "0") + ":" + crypto.randomUUID().slice(0, 6);
+      await env.NM.put(key, JSON.stringify({ t, at: Date.now(), by: "line-" + (await sha(req.headers.get("cf-connecting-ip") || "x")).slice(0, 4) }));
+      return jsonAny({ ok: true });
+    }
+    const l = await env.NM.list({ prefix: "B:0", limit: 60 });
+    const posts = (await Promise.all(l.keys.map((k) => env.NM.get(k.name, "json")))).filter(Boolean);
+    return jsonAny({ posts });
+  }
   if (url.pathname === "/line/events") return jsonAny({ events: rec ? rec.events : [], next: rec ? rec.next : null });
   if (url.pathname === "/line/latest") { const e = rec && rec.events.length ? rec.events[rec.events.length - 1] : null; return jsonAny({ event: e, count: rec ? rec.events.length : 0, total: STEPS.length }); }
   if (url.pathname === "/line/ack" && req.method === "POST" && rec) {          // answering pulls the next alert forward
