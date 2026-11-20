@@ -1,0 +1,48 @@
+name: LINE
+options:
+  bundleIdPrefix: io.github.jerryshi042003
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: 39225XZQP2
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  LINE:
+    type: application
+    platform: iOS
+    sources: [App, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.jerryshi042003.line
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: Cracked
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: LINE
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarHidden: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - target: LINEWidgets
+  LINEWidgets:
+    type: app-extension
+    platform: iOS
+    sources: [Widget, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.jerryshi042003.line.widgets
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: LINE
+        INFOPLIST_KEY_NSExtension: {NSExtensionPointIdentifier: com.apple.widgetkit-extension}
+        TARGETED_DEVICE_FAMILY: "1"
+    info:
+      path: Widget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
