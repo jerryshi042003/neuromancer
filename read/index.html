@@ -35,8 +35,7 @@ button{background:transparent;border:1px solid var(--accent);color:var(--accent)
   <p id="gone" class="hide">this was already read on this device.</p>
 </div>
 <script>
-const HASH="eb08c8f36a6259215a0c507a10338841d067c3c66814449593bfd98f0adc010a";
-const KEY="nm_read_v1";
+const KEY="nm_read_L"+(new URLSearchParams(location.search).get("level")??"4");
 const store={get(){try{return localStorage.getItem(KEY)}catch(e){return null}},set(v){try{localStorage.setItem(KEY,v)}catch(e){}}};
 const $=id=>document.getElementById(id), show=id=>$(id).classList.remove("hide"), hide=id=>$(id).classList.add("hide");
 
@@ -57,21 +56,29 @@ $("clue").textContent = atSunset
   ? "the city is asleep. the word still works.\ncome back when the sky turns grey."
   : "the static had a word in it.\ncome back at sunset for more.";
 
-const FRAG_DAY=["fragment 1 of 5: the first number is the year the book came out.","fragment 2 of 5: the phone that rings is near water.","fragment 3 of 5: listen for the third word, not the first.","fragment 4 of 5: the time is the sky's color, not the clock's.","fragment 5 of 5: bring someone. one person cannot hear it all."];
-const FRAG_SUNSET="sunset fragment: tonight, a phone rings. the place is the number you put together.";
 
 // a different clue every 10 seconds, same for everyone at that moment
 const TICKS=["the first letter is a j.","the word has six letters.","it is something you do to a phone line.","the second half is a preposition.","say it like a hacker would.","it ends where most things begin: in.","the word is two words.","the book says it before every run.","it starts with the same letter as jaguar.","you plug something in. what is the slang?"];
 function tick(){const w=Math.floor(Date.now()/10000);const r=(Date.now()%10000)/10000;
   $("tick").textContent="clue "+(w%TICKS.length+1)+" of "+TICKS.length+": "+TICKS[w%TICKS.length];$("bar").style.width=(100-r*100)+"%";requestAnimationFrame(tick);}
 tick();
-if(store.get()){hide("gate");show("gone");}
+if(LEVEL>=1&&store.get()){hide("gate");show("gone");}
 
-async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const API="https://neuromancer-read.jerryshi.workers.dev";
+const LEVEL=Math.max(0,Math.min(6,parseInt(new URLSearchParams(location.search).get("level")??"4",10)||0));
+function did(){try{let v=localStorage.getItem("nm_did");if(!v){v=crypto.randomUUID();localStorage.setItem("nm_did",v);}return v;}catch(e){return ""}}
+let FP="";
+const fpReady=import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@5.3.0/+esm").then(m=>m.default.load()).then(a=>a.get()).then(r=>{FP=r.visitorId}).catch(()=>{});
+async function api(path,extra){await fpReady;const r=await fetch(API+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({level:LEVEL,did:did(),fp:FP,...extra})});return r.json();}
+if(LEVEL>=2)api("/status",{}).then(r=>{if(r.read){hide("gate");show("gone");}}).catch(()=>{});
 async function tryCode(){
-  if(await sha($("code").value.trim().toLowerCase())!==HASH){$("err").textContent="no.";return;}
-  store.set(new Date().toISOString());
-  const frag = atSunset ? FRAG_SUNSET : FRAG_DAY[Math.floor(Math.random()*FRAG_DAY.length)];
+  $("err").textContent="";
+  let r; try{ r=await api("/enter",{code:$("code").value}); }catch(e){ $("err").textContent="the line is dead. try again."; return; }
+  if(r.status==="wrong"){$("err").textContent="no.";return;}
+  if(r.status==="read"){hide("gate");show("gone");return;}
+  if(r.status==="taken"){$("err").textContent="someone already read this one.";return;}
+  if(LEVEL>=1)store.set(new Date().toISOString());
+  const frag=r.fragment;
   hide("gate");show("countdown");
   let n=10;$("count").textContent=n;
   const iv=setInterval(()=>{n--; $("count").textContent=n; if(n<=0){clearInterval(iv);hide("countdown");play(frag);}},1000);

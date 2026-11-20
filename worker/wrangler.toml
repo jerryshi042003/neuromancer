@@ -1,0 +1,7 @@
+name = "neuromancer-read"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+[[kv_namespaces]]
+binding = "NM"
+id = "b5affd84a68640e0a18107d472a6f503"
