@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuromancer</title>
+<meta name="description" content="Neuromancer is a game played on the payphones of Los Angeles.">
+<style>
+:root{--bg:#050607;--fg:#d7dde2;--dim:#6b747c;--accent:#4fe3c1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:flex;flex-direction:column;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:760px;margin:0 auto;padding:64px 20px}
+h1{font-size:clamp(40px,11vw,96px);letter-spacing:.08em;font-weight:600;line-height:1}
+h1 span{color:var(--accent)}
+.lede{margin-top:24px;font-size:clamp(17px,2.6vw,22px);color:var(--fg)}
+.ring{margin-top:48px;color:var(--accent);font-size:clamp(18px,3vw,24px);min-height:1.6em}
+.ring:after{content:"_";animation:b 1s steps(1) infinite}
+@keyframes b{50%{opacity:0}}
+ol{margin-top:56px;list-style:none;display:grid;gap:14px;counter-reset:s}
+li{counter-increment:s;display:flex;gap:16px;color:var(--fg)}
+li:before{content:"0" counter(s);color:var(--dim)}
+footer{padding:24px 20px;text-align:center;color:var(--dim);font-size:13px}
+@media (prefers-reduced-motion:reduce){.ring:after{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>NEURO<span>MANCER</span></h1>
+  <p class="lede">A game played on the payphones of Los Angeles.</p>
+  <p class="ring" id="ring"></p>
+  <ol>
+    <li>Find a payphone.</li>
+    <li>Wait for it to ring.</li>
+    <li>Answer. Follow the voice.</li>
+  </ol>
+</main>
+<footer>&copy; 2026 Neuromancer &middot; Los Angeles, CA</footer>
+<script>
+const lines=["the phone is ringing.","answer it.","jack in."];
+const el=document.getElementById("ring");
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let i=0;
+async function type(t){el.textContent="";for(const c of t){el.textContent+=c;await new Promise(r=>setTimeout(r,still?0:70));}}
+async function loop(){for(;;){await type(lines[i]);await new Promise(r=>setTimeout(r,2200));i=(i+1)%lines.length;}}
+loop();
+</script>
+</body>
+</html>
