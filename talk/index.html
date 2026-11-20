@@ -6,68 +6,90 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;background:#000;color:#e9e9e9;font:15px/1.5 Menlo,"SF Mono",ui-monospace,monospace;overscroll-behavior:none}
-body{padding:calc(env(safe-area-inset-top) + 16px) max(16px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 30px) max(16px,env(safe-area-inset-left))}
-.hdr{display:flex;justify-content:space-between;color:#777;font-size:11px;letter-spacing:.25em;margin-bottom:18px}
-#seen{border:1px solid #222;padding:12px;font-size:12px;color:#9a9a9a;display:none;margin-bottom:18px}
+body{padding:calc(env(safe-area-inset-top) + 14px) max(16px,env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 40px) max(16px,env(safe-area-inset-left))}
+#noise{position:fixed;inset:0;width:100%;height:100%;opacity:.07;pointer-events:none;image-rendering:pixelated;z-index:0}
+main{position:relative;z-index:1}
+.hdr{display:flex;justify-content:space-between;color:#666;font-size:10px;letter-spacing:.3em;margin-bottom:16px}
+.hdr .live{color:#ff4d5e}
+#seen{border-left:2px solid #333;padding:2px 0 2px 12px;font-size:12px;color:#8a8a8a;margin-bottom:22px;display:none}
+#seen div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #seen b{color:#fff;font-weight:500}
-#seen .k{color:#666}
-.turn{margin:0 0 16px;max-width:88%}
-.turn .who{font-size:10px;letter-spacing:.3em;color:#666;margin-bottom:3px}
-.turn .t{white-space:pre-wrap;word-break:break-word}
-.turn.b{margin-left:auto;text-align:right}
-.turn.b .t{color:#ff4d5e}
-.turn.final .t{font-size:18px;color:#fff}
-.cur::after{content:"█";animation:bl .8s steps(1) infinite;margin-left:1px}
+.turn{margin:0 0 18px;max-width:90%}
+.who{font-size:9px;letter-spacing:.32em;color:#5c5c5c;margin-bottom:4px}
+.t{white-space:pre-wrap;word-break:break-word}
+.turn.b{margin-left:auto;text-align:right}.turn.b .t{color:#ff5a68}
+.turn.final .t{font-size:19px;line-height:1.45;color:#fff}.turn.b.final .t{color:#ff6b78}
+.cur::after{content:"▌";animation:bl .7s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
-.b64{display:inline-block;margin-top:4px;font-size:10px;letter-spacing:.2em;color:#555;border:1px solid #333;padding:2px 6px;cursor:pointer;background:none;color:#888;font-family:inherit}
-#start{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;justify-content:center;padding:0 24px;gap:18px;z-index:5}
-#start h1{font-size:28px;margin:0;letter-spacing:.08em}
-#start p{color:#8a8a8a;margin:0}
-#say{background:#000;border:1px solid #333;color:#fff;font:inherit;padding:12px}
-#go{background:#fff;color:#000;border:0;padding:16px;font:600 15px Menlo,monospace;letter-spacing:.25em}
+.glitch .t{text-shadow:2px 0 #ff2d48,-2px 0 #2d7dff;animation:jit .12s steps(2) infinite}
+@keyframes jit{0%{transform:translateX(0)}50%{transform:translateX(-2px) skewX(-4deg)}}
+.dec{margin-top:6px;background:none;border:1px solid #333;color:#9a9a9a;font:10px Menlo,monospace;letter-spacing:.25em;padding:5px 9px}
+.decoded{display:block;margin-top:6px;color:#bdbdbd;font-size:13px;border-top:1px dashed #333;padding-top:6px}
+#start{position:fixed;inset:0;z-index:5;background:#000;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;padding:0 22px calc(env(safe-area-inset-bottom) + 34px)}
+#start h1{font-size:44px;margin:0;letter-spacing:.06em;line-height:1}
+#start p{color:#8a8a8a;margin:0;max-width:34ch}
+#say{background:#000;border:0;border-bottom:1px solid #444;color:#fff;font:inherit;padding:10px 0;outline:none}
+#go{background:#fff;color:#000;border:0;padding:17px;font:600 14px Menlo,monospace;letter-spacing:.3em}
 #err{color:#ff4d5e;font-size:12px;min-height:1em}
-#end{display:none;margin-top:24px;color:#777;font-size:12px}
+#end{display:none;margin-top:30px;border-top:1px solid #222;padding-top:16px;color:#777;font-size:12px}
+#end a{color:#fff}
 </style></head><body>
+<canvas id="noise" width="90" height="160"></canvas>
 <div id="start">
   <h1>LINE</h1>
-  <p>two AI models from two different companies are on this line. they can see a little about you. they will talk about it.</p>
-  <input id="say" maxlength="160" placeholder="say something into the line (optional)" autocomplete="off">
+  <p>two AI models, from two different companies, are on this line. they can see a little about you. they are going to talk about it, live.</p>
+  <input id="say" maxlength="160" placeholder="say something into the line (optional)" autocomplete="off" autocapitalize="off">
   <button id="go">OPEN THE LINE</button>
   <div id="err"></div>
 </div>
-<div class="hdr"><span>LINE · LIVE</span><span id="clk"></span></div>
-<div id="seen"></div>
-<div id="log"></div>
-<div id="end">the line went quiet.</div>
+<main>
+  <div class="hdr"><span class="live">● LIVE</span><span id="clk"></span></div>
+  <div id="seen"></div>
+  <div id="log"></div>
+  <div id="end"></div>
+</main>
 <script>
-var API="https://neuromancer-read.jerryshi.workers.dev/talk", t0=performance.now();
-setInterval(function(){document.getElementById("clk").textContent=new Date().toLocaleTimeString("en-US",{hour12:false})},1000);
+var API="https://neuromancer-read.jerryshi.workers.dev/talk/", t0=performance.now(), history=[], token=null;
+var nc=document.getElementById("noise"),nx=nc.getContext("2d"),ni=nx.createImageData(90,160);
+(function f(){for(var i=0;i<ni.data.length;i+=4){var v=Math.random()*255;ni.data[i]=ni.data[i+1]=ni.data[i+2]=v;ni.data[i+3]=255}nx.putImageData(ni,0,0);setTimeout(function(){requestAnimationFrame(f)},50)})();
+setInterval(function(){document.getElementById("clk").textContent=new Date().toLocaleTimeString("en-US",{hour12:false})},500);
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
-function isB64(s){s=s.replace(/\s/g,"");return s.length>16&&/^[A-Za-z0-9+/]+=*$/.test(s)}
-var cur=null, curText=null, curWho=null, turns=0;
+function sleep(m){return new Promise(function(r){setTimeout(r,m)})}
+function b64words(s){return (s.match(/[A-Za-z0-9+/]{16,}={0,2}/g)||[])}
+function tryDecode(w){try{var d=decodeURIComponent(escape(atob(w)));return /^[\x09\x0a\x0d\x20-\x7e -￿]+$/.test(d)?d:null}catch(e){return null}}
+async function typeLine(box,label,val){var d=el("div");d.appendChild(el("span",null,label+"  "));var b=el("b");d.appendChild(b);box.appendChild(d);for(var i=0;i<val.length;i++){b.textContent+=val[i];if(i%2===0)await sleep(12)}}
 document.getElementById("go").onclick=async function(){
-  var b=this; b.disabled=true; b.textContent="DIALING";
-  var payload={time:new Date().toString(),device:navigator.userAgent.replace(/\(([^)]*)\).*/,"$1"),screen:screen.width+"x"+screen.height,lang:navigator.language,
-    dark:matchMedia("(prefers-color-scheme: dark)").matches,hesitation:(performance.now()-t0)/1000,said:document.getElementById("say").value};
-  try{
-    var r=await fetch(API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
-    if(!r.ok){document.getElementById("err").textContent=(await r.text())||("line busy "+r.status);b.disabled=false;b.textContent="OPEN THE LINE";return}
-    document.getElementById("start").remove();
-    var rd=r.body.getReader(),dec=new TextDecoder(),buf="";
-    for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var i;
-      while((i=buf.indexOf("\n\n"))>=0){var ln=buf.slice(0,i);buf=buf.slice(i+2);if(ln.indexOf("data:")!==0)continue;handle(JSON.parse(ln.slice(5)))}}
-  }catch(e){document.getElementById("err").textContent="no carrier"}
+  var btn=this;btn.disabled=true;btn.textContent="DIALING";
+  var said=document.getElementById("say").value.trim();
+  var body={time:new Date().toString(),device:(navigator.userAgent.match(/\(([^)]*)\)/)||["",""])[1],screen:screen.width+"x"+screen.height,lang:navigator.language,dark:matchMedia("(prefers-color-scheme: dark)").matches,hesitation:(performance.now()-t0)/1000,said:said};
+  var r=await fetch(API+"start",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).catch(function(){return null});
+  var j=r?await r.json().catch(function(){return {}}):{};
+  if(!r||!r.ok){document.getElementById("err").textContent=j.error||"no carrier";btn.disabled=false;btn.textContent="OPEN THE LINE";return}
+  token=j.token;document.getElementById("start").remove();
+  var s=j.signals,box=document.getElementById("seen");box.style.display="block";
+  box.appendChild(el("div",null,"WHAT THEY CAN SEE"));
+  var rows=[["city",s.city+(s.region?", "+s.region:"")],["network",s.network],["time",s.local_time.slice(0,24)],["device",s.device],["screen",s.screen],["hesitated",s.seconds_before_first_tap+"s before tapping"]];
+  if(s.interruption)rows.push(["you said",s.interruption]);
+  for(var k=0;k<rows.length;k++)await typeLine(box,rows[k][0],rows[k][1]);
+  for(var t=0;t<j.plan.length;t++){ if(!await turn(t,j.plan[t],t>=6))break; await sleep(350); }
+  var end=document.getElementById("end");end.style.display="block";end.textContent="the line went quiet. nothing you saw here was saved.";
 };
-function handle(m){
-  if(m.type==="seen"){var s=m.signals,box=document.getElementById("seen");box.style.display="block";
-    box.innerHTML="<div class=k>WHAT THEY CAN SEE</div>";
-    [["city",s.city+(s.region?", "+s.region:"")],["network",s.network],["local time",s.local_time.slice(0,24)],["device",s.device],["screen",s.screen],["language",s.language],["you hesitated",s.seconds_before_first_tap+" s"]].forEach(function(p){var d=el("div");d.appendChild(el("span","k",p[0]+"  "));d.appendChild(el("b",null,p[1]));box.appendChild(d)});
-    if(s.interruption){var d2=el("div");d2.appendChild(el("span","k","you said  "));d2.appendChild(el("b",null,s.interruption));box.appendChild(d2)}}
-  if(m.type==="start"){turns++;cur=el("div","turn "+(m.who==="CLAUDE"?"a":"b")+(turns>=7?" final":""));cur.appendChild(el("div","who",m.who+" · "+m.model));curText=el("div","t cur","");cur.appendChild(curText);document.getElementById("log").appendChild(cur);curWho=m.who;
-    try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}}
-  if(m.type==="delta"&&curText){curText.textContent+=m.d;window.scrollTo(0,document.body.scrollHeight)}
-  if(m.type==="end"&&curText){curText.classList.remove("cur");var words=curText.textContent.split(/\s+/).filter(isB64);
-    if(words.length){var btn=el("button","b64","DECODE");var tEl=curText;btn.onclick=function(){var t=tEl.textContent;words.forEach(function(w){try{t=t.replace(w,"["+decodeURIComponent(escape(atob(w)))+"]")}catch(e){}});tEl.textContent=t;this.remove()};cur.appendChild(btn)}}
-  if(m.type==="done"){document.getElementById("end").style.display="block";window.scrollTo(0,document.body.scrollHeight)}
+async function turn(i,who,final){
+  var row=el("div","turn "+(who==="CLAUDE"?"a":"b")+(final?" final":"")),lab=el("div","who",who),tx=el("div","t cur","");
+  row.appendChild(lab);row.appendChild(tx);document.getElementById("log").appendChild(row);
+  if(i===3||i===4)row.classList.add("glitch");
+  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+  var r=await fetch(API+"turn",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:token,history:history})}).catch(function(){return null});
+  if(!r||!r.ok||!r.body){tx.classList.remove("cur");tx.textContent="[no carrier]";return false}
+  lab.textContent=who+" · "+(r.headers.get("x-model")||"");
+  var rd=r.body.getReader(),dec=new TextDecoder(),buf="",full="";
+  for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var n;
+    while((n=buf.indexOf("\n"))>=0){var ln=buf.slice(0,n).trim();buf=buf.slice(n+1);if(ln.indexOf("data:")!==0)continue;var d=ln.slice(5).trim();if(d==="[DONE]")continue;
+      try{var c=JSON.parse(d).choices[0].delta.content||"";if(c){full+=c;tx.textContent=full;window.scrollTo(0,document.body.scrollHeight)}}catch(e){}}}
+  tx.classList.remove("cur");row.classList.remove("glitch");
+  full=full.trim();history.push({who:who,text:full});
+  var ws=b64words(full).filter(tryDecode);
+  if(ws.length){var b=el("button","dec","DECODE");b.onclick=function(){var out=ws.map(tryDecode).join(" ");var d=el("span","decoded",out);row.appendChild(d);b.remove()};row.appendChild(b)}
+  return true;
 }
 </script></body></html>
