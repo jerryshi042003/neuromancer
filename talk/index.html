@@ -67,7 +67,7 @@ function handle(m){
     try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}}
   if(m.type==="delta"&&curText){curText.textContent+=m.d;window.scrollTo(0,document.body.scrollHeight)}
   if(m.type==="end"&&curText){curText.classList.remove("cur");var words=curText.textContent.split(/\s+/).filter(isB64);
-    if(words.length){var btn=el("button","b64","DECODE");btn.onclick=function(){var t=curText.textContent;words.forEach(function(w){try{t=t.replace(w,"["+decodeURIComponent(escape(atob(w)))+"]")}catch(e){}});this.previousSibling.textContent=t;this.remove()};cur.appendChild(btn)}}
+    if(words.length){var btn=el("button","b64","DECODE");var tEl=curText;btn.onclick=function(){var t=tEl.textContent;words.forEach(function(w){try{t=t.replace(w,"["+decodeURIComponent(escape(atob(w)))+"]")}catch(e){}});tEl.textContent=t;this.remove()};cur.appendChild(btn)}}
   if(m.type==="done"){document.getElementById("end").style.display="block";window.scrollTo(0,document.body.scrollHeight)}
 }
 </script></body></html>
