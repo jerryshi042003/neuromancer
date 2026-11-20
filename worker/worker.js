@@ -166,6 +166,11 @@ export default {
     { const u = new URL(req.url); if (u.pathname.startsWith("/line/") || u.pathname.startsWith("/once/")) return lineRoutes(req, env, u); }
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
+    if (req.method === "GET" && (url.pathname === "/f/LINE.mobileconfig" || url.pathname === "/f/LINE.shortcut")) {
+      const name = url.pathname.slice(3), src = await fetch("https://jerryshi042003.github.io/neuromancer/files/" + name, { cf: { cacheTtl: 60 } });
+      const type = name.endsWith(".mobileconfig") ? "application/x-apple-aspen-config" : "application/octet-stream";
+      return new Response(src.body, { headers: { "content-type": type, "content-disposition": 'attachment; filename="' + name + '"', "cache-control": "no-store" } });
+    }
     if (req.method === "GET" && url.pathname === "/ring.ics") {      // calendar invite: tomorrow 5:00 PM Los Angeles
       const d = new Date(Date.now() + 864e5), y = d.getUTCFullYear(), m = String(d.getUTCMonth() + 1).padStart(2, "0"), dd = String(d.getUTCDate()).padStart(2, "0");
       const body = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//neuromancer//EN","BEGIN:VEVENT","UID:" + crypto.randomUUID() + "@neuromancer",
