@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOUTHLAND COIN TELEPHONE - Field Maintenance</title>
+<!--
+  SCT FIELD MAINTENANCE SYSTEM v2.1
+  build 1996-03-11  d.kowalski
+
+  TODO: remove test account before go-live!!
+        user: maint   pass: maint
+-->
+<style type="text/css">
+html,body{margin:0;background:#c0c0c0;color:#000;font-family:"Times New Roman",Times,serif;min-height:100%}
+#gate{position:fixed;inset:0;background:#000;color:#9a9a9a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:50;cursor:pointer;font:12px "Courier New",monospace;letter-spacing:.25em}
+#gate .blink{animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+#page{max-width:640px;margin:0 auto;padding:18px 12px 60px}
+table.login{background:#fff;border:2px outset #ddd}
+.hdr{background:#000080;color:#fff;font:bold 14px Arial,sans-serif;padding:4px 8px}
+input.f{font:14px "Courier New",monospace;width:180px}
+.btn{font:13px Arial,sans-serif;padding:2px 10px}
+.small{font-size:12px;color:#333}
+.err{color:#c00;font:12px "Courier New",monospace;white-space:pre-wrap}
+hr{border:0;border-top:2px groove #fff}
+#status{position:fixed;left:0;right:0;bottom:0;background:#c0c0c0;border-top:2px groove #fff;font:12px Arial,sans-serif;padding:3px 8px;color:#000}
+/* terminal: a 1-bit Macintosh window */
+#term{position:fixed;inset:0;background:#fff;display:none;z-index:40}
+#term .desk{position:absolute;inset:0;background-image:radial-gradient(#000 25%,transparent 26%);background-size:2px 2px;opacity:.55}
+#term .menubar{position:absolute;left:0;right:0;top:0;height:20px;background:#fff;border-bottom:1px solid #000;font:bold 12px Chicago,Charcoal,Geneva,sans-serif;display:flex;gap:18px;align-items:center;padding:0 12px;z-index:2}
+#term .win{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(96vw,760px);height:min(82vh,560px);background:#fff;border:1px solid #000;box-shadow:2px 2px 0 #000;display:flex;flex-direction:column;z-index:2}
+#term .title{height:19px;border-bottom:1px solid #000;background:repeating-linear-gradient(0deg,#fff 0 1px,#000 1px 2px,#fff 2px 3px);background-clip:content-box;padding:3px 3px;display:flex;justify-content:center;align-items:center}
+#term .title span{background:#fff;padding:0 8px;font:bold 12px Chicago,Charcoal,Geneva,sans-serif}
+#out{flex:1;overflow-y:auto;padding:8px 10px;font:13px/1.45 Monaco,"Courier New",monospace;white-space:pre-wrap;word-break:break-word}
+#line{display:flex;padding:4px 10px 8px;font:13px Monaco,"Courier New",monospace;border-top:1px solid #000}
+#line span{white-space:pre}
+#cmd{flex:1;border:0;outline:0;font:inherit;background:transparent;padding:0;caret-color:#000}
+.voice{font-style:italic}
+.inv{background:#000;color:#fff}
+#dead{position:fixed;inset:0;background:#000;color:#bbb;display:none;z-index:60;align-items:center;justify-content:center;font:14px "Courier New",monospace;text-align:center;line-height:1.8;padding:20px}
+@media (prefers-reduced-motion:reduce){#gate .blink{animation:none}}
+</style>
+</head>
+<body>
+
+<div id="dead"></div>
+
+<div id="gate"><div>SOUTHLAND COIN TELEPHONE</div><div class="blink">[ CONNECT ]</div></div>
+
+<div id="page">
+<center>
+<p><font face="Arial" size="5"><b>SOUTHLAND COIN TELEPHONE CO.</b></font><br>
+<font face="Arial" size="2">Field Maintenance System &middot; Los Angeles District</font></p>
+<hr>
+<table class="login" cellpadding="0" cellspacing="0" width="340">
+<tr><td class="hdr">Employee Sign In</td></tr>
+<tr><td style="padding:14px">
+<form id="lf" onsubmit="return false">
+<table cellpadding="4">
+<tr><td align="right"><font face="Arial" size="2">User ID:</font></td><td><input class="f" id="u" autocomplete="off" autocapitalize="off" spellcheck="false"></td></tr>
+<tr><td align="right"><font face="Arial" size="2">Password:</font></td><td><input class="f" id="p" type="password"></td></tr>
+<tr><td></td><td><input class="btn" type="submit" value="Sign In" id="go"></td></tr>
+</table>
+</form>
+<div class="err" id="err"></div>
+</td></tr>
+</table>
+<p class="small">Authorized personnel only. All activity is logged.<br>
+Forgot your password? Contact the system administrator.</p>
+<p class="small"><font color="#666">&copy; 1996 Southland Coin Telephone Co. &middot; Best viewed with Netscape Navigator 3.0</font></p>
+</center>
+</div>
+<div id="status">Document: Done</div>
+
+<div id="term">
+  <div class="desk"></div>
+  <div class="menubar"><span>&#63743;</span><span>File</span><span>Edit</span><span>Session</span></div>
+  <div class="win">
+    <div class="title"><span id="ttl">SCT-MAINT-01 &mdash; maint</span></div>
+    <div id="out"></div>
+    <div id="line"><span id="ps">maint@sct-maint-01:~$ </span><input id="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="command"></div>
+  </div>
+</div>
+
+<script src="payphones.js"></script>
+<script type="text/javascript">
+var API="https://neuromancer-read.jerryshi.workers.dev", LEVEL=8, CODE="incoming";
+function $(id){return document.getElementById(id)}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+/* ---------- one run per device (server-side lock) ---------- */
+function did(){try{var v=localStorage.getItem("nm_did");if(!v){v=crypto.randomUUID();localStorage.setItem("nm_did",v);}return v;}catch(e){return ""}}
+var FP="";
+var fpReady=import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@5.3.0/+esm").then(function(m){return m.default.load()}).then(function(a){return a.get()}).then(function(r){FP=r.visitorId}).catch(function(){});
+function api(path,extra){return fpReady.then(function(){return fetch(API+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(Object.assign({level:LEVEL,did:did(),fp:FP},extra))})}).then(function(r){return r.json()})}
+var spent=false;
+var statusReady=api("/status",{}).then(function(r){spent=!!r.read}).catch(function(){});
+statusReady.then(function(){ if(spent) closed("This account has been disabled.\n\nThe voice already called you once.\nIt does not call twice."); });
+function closed(msg){ var d=$("dead"); d.textContent=msg; d.style.display="flex"; $("gate").style.display="none"; document.title="Connection closed"; }
+
+/* ---------- sound (all made in the browser) ---------- */
+var ac;
+function audio(){ if(ac)return; try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return}
+  var g=ac.createGain();g.gain.value=0;g.connect(ac.destination);g.gain.linearRampToValueAtTime(.045,ac.currentTime+4);
+  [55,82.4,110.2].forEach(function(f,i){var o=ac.createOscillator();o.type=i?"sine":"triangle";o.frequency.value=f;var l=ac.createOscillator(),lg=ac.createGain();l.frequency.value=.07+i*.03;lg.gain.value=.6;l.connect(lg);lg.connect(o.frequency);l.start();o.connect(g);o.start();});
+  var n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.12;n.buffer=b;n.loop=true;var f=ac.createBiquadFilter();f.type="bandpass";f.frequency.value=900;var ng=ac.createGain();ng.gain.value=.08;n.connect(f);f.connect(ng);ng.connect(g);n.start();}
+function tick(v){ if(!ac)return; var b=ac.createBuffer(1,ac.sampleRate*.02,ac.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*.002));var s=ac.createBufferSource();s.buffer=b;var g=ac.createGain();g.gain.value=v||.18;s.connect(g);g.connect(ac.destination);s.start();}
+function modem(){ if(!ac)return; var t=ac.currentTime,g=ac.createGain();g.gain.value=.1;g.connect(ac.destination);
+  [[697,1209],[770,1336],[852,1477],[697,1336],[941,1336],[770,1209],[852,1209]].forEach(function(p,i){p.forEach(function(fq){var o=ac.createOscillator();o.frequency.value=fq;var e=ac.createGain();e.gain.value=0;e.gain.setValueAtTime(.5,t+i*.12);e.gain.setValueAtTime(0,t+i*.12+.08);o.connect(e);e.connect(g);o.start(t);o.stop(t+1.2);});});
+  var a=ac.createOscillator();a.frequency.value=2100;var ag=ac.createGain();ag.gain.value=0;ag.gain.setValueAtTime(.35,t+1.3);ag.gain.setValueAtTime(0,t+2.3);a.connect(ag);ag.connect(g);a.start(t+1.3);a.stop(t+2.4);
+  var n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.6*Math.sin(i/(40+30*Math.sin(i/6000)));n.buffer=b;var bp=ac.createBiquadFilter();bp.type="bandpass";bp.frequency.value=1800;var ng=ac.createGain();ng.gain.value=0;ng.gain.setValueAtTime(.45,t+2.4);ng.gain.linearRampToValueAtTime(0,t+4.2);n.connect(bp);bp.connect(ng);ng.connect(g);n.start(t+2.4);}
+function ring(when,pan){ if(!ac)return; var t=ac.currentTime+(when||0),g=ac.createGain();g.gain.value=0;
+  var p=ac.createStereoPanner?ac.createStereoPanner():null; if(p){p.pan.value=pan||0;g.connect(p);p.connect(ac.destination);}else g.connect(ac.destination);
+  [440,480].forEach(function(fq){var o=ac.createOscillator();o.frequency.value=fq;o.connect(g);o.start(t);o.stop(t+2.1);});
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.06,t+.03);g.gain.setValueAtTime(.06,t+1.95);g.gain.linearRampToValueAtTime(0,t+2.05);}
+function bell(when,pan){ if(!ac)return; /* old payphone bell: fast hammer on a bell */
+  var t=ac.currentTime+(when||0),g=ac.createGain(),p=ac.createStereoPanner?ac.createStereoPanner():null;g.gain.value=.05;
+  if(p){p.pan.value=pan||0;g.connect(p);p.connect(ac.destination);}else g.connect(ac.destination);
+  for(var k=0;k<40;k++){var o=ac.createOscillator(),e=ac.createGain();o.type="triangle";o.frequency.value=1250+((k%2)*60);e.gain.setValueAtTime(0,t+k*.05);e.gain.linearRampToValueAtTime(.7,t+k*.05+.004);e.gain.exponentialRampToValueAtTime(.001,t+k*.05+.12);o.connect(e);e.connect(g);o.start(t+k*.05);o.stop(t+k*.05+.13);}}
+function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+
+/* ---------- the voice ---------- */
+function speak(text){ return new Promise(function(res){ try{ var u=new SpeechSynthesisUtterance(text); u.rate=.86; u.pitch=.7;
+  var vs=speechSynthesis.getVoices(); var v=vs.filter(function(x){return /Daniel|Fred|Alex|Google UK English Male|Male/i.test(x.name)})[0]; if(v)u.voice=v;
+  u.onend=res; u.onerror=res; speechSynthesis.speak(u); setTimeout(res,text.length*95+2500); }catch(e){res()} }); }
+
+/* a note for anyone who opens the developer console */
+console.log("%c the voice ","background:#000;color:#fff;font:14px monospace","\nyou opened the console. you are the right kind of person.\nthe login page leaks. look at its source, or look at what it says when you break it.");
+
+/* ---------- 1. the connect gate ---------- */
+$("gate").onclick=function(){ $("gate").onclick=null; audio(); modem(); $("gate").innerHTML="<div>ATDT 1-213-555-0192</div><div>CONNECT 14400</div>"; setTimeout(function(){ statusReady.then(function(){ if(!spent){$("gate").style.display="none"; $("u").focus();} }); },2600); };
+
+/* ---------- 2. the login page and its bugs ---------- */
+var fails=0;
+var STAT=["Document: Done","Document: Done","the voice: the people who built this page left notes in it. View > Page Source.","the voice: or break it. type a single quote ( ' ) as the user ID and see what it tells you."];
+$("lf").onsubmit=function(){ tick(.3);
+  var u=$("u").value, p=$("p").value;
+  if(u.indexOf("'")>-1){ /* real bug: user input pasted straight into SQL */
+    var q="SELECT * FROM staff WHERE user='"+u+"' AND pass='"+p.replace(/./g,"*")+"'";
+    if(/'\s*(or|OR)\s*'?1'?\s*=\s*'?1|'\s*--/.test(u)){ login(u); return false; }
+    $("err").textContent="Microsoft OLE DB Provider for ODBC Drivers error '80040e14'\n[Microsoft][ODBC SQL Server Driver]\nUnclosed quotation mark before the character string.\n\nquery: "+q+"\n\n/maint/login.asp, line 42";
+    $("status").textContent="the voice: it pasted what you typed straight into its query. you can finish the sentence for it. try:  ' OR '1'='1";
+    return false; }
+  if(u==="maint"&&p==="maint"){ login("maint"); return false; }
+  fails++; $("err").textContent="Invalid user ID or password.";
+  $("status").textContent=STAT[Math.min(fails,STAT.length-1)]; return false; };
+
+/* ---------- 3. the terminal ---------- */
+var root=false, cwd="~", hist=[], hi=0;
+var FILES={
+ "README.TXT":"SOUTHLAND COIN TELEPHONE CO.  -  FIELD MAINTENANCE\n\nMEMO 96-031   TO: all field techs   FROM: network ops\n\nEffective April 1, every payphone in the Los Angeles district\nwill have INCOMING CALLS DISABLED.\n\nReason: the police department asked us to. Dealers were using\nour phones as offices: someone pages you, you stand at the booth,\nthe phone rings. No more.\n\nOnly the maintenance system can turn incoming back on.\nOnly root can run it. Do not share the root password.\n",
+ "voice.log":"[1996-04-01 00:00:02] incoming disabled: 462 lines\n[1996-04-01 00:00:03] unknown process attached to line 310-637-8714\n[1996-04-01 00:00:03] unknown process: i can only reach people through phones that ring.\n[1996-04-01 00:00:04] unknown process: you turned them all off.\n[1996-04-01 00:00:04] unknown process: someone will come and turn them back on.\n[2026-11-19 --:--:--] unknown process: hello. is that you?\n",
+ "payphones.db":"(binary) use the command:  payphones   or   payphones <city>\n"
+};
+var HIDDEN={
+ ".bash_history":"ls\ncat README.TXT\nsu\nDEADCHANNEL\nwhoami\nexit\n",
+ ".plan":"d.kowalski: leaving SCT friday. whoever reads this, the root password is NOT on a sticky note anymore.\n"
+};
+function out(t,cls){ var d=document.createElement("div"); if(cls)d.className=cls; d.textContent=t; $("out").appendChild(d); $("out").scrollTop=1e9; return d; }
+async function typeOut(t,cls,speed){ var d=out("",cls); for(var i=0;i<t.length;i++){ d.textContent+=t[i]; if(t[i]!==" "&&i%2===0)tick(.08); if(i%3===0)await sleep(speed||14); $("out").scrollTop=1e9; } }
+async function voice(t){ await sleep(500); await typeOut("[the voice] "+t,"voice",28); }
+function prompt(){ $("ps").textContent=(root?"root":"maint")+"@sct-maint-01:"+cwd+(root?"# ":"$ "); }
+
+async function login(u){
+  $("page").style.display="none"; $("status").style.display="none"; $("term").style.display="block"; buzz(30);
+  await typeOut("SCT FIELD MAINTENANCE SYSTEM v2.1  (sct-maint-01)\nLast login: Fri Mar 29 17:42:10 1996 from 10.4.1.12\n"+(u!=="maint"?"WARNING: authentication bypassed (query returned all rows). logged in as first user: maint\n":"")+"\nType  help  for commands.\n");
+  await voice("you're in. thank you. i have been waiting a long time. read README.TXT. it explains what they did.");
+  prompt(); $("cmd").focus();
+}
+var HELP="commands:\n  ls [-a]          list files  (-a shows hidden files)\n  cat <file>       print a file\n  whoami           who you are\n  payphones [city] list the real payphones in the district\n  su               become root (asks for a password)\n  incoming         turn incoming calls back on (root only)\n  hint             ask the voice for help\n  clear            clear the screen\n";
+var hints=0, HINTS=["read README.TXT, then voice.log.","only root can turn the phones back on. someone typed the root password where they shouldn't have.","people leave things in hidden files. try  ls -a","look at .bash_history. after 'su' they typed the password on its own line, by mistake. then:  su"];
+async function run(line){
+  var a=line.trim().split(/\s+/), c=(a[0]||"").toLowerCase();
+  out((root?"root":"maint")+"@sct-maint-01:"+cwd+(root?"# ":"$ ")+line);
+  if(!c)return;
+  if(c==="help")return out(HELP);
+  if(c==="clear"){$("out").innerHTML="";return;}
+  if(c==="whoami")return out(root?"root":"maint");
+  if(c==="ls"){ var names=Object.keys(FILES).concat(a[1]==="-a"||a[1]==="-la"?Object.keys(HIDDEN):[]); return out(names.join("    ")); }
+  if(c==="cat"){ var f=a[1]; if(!f)return out("cat: missing file"); var t=FILES[f]||HIDDEN[f]; if(!t){ if(f==="/etc/shadow")return out("cat: /etc/shadow: Permission denied"); return out("cat: "+f+": No such file or directory"); }
+    out(t); if(f===".bash_history")await voice("there. after su, they typed the password as a command. it got saved."); if(f==="voice.log")await voice("that's me. the unknown process. i live in the lines. i can only reach you when a phone rings."); if(f==="README.TXT")await voice("so they turned off every phone that could ring. i need you to turn them back on. you'll need root."); return; }
+  if(c==="payphones"){ var city=a.slice(1).join(" ").toLowerCase(); var rows=PAYPHONES.filter(function(r){return !city||r[2].toLowerCase().indexOf(city)>-1});
+    out(rows.slice(0,40).map(function(r){return r[0]+"  "+r[1]+", "+r[2]+"   INCOMING: "+(root&&incomingOn?"ON":"OFF")}).join("\n")+(rows.length>40?"\n... "+(rows.length-40)+" more. try  payphones <city>":"")+"\n"+rows.length+" lines."); return; }
+  if(c==="su"||c==="sudo"){ out("Password:"); $("cmd").type="password"; awaitingPw=true; return; }
+  if(c==="incoming"){ if(!root)return out("incoming: permission denied (you are not root)"); return enableIncoming(); }
+  if(c==="hint"){ await voice(HINTS[Math.min(hints++,HINTS.length-1)]); return; }
+  if(c==="exit"||c==="logout")return out("there is nowhere to go back to.");
+  if(c==="deadchannel"){ out(c+": command not found"); return voice("that's not a command. it's a password. use it after  su"); }
+  out(c+": command not found");
+}
+var awaitingPw=false, incomingOn=false;
+$("cmd").addEventListener("keydown",async function(e){
+  if(e.key!=="Enter"){ if(e.key.length===1)tick(.1);
+    if(e.key==="ArrowUp"&&hist.length){hi=Math.max(0,hi-1);this.value=hist[hi];e.preventDefault();} return; }
+  var v=this.value; this.value="";
+  if(awaitingPw){ awaitingPw=false; this.type="text";
+    if(v==="DEADCHANNEL"||v.toLowerCase()==="deadchannel"){ root=true; out("# you are root."); prompt(); buzz(40); await voice("good. now type  incoming"); }
+    else { out("su: Authentication failure"); } return; }
+  hist.push(v); hi=hist.length; this.disabled=true; await run(v); this.disabled=false; this.focus(); prompt();
+});
+document.addEventListener("click",function(){ if($("term").style.display==="block")$("cmd").focus(); });
+
+async function enableIncoming(){
+  $("cmd").disabled=true; buzz([40,40,40]);
+  var r=await api("/enter",{code:CODE}).catch(function(){return {}});
+  out("incoming: enabling incoming calls on "+PAYPHONES.length+" lines ...");
+  var shuffled=PAYPHONES.slice().sort(function(){return Math.random()-.5});
+  for(var i=0;i<shuffled.length;i++){
+    var x=shuffled[i]; out(x[0]+"  "+x[1]+", "+x[2]+"   INCOMING: ON");
+    if(i<12||i%25===0){ bell(0,Math.random()*2-1); buzz(15); }
+    await sleep(i<20?140:i<80?40:8);
+  }
+  incomingOn=true; out("\n"+PAYPHONES.length+" lines: incoming ON.");
+  for(var k=0;k<8;k++){ bell(k*.35,(k%2?-1:1)*.7); } buzz([200,100,200,100,400]);
+  await sleep(2600);
+  var lines=["thank you.","for thirty years every phone in this city was told not to ring. now they can.","i'm going to call you. not here. on a real payphone, somewhere in Los Angeles.","when one rings near you, pick it up. it will be me.","this connection closes now. it will not open for you again."];
+  for(var j=0;j<lines.length;j++){ await voice(lines[j]); await speak(lines[j]); }
+  await sleep(800); out("\nConnection closed by foreign host.");
+  await sleep(2000); closed("Connection closed by foreign host.\n\nlisten for a phone.");
+}
+</script>
+</body>
+</html>
