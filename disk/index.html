@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEUROMANCER</title>
+<link rel="icon" href="floppy.jpg">
+<!--
+        ____________________________
+       |  ________________________  |
+       | |                        | |
+       | |   N E U R O M A N C E R| |
+       | |________________________| |
+       |      ____________          |
+       |     |  ________  |         |
+       |     | |  DISK  | |         |
+       |     | |________| |         |
+       |_____|____________|_________|
+
+   you opened the source. good.
+   the floppy on this page is a real file.
+   save it. look inside it. it is hollow.
+-->
+<style type="text/css">
+html,body{margin:0;padding:0;height:100%;background:#5a4b45;overflow:hidden;font-family:Verdana,Geneva,Arial,sans-serif;font-size:11px;color:#222}
+a{color:#e8e4dc;text-decoration:none}
+a:hover{color:#fff;text-decoration:underline}
+#splash{position:fixed;inset:0;background:#000;color:#8f8f8f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:20;cursor:pointer;font:12px/1.4 "Courier New",Courier,monospace;letter-spacing:.2em}
+#splash b{color:#d6d6d6;font-weight:normal;font-size:13px}
+#splash .blink{animation:bl 1.1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+#dial{white-space:pre;color:#5f5;font-size:11px;letter-spacing:0;min-height:5em;text-align:left}
+#site{position:fixed;inset:0;opacity:0;transition:opacity 1.6s}
+#sky{position:absolute;left:0;top:0;right:0;height:72%;background:#d9d9d6;overflow:hidden}
+.layer{position:absolute;background:#bdbdb8;mix-blend-mode:multiply;opacity:.55}
+.word{position:absolute;font:28px/1 "Courier New",Courier,monospace;color:#7d7d78;white-space:nowrap;opacity:0;transition:opacity 2.4s,transform 9s linear}
+.word.on{opacity:.75}
+.word.big{font-size:44px;color:#9fb6c3;text-shadow:0 0 6px rgba(160,190,210,.8)}
+.scan{position:absolute;left:0;right:0;height:3px;background:#fff;opacity:.9}
+.nav{position:absolute;font:11px Verdana,sans-serif;letter-spacing:.12em;color:#555;background:rgba(255,255,255,.35);padding:3px 8px}
+.nav:hover{color:#000;background:rgba(255,255,255,.75);text-decoration:none}
+#ground{position:absolute;left:0;right:0;top:72%;bottom:0;background:#5a4b45}
+#stem{position:absolute;left:33%;top:72%;width:1px;height:16%;background:#a99}
+#counter{position:absolute;left:33%;top:88%;transform:translateX(-50%);background:#000;color:#3f3;font:12px "Courier New",monospace;padding:4px 8px;border:2px inset #777;letter-spacing:.25em}
+#marq{position:absolute;left:0;right:0;bottom:0;height:18px;background:#000;color:#bbb;font:11px "Courier New",monospace;overflow:hidden;white-space:nowrap}
+#marq span{display:inline-block;padding-left:100%;animation:mq 26s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+#floppy{position:absolute;left:14px;top:14px;width:64px;cursor:pointer;z-index:5;box-shadow:2px 2px 0 rgba(0,0,0,.35);transition:transform .25s}
+#floppy:hover{transform:translate(-1px,-2px) rotate(-2deg)}
+#flylabel{position:absolute;left:14px;top:14px;width:64px;z-index:6;pointer-events:none}
+#fly{position:fixed;z-index:15;display:none;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+#macwrap{position:fixed;inset:0;z-index:12;display:none;align-items:center;justify-content:center;background:rgba(20,16,14,.86)}
+.crt{position:relative;width:min(94vw,calc(86vh*512/342));aspect-ratio:512/342;padding:2.2%;background:#d8d1bf;border-radius:18px;box-shadow:inset 0 0 0 2px #b9b19d,0 40px 90px rgba(0,0,0,.85)}
+.crt:after{content:"";position:absolute;inset:2.2%;border-radius:10px;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 60%,rgba(0,0,0,.35)),repeating-linear-gradient(0deg,rgba(0,0,0,.08) 0 1px,transparent 1px 3px)}
+#mac{display:block;width:100%;height:100%;image-rendering:pixelated;background:#000;border-radius:8px}
+#hx{position:fixed;left:-99px;opacity:0}
+#dead{position:fixed;inset:0;background:#fff;color:#000;z-index:30;display:none;padding:8px 14px;font:16px "Times New Roman",Times,serif;overflow:auto}
+#dead h1{font-size:2em;margin:.67em 0;font-weight:bold}
+#dead hr{border:0;border-top:1px solid #888}
+#dead address{font-style:italic}
+</style>
+</head>
+<body>
+
+<div id="dead">
+<h1>Not Found</h1>
+<p>The requested URL /neuromancer/disk/ was not found on this server.</p>
+<hr>
+<address>Apache/1.3.27 Server at neuromancer Port 80</address>
+</div>
+
+<div id="splash">
+  <b>N E U R O M A N C E R</b>
+  <div id="dial"></div>
+  <span class="blink">[ CLICK TO CONNECT ]</span>
+</div>
+
+<div id="site">
+  <div id="sky"></div>
+  <div id="ground"></div>
+  <div id="stem"></div>
+  <div id="counter">000000</div>
+  <div id="marq"><span>you are visitor number ... &nbsp;&nbsp;&nbsp; best viewed at 800x600 &nbsp;&nbsp;&nbsp; the phone will ring once &nbsp;&nbsp;&nbsp; do not tell anyone what the disk said &nbsp;&nbsp;&nbsp; last updated 12/09/1992</span></div>
+  <img id="floppy" src="floppy.jpg" alt="disk" title="disk 1 of 1">
+</div>
+
+<img id="fly" src="floppy.jpg" alt="">
+<div id="macwrap"><div class="crt"><canvas id="mac" width="512" height="342"></canvas></div></div>
+
+<script type="text/javascript">
+var API="https://neuromancer-read.jerryshi.workers.dev", LEVEL=7, CODE="agrippa";
+var $=function(id){return document.getElementById(id)};
+var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
+/* device id + fingerprint, same lock as level 4 */
+function did(){try{let v=localStorage.getItem("nm_did");if(!v){v=crypto.randomUUID();localStorage.setItem("nm_did",v);}return v;}catch(e){return ""}}
+let FP="";
+const fpReady=import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@5.3.0/+esm").then(m=>m.default.load()).then(a=>a.get()).then(r=>{FP=r.visitorId}).catch(()=>{});
+async function api(path,extra){await fpReady;const r=await fetch(API+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({level:LEVEL,did:did(),fp:FP,...extra})});return r.json();}
+
+var alreadyRead=false;
+/* check the lock FIRST: a spent disk never shows the site again */
+var statusReady=api("/status",{}).then(function(r){alreadyRead=!!r.read;}).catch(function(){});
+statusReady.then(function(){ if(alreadyRead){ $("dead").style.display="block"; $("splash").style.display="none"; document.title="404 Not Found"; } });
+
+/* sound: calm drone + shutter click (made in the browser, no files) */
+let ac;
+function audio(){ if(ac) return; try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return}
+  const g=ac.createGain();g.gain.value=0;g.connect(ac.destination);g.gain.linearRampToValueAtTime(.05,ac.currentTime+4);
+  [55,82.4,110.2].forEach((f,i)=>{const o=ac.createOscillator();o.type=i?"sine":"triangle";o.frequency.value=f;
+    const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.07+i*.03;lg.gain.value=.6;lfo.connect(lg);lg.connect(o.frequency);lfo.start();o.connect(g);o.start();});
+  const n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.12;n.buffer=b;n.loop=true;const f=ac.createBiquadFilter();f.type="bandpass";f.frequency.value=900;f.Q.value=.6;
+  const ng=ac.createGain();ng.gain.value=.08;n.connect(f);f.connect(ng);ng.connect(g);n.start();}
+function click(){ if(!ac) return; const b=ac.createBuffer(1,ac.sampleRate*.08,ac.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*.008));
+  const s=ac.createBufferSource();s.buffer=b;const g=ac.createGain();g.gain.value=.5;s.connect(g);g.connect(ac.destination);s.start();}
+
+
+/* modem handshake: dial tones, answer tone, screech, then silence */
+function modem(){ if(!ac)return; var t=ac.currentTime, g=ac.createGain(); g.gain.value=.12; g.connect(ac.destination);
+  var digits=[[697,1209],[770,1336],[852,1477],[697,1336],[941,1336],[770,1209],[852,1209]];
+  digits.forEach(function(p,i){p.forEach(function(f){var o=ac.createOscillator();o.frequency.value=f;var e=ac.createGain();e.gain.value=0;
+    e.gain.setValueAtTime(.5,t+i*.12);e.gain.setValueAtTime(0,t+i*.12+.08);o.connect(e);e.connect(g);o.start(t);o.stop(t+1.2);});});
+  var a=ac.createOscillator();a.frequency.value=2100;var ag=ac.createGain();ag.gain.value=0;ag.gain.setValueAtTime(.35,t+1.3);ag.gain.setValueAtTime(0,t+2.4);a.connect(ag);ag.connect(g);a.start(t+1.3);a.stop(t+2.5);
+  var n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*2.2,ac.sampleRate),d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++){d[i]=(Math.random()*2-1)*.6*Math.sin(i/(40+30*Math.sin(i/6000)));}
+  n.buffer=b;var bp=ac.createBiquadFilter();bp.type="bandpass";bp.frequency.value=1800;bp.Q.value=.9;var ng=ac.createGain();ng.gain.value=0;
+  ng.gain.setValueAtTime(.5,t+2.5);ng.gain.linearRampToValueAtTime(0,t+4.6);n.connect(bp);bp.connect(ng);ng.connect(g);n.start(t+2.5);
+}
+function eject(){ if(!ac)return; click(); var o=ac.createOscillator(),g=ac.createGain();o.type="sawtooth";o.frequency.value=70;g.gain.value=.0;
+  g.gain.linearRampToValueAtTime(.06,ac.currentTime+.05);g.gain.linearRampToValueAtTime(0,ac.currentTime+.5);var f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=400;
+  o.connect(f);f.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.55);setTimeout(click,420);}
+/* ---------- 1992 Macintosh, 512x342, 1-bit ---------- */
+var M=document.getElementById("mac"), X=M.getContext("2d"), W=512, H=342;
+X.imageSmoothingEnabled=false;
+function onebit(){ /* force pure black/white like a Mac Plus */
+  var im=X.getImageData(0,0,W,H), d=im.data;
+  for(var i=0;i<d.length;i+=4){ var v=(d[i]+d[i+1]+d[i+2])/3>140?255:0; d[i]=d[i+1]=d[i+2]=v; d[i+3]=255; }
+  X.putImageData(im,0,0); }
+function desktop(){ /* 50% grey dither desktop */
+  X.fillStyle="#fff";X.fillRect(0,0,W,H);X.fillStyle="#000";
+  for(var y=20;y<H;y++)for(var x=(y&1);x<W;x+=2)X.fillRect(x,y,1,1);
+  X.fillStyle="#fff";X.fillRect(0,0,W,20);X.fillStyle="#000";X.fillRect(0,19,W,1);
+  X.font="bold 12px Chicago, Charcoal, Geneva, sans-serif";X.textBaseline="middle";
+  X.fillText("",12,10);X.fillText("File",34,10);X.fillText("Edit",70,10);X.fillText("Special",106,10);
+  X.beginPath();X.arc(W-20,10,6,0,7);X.stroke(); }
+var WX=26,WY=34,WW=W-52,WH=H-48,TOP=WY+20+44; /* window, title bar, banner */
+var banner=null;
+function makeBanner(){ /* ragged etched band across the top, like the disk's label strip */
+  var c=document.createElement("canvas");c.width=WW-4;c.height=40;var b=c.getContext("2d");
+  b.fillStyle="#fff";b.fillRect(0,0,c.width,c.height);b.fillStyle="#000";
+  for(var y=0;y<40;y++)for(var x=0;x<c.width;x++){
+    var band=(y>6&&y<11)||(y>16&&y<21)||(y>27&&y<30), edge=(y<4||y>34);
+    var p=band?.82:edge?.25:.08; if(Math.random()<p)b.fillRect(x,y,1,1);}
+  b.fillStyle="#fff";b.fillRect(c.width/2-70,13,140,14);b.fillStyle="#000";
+  b.font="bold 11px Chicago, Geneva, sans-serif";b.textAlign="center";b.textBaseline="middle";b.fillText("N E U R O M A N C E R",c.width/2,20);
+  banner=c; }
+function frameWin(title){
+  X.fillStyle="#fff";X.fillRect(WX,WY,WW,WH);X.strokeStyle="#000";X.lineWidth=1;X.strokeRect(WX+.5,WY+.5,WW-1,WH-1);
+  X.fillStyle="#000";X.fillRect(WX+2,WY+WH,WW,1);X.fillRect(WX+WW,WY+2,1,WH); /* drop shadow */
+  for(var i=0;i<6;i++)X.fillRect(WX+3,WY+4+i*2,WW-6,1);   /* title stripes */
+  X.fillStyle="#fff";X.font="bold 12px Chicago, Charcoal, Geneva, sans-serif";var tw=X.measureText(title).width+16;
+  X.fillRect(WX+WW/2-tw/2,WY+2,tw,15);X.fillStyle="#000";X.textAlign="center";X.textBaseline="middle";X.fillText(title,WX+WW/2,WY+10);X.textAlign="left";
+  X.fillRect(WX,WY+19,WW,1);
+  if(!banner)makeBanner(); X.drawImage(banner,WX+2,WY+21); X.fillRect(WX,WY+62,WW,1); }
+function clipText(lines,offset){
+  X.save();X.beginPath();X.rect(WX+1,TOP,WW-2,WY+WH-TOP-1);X.clip();
+  X.fillStyle="#fff";X.fillRect(WX+1,TOP,WW-2,WY+WH-TOP);X.fillStyle="#000";
+  X.font="12px Geneva, Monaco, ui-monospace, monospace";X.textBaseline="top";
+  for(var i=0;i<lines.length;i++){var y=TOP+8+i*16-offset; if(y>TOP-16&&y<H)X.fillText(lines[i],WX+18,y);}
+  X.restore(); }
+function screen(lines,offset,title){desktop();frameWin(title||"Neuromancer");clipText(lines,offset);onebit();}
+
+function labelScreen(){ desktop(); frameWin("Neuromancer");
+  X.fillStyle="#000";X.font="bold 30px Chicago, Geneva, sans-serif";X.textAlign="center";X.textBaseline="middle";
+  X.fillText("NEUROMANCER",W/2,TOP+80);X.font="12px Geneva, sans-serif";X.fillText("(a book of the static)",W/2,TOP+112);
+  X.fillText("© 1992 / 2026",W/2,TOP+150);X.textAlign="left";onebit(); }
+
+/* sounds (made here, no files): camera shutter at start, gunshot at the end */
+function shutter(){ click(); setTimeout(click,70); }
+function gunshot(){ if(!ac)return; var n=ac.sampleRate*.6,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);
+  for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*.09));
+  var s=ac.createBufferSource();s.buffer=b;var f=ac.createBiquadFilter();f.type="lowpass";f.frequency.value=1800;var g=ac.createGain();g.gain.value=.9;
+  s.connect(f);f.connect(g);g.connect(ac.destination);s.start();
+  var o=ac.createOscillator(),og=ac.createGain();o.frequency.setValueAtTime(90,ac.currentTime);o.frequency.exponentialRampToValueAtTime(30,ac.currentTime+.4);
+  og.gain.setValueAtTime(.8,ac.currentTime);og.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.5);o.connect(og);og.connect(ac.destination);o.start();o.stop(ac.currentTime+.5);}
+
+/* haptics: Android vibrates; iPhone (iOS 18+) ticks when a switch toggles */
+var hx=document.createElement("input");hx.type="checkbox";hx.setAttribute("switch","");hx.id="hx";document.body.appendChild(hx);
+var hl=document.createElement("label");hl.htmlFor="hx";hl.style.cssText="position:fixed;left:-99px";document.body.appendChild(hl);
+function buzz(pattern){ try{ if(navigator.vibrate)navigator.vibrate(pattern); }catch(e){} try{ hl.click(); }catch(e){} }
+
+function garble(s){var G="©ãõùèàçº¹∂π¬≈◊∆";
+  return s.replace(/\S/g,function(){return Math.random()<.45?"□":G[Math.random()*G.length|0];});}
+
+function melt(done){ /* pixel columns drip down and away */
+  var im=X.getImageData(0,0,W,H),src=new Uint8ClampedArray(im.data),sp=[],off=[];
+  for(var x=0;x<W;x++){sp[x]=.4+Math.random()*1.6+(Math.sin(x/9)+1)*.6;off[x]=-Math.random()*40;}
+  var f=0;(function step(){f++;var d=im.data;
+    for(var x=0;x<W;x++){off[x]+=sp[x]*(1+f/40);var o=Math.max(0,off[x]|0);
+      for(var y=H-1;y>=0;y--){var sy=y-o,i=(y*W+x)*4;if(sy<0){d[i]=d[i+1]=d[i+2]=0;}else{var j=(sy*W+x)*4;d[i]=d[i+1]=d[i+2]=src[j];}d[i+3]=255;}}
+    X.putImageData(im,0,0); if(f%12===0)buzz(20);
+    if(f<150)requestAnimationFrame(step);else done();})(); }
+
+
+const POEM=[
+"NEUROMANCER",
+"(a book of the static)",
+"","",
+"I.","",
+"The screen was grey before it was anything.",
+"A channel nobody owns,",
+"a picture nobody sent.",
+"You found the book.",
+"The book found you first.",
+"","",
+"II.","",
+"Somewhere in this city a phone is waiting",
+"for a hand it has never held.",
+"It will ring once for you.",
+"It will not ring twice.",
+"","",
+"III.","",
+"@FRAGMENT@",
+"","",
+"IV.","",
+"Write it down.",
+"Paper remembers",
+"what screens forget.",
+"","","",""];
+
+/* ---------- the site: a grey, layered, early-2000s author page ---------- */
+var WORDS=["jack in","the static","payphone","los angeles","1992","the sky","no carrier","dead channel","the voice","disk 1 of 1"];
+function buildSky(){
+  var s=$("sky"), w=s.clientWidth, h=s.clientHeight, i;
+  for(i=0;i<9;i++){var l=document.createElement("div");l.className="layer";
+    l.style.left=(Math.random()*w*.8)+"px";l.style.top=(Math.random()*h*.7)+"px";l.style.width=(80+Math.random()*w*.35)+"px";l.style.height=(30+Math.random()*h*.4)+"px";s.appendChild(l);}
+  for(i=0;i<6;i++){var b=document.createElement("div");b.className="scan";b.style.top=(h*.55+i*7+Math.random()*20)+"px";b.style.opacity=.4+Math.random()*.6;s.appendChild(b);}
+  var big=document.createElement("div");big.className="word big on";big.textContent="NEUROMANCER";big.style.left="40%";big.style.top="44%";s.appendChild(big);
+  var navs=[["source","#"],["transmissions","#"],["links","#"],["guestbook","#"]];
+  navs.forEach(function(n,k){var a=document.createElement("a");a.className="nav";a.href=n[1];a.textContent=n[0];
+    a.style.left=(26+k*7)+"%";a.style.top=(38+k*6)+"%";a.onclick=function(e){e.preventDefault();click();a.textContent="404";setTimeout(function(){a.textContent=n[0]},900)};s.appendChild(a);});
+  setInterval(function(){ /* words drift in and out, like a slow slideshow */
+    var d=document.createElement("div");d.className="word";d.textContent=WORDS[Math.random()*WORDS.length|0];
+    d.style.left=(30+Math.random()*55)+"%";d.style.top=(5+Math.random()*60)+"%";s.appendChild(d);
+    requestAnimationFrame(function(){d.classList.add("on");d.style.transform="translateX("+(Math.random()>.5?"":"-")+"40px)"});
+    setTimeout(function(){d.classList.remove("on")},5200);setTimeout(function(){d.remove()},8000);},1300);
+  setInterval(function(){ /* scan bars twitch */
+    var bars=s.querySelectorAll(".scan");for(var j=0;j<bars.length;j++){bars[j].style.top=(h*.5+Math.random()*h*.3)+"px";}},2600);
+  var c=$("counter"), n=1000+Math.floor(Math.random()*9000);
+  setInterval(function(){n+=Math.random()<.3?1:0;c.textContent=("000000"+n).slice(-6)},900);
+}
+
+/* ---------- start: one click connects (browsers only allow sound after a click) ---------- */
+async function connect(){
+  $("splash").onclick=null; audio(); modem(); buzz(20);
+  var lines=["ATDT 1-213-555-0192","CONNECT 14400","LOGIN: guest","..."],out="";
+  for(var i=0;i<lines.length;i++){out+=lines[i]+"\n";$("dial").textContent=out;await sleep(900);}
+  await statusReady; if(alreadyRead)return;
+  $("splash").style.display="none";$("site").style.opacity=1;buildSky();
+}
+$("splash").onclick=connect;
+
+/* ---------- the disk comes out of the page ---------- */
+$("floppy").onclick=async function(){
+  if(alreadyRead){location.reload();return;}
+  var r=$("floppy").getBoundingClientRect(), f=$("fly");
+  f.style.left=r.left+"px";f.style.top=r.top+"px";f.style.width=r.width+"px";f.style.display="block";$("floppy").style.visibility="hidden";
+  eject(); buzz(30);
+  var tw=Math.min(innerWidth*.42,360);
+  f.animate([{left:r.left+"px",top:r.top+"px",width:r.width+"px",transform:"rotate(0)"},
+             {left:(innerWidth/2-tw/2)+"px",top:(innerHeight/2-tw*.55)+"px",width:tw+"px",transform:"rotate(-6deg)",offset:.55},
+             {left:(innerWidth/2-tw/2)+"px",top:(innerHeight/2-tw*.55)+"px",width:tw+"px",transform:"rotate(0)"}],{duration:1400,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});
+  await sleep(1700);
+  $("macwrap").style.display="flex";
+  f.animate([{transform:"translateY(0) scale(1)",opacity:1},{transform:"translateY(-40vh) scale(.25)",opacity:0}],{duration:800,easing:"ease-in",fill:"forwards"});
+  click(); await sleep(800); f.style.display="none";
+  runDisk();
+};
+
+async function runDisk(){
+  desktop();onebit();await sleep(900);
+  var frag=null;
+  try{var r=await api("/enter",{code:CODE});if(r.status==="ok")frag=r.fragment;else alreadyRead=true;}catch(e){}
+  labelScreen(); shutter(); await sleep(3200);
+  if(!frag){ return destroy(); }
+  var text=POEM.join("\n").replace("@FRAGMENT@",frag).split("\n");
+  var maxOff=text.length*16-(WY+WH-TOP)+40, o=-(WY+WH-TOP);
+  await new Promise(function(res){ var last=0; (function step(t){ if(t-last>38){o+=1;last=t;screen(text,o);} if(o<maxOff)requestAnimationFrame(step);else res(); })(0); });
+  await sleep(1800); gunshot(); buzz([60,40,60]);
+  for(var k=0;k<=24;k++){var tt=k/24;screen(text.map(function(l){return l.split("").map(function(ch){return /\s/.test(ch)||Math.random()>tt?ch:garble(ch);}).join("");}),o);await sleep(90);}
+  await sleep(1500); destroy();
+}
+async function destroy(){
+  buzz([80,50,80,50,200]);
+  await new Promise(function(r){melt(r);});
+  buzz(400);
+  alert("The disk is blank.");
+  document.title="404 Not Found"; $("dead").style.display="block";
+}
+</script>
+</body>
+</html>
