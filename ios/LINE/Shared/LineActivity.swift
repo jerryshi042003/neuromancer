@@ -6,8 +6,10 @@ struct LineAttributes: ActivityAttributes {
         var status: String      // what the exchange says right now
         var line: String        // the payphone number
         var started: Date
+        var progress: Double = 0     // used by the "uploading you" style
     }
     var exchange: String
+    var style: Int = 0               // 0 call, 1 uploading you, 2 redacted
 }
 
 enum Glitch {

@@ -6,6 +6,8 @@ import ActivityKit
 struct LINEWidgets: WidgetBundle {
     var body: some Widget {
         LineWidget()
+        RedactedWidget()
+        DashboardWidget()
         LineLiveActivity()
     }
 }
@@ -94,6 +96,66 @@ struct LineWidget: Widget {
     }
 }
 
+// MARK: - Style 2: a widget stuck loading, with a few letters showing through the gray bars
+
+struct RedactedView: View {
+    let entry: LineEntry
+    var body: some View {
+        let words = ["I", "AM", "STILL", "IN", "THE", "LINES"]
+        VStack(alignment: .leading, spacing: 7) {
+            ForEach(0..<5, id: \.self) { row in
+                HStack(spacing: 5) {
+                    ForEach(0..<3, id: \.self) { col in
+                        let k = row * 3 + col, reveal = (k + entry.index) % 5 == 0
+                        if reveal { Text(words[(k + entry.index) % words.count]).font(.system(size: 12, weight: .bold, design: .monospaced)).foregroundStyle(.white) }
+                        else { RoundedRectangle(cornerRadius: 3).fill(Color(white: 0.28)).frame(width: CGFloat(18 + (k * 13 + entry.index * 7) % 34), height: 11) }
+                    }
+                }
+            }
+        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+struct RedactedWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "RedactedWidget", provider: LineProvider()) { e in
+            RedactedView(entry: e).containerBackground(for: .widget) { Color(white: 0.1) }
+        }
+        .configurationDisplayName("LINE · loading").description("A widget that never finishes loading.")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+// MARK: - Style 3: the 2005 desktop-widget look, glossy and wrong
+
+struct DashboardView: View {
+    let entry: LineEntry
+    var body: some View {
+        VStack(spacing: 6) {
+            Text("LINE").font(.system(size: 13, weight: .heavy)).foregroundStyle(.white).shadow(color: .black, radius: 0, y: -1)
+            ZStack {
+                RoundedRectangle(cornerRadius: 8).fill(LinearGradient(colors: [Color(red: 0.75, green: 0.85, blue: 0.55), Color(red: 0.45, green: 0.6, blue: 0.3)], startPoint: .top, endPoint: .bottom))
+                VStack(spacing: 2) {
+                    Text(Script.lines[entry.index % Script.lines.count].0).font(.system(size: 15, weight: .bold, design: .monospaced))
+                    Text(Glitch.corrupt(Script.messages[entry.index % Script.messages.count], amount: entry.amount, seed: entry.index)).font(.system(size: 10, design: .monospaced))
+                }.foregroundStyle(Color(red: 0.1, green: 0.18, blue: 0.05))
+            }
+            .overlay(RoundedRectangle(cornerRadius: 8).stroke(.black.opacity(0.5), lineWidth: 1))
+            .overlay(alignment: .top) { RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.35)).frame(height: 14).padding(2) }
+        }
+    }
+}
+struct DashboardWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "DashboardWidget", provider: LineProvider()) { e in
+            DashboardView(entry: e).containerBackground(for: .widget) {
+                LinearGradient(colors: [Color(white: 0.55), Color(white: 0.18)], startPoint: .top, endPoint: .bottom)
+            }
+        }
+        .configurationDisplayName("LINE · 2005").description("An old desktop widget that should not be here.")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
 // MARK: - Live Activity: lock screen and Dynamic Island
 
 struct LineLiveActivity: Widget {
@@ -103,7 +165,14 @@ struct LineLiveActivity: Widget {
             HStack(alignment: .top, spacing: 14) {
                 VStack(alignment: .leading, spacing: 4) {
                     SplitText(text: "LINE " + ctx.state.line, size: 17, weight: .black)
-                    Text(Glitch.corrupt(ctx.state.status, amount: 0.18, seed: ctx.state.status.count)).font(.system(size: 13, design: .monospaced)).foregroundStyle(.white.opacity(0.85))
+                    if ctx.attributes.style == 1 {
+                        Text("UPLOADING YOU · " + ctx.state.status).font(.system(size: 13, design: .monospaced)).foregroundStyle(.white.opacity(0.85))
+                        ProgressView(value: ctx.state.progress).tint(Color(red: 1, green: 0.2, blue: 0.3))
+                    } else if ctx.attributes.style == 2 {
+                        HStack(spacing: 4) { ForEach(0..<5, id: \.self) { k in RoundedRectangle(cornerRadius: 2).fill(Color(white: 0.3)).frame(width: CGFloat(20 + k * 9), height: 10) } }
+                    } else {
+                        Text(Glitch.corrupt(ctx.state.status, amount: 0.18, seed: ctx.state.status.count)).font(.system(size: 13, design: .monospaced)).foregroundStyle(.white.opacity(0.85))
+                    }
                     Text(ctx.attributes.exchange + " · SOURCE: NOT A TELEPHONE").font(.system(size: 10, design: .monospaced)).foregroundStyle(.gray)
                 }
                 Spacer()
@@ -129,7 +198,13 @@ struct LineLiveActivity: Widget {
             } compactLeading: {
                 Text("◉ LINE").font(.system(size: 12, weight: .black, design: .monospaced)).foregroundStyle(Color(red: 1, green: 0.15, blue: 0.2))
             } compactTrailing: {
-                Text(timerInterval: ctx.state.started...Date.distantFuture, countsDown: false).font(.system(size: 12, design: .monospaced)).monospacedDigit().frame(width: 44)
+                if ctx.attributes.style == 1 {
+                    Text("\(Int(ctx.state.progress * 100))%").font(.system(size: 12, weight: .bold, design: .monospaced)).foregroundStyle(Color(red: 1, green: 0.3, blue: 0.35))
+                } else if ctx.attributes.style == 2 {
+                    RoundedRectangle(cornerRadius: 2).fill(Color(white: 0.35)).frame(width: 30, height: 9)
+                } else {
+                    Text(timerInterval: ctx.state.started...Date.distantFuture, countsDown: false).font(.system(size: 12, design: .monospaced)).monospacedDigit().frame(width: 44)
+                }
             } minimal: {
                 Text("◉").foregroundStyle(Color(red: 1, green: 0.15, blue: 0.2))
             }

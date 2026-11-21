@@ -14,15 +14,15 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		VrNm4JwgKk/fld06OUOjGUdVG/o=
+		DSx3AppcwSCOnLWok/oFSbm/mmM=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Ll1EzlKqIfV2KrloICE6Y4jPOlA=
+		GS79Awz5UDaua2KUKAiFVpb1900=
 		</data>
 		<key>LINE.debug.dylib</key>
 		<data>
-		q75w61j5Al/NxvQY5sbUy515gGw=
+		iJ5ah8uBAoSru3mcTRbtZ/J9pyQ=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -34,19 +34,19 @@
 		</data>
 		<key>PlugIns/LINEWidgets.appex/LINEWidgets</key>
 		<data>
-		ywnZy6SfKf7ZnCqtWm3lAFEv+JA=
+		idKe/AtBdrLAMQczxMlSoatTjDc=
 		</data>
 		<key>PlugIns/LINEWidgets.appex/LINEWidgets.debug.dylib</key>
 		<data>
-		Wb/7yOddifH8N6aZILEY/wS1VNs=
+		3GjUKAWN+gEk03Y4JDyzmHBYALk=
 		</data>
 		<key>PlugIns/LINEWidgets.appex/_CodeSignature/CodeResources</key>
 		<data>
-		3KgBMlMGenVv7MyRqnmh81BZFic=
+		zT0o0vGiCZ1O/qVewkCX4aXd+Xo=
 		</data>
 		<key>PlugIns/LINEWidgets.appex/__preview.dylib</key>
 		<data>
-		4LGrZR1Bp20xO83evap4f+4m7p4=
+		XhqSg/kP0hj/C6hIXe/7KLbb5Oc=
 		</data>
 		<key>PlugIns/LINEWidgets.appex/embedded.mobileprovision</key>
 		<data>
@@ -54,15 +54,19 @@
 		</data>
 		<key>__preview.dylib</key>
 		<data>
-		YLNxWqRksJKtxjCY5aOLIFZCwfE=
+		GDj5i/VvnMBclnvf6r+CMttvS2U=
 		</data>
 		<key>default.metallib</key>
 		<data>
-		2RIFfOVrgoBmx0OnrOxKYZViJkE=
+		th6z/HsGivNl7mKYo6ZR63DLPNI=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
 		5VtLGX8D6NZ/tLziXVO4sEQE/W4=
+		</data>
+		<key>payphones.json</key>
+		<data>
+		FnXJsbK0Jq1QXY0tU3WWOxWjPGw=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -85,14 +89,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			pCvMY1mbPpcFnpEcninBstcwdFh7Bs3kPnwxGFTYqgk=
+			d4sMEAp9o/afHDIsnK1F5KNb4skues5gaLI4IlatGn8=
 			</data>
 		</dict>
 		<key>LINE.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			OyaiV2S6ydGBfxIhrRj8qZWf8M37JdEml2WZqC8kkRM=
+			1QkxlwCt912057cS8C3oCdd9ddD8Zq3IueejAQBch2o=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/Info.plist</key>
@@ -106,28 +110,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Z0bZRkjL3SecAlYRhyPen8/+zSvtETnEUCzW+J16vfI=
+			oU+qcBtQiWuHeWcVXnYhPDQFukbbjJ8bhYnQrylxo4M=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/LINEWidgets.debug.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UO9ET4zHjH4ZZ5GLL0nS6Hl8IfkKpwuDYGd+llx9frM=
+			HoVbfFovSLfknrcEkdMkHZHuP9QWhMAhfn7qNLFgMEg=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Rm6iq2mTJSCMAYNc0vrOBJX4ZNO91X31RSS9+9mAkfs=
+			G+RDBRRPiBGvTcrFcU51ocEitHsxvpI35bVrJsgVBOI=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/__preview.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			aGY0DnjhlvCB29lZz1VJmcWCmb2t3sLHAiaoR9Y9y4g=
+			U2J+WOcTt+tG8OBypgxDInymLWw2BPoB80Sv805KuLk=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/embedded.mobileprovision</key>
@@ -141,14 +145,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			DjoS/Jhnz4KG6SpuZHu+TdhBzmnRhut8emxWVo9HFcc=
+			20ldqe28unmN1sxaFF4qafbN8fIyutZm7uA0KBT65C0=
 			</data>
 		</dict>
 		<key>default.metallib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			oQOcCxj+xcIMmTf537maZ04asrgRgMhvF/1lpDDjCrg=
+			/xh78q3wtb4j3th+J46RB9seUtyJ8/X14DzLmPnw/zQ=
 			</data>
 		</dict>
 		<key>embedded.mobileprovision</key>
@@ -156,6 +160,13 @@
 			<key>hash2</key>
 			<data>
 			lf9k4uS4eHifXI8syXlOQ5Nb02za1sFnG4QwouCfgvI=
+			</data>
+		</dict>
+		<key>payphones.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			NLlX6DOXKT57b8kJ5437eLRfaYRbsbISejVef/VJTuE=
 			</data>
 		</dict>
 	</dict>

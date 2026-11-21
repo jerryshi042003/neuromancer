@@ -103,6 +103,14 @@ async function advance(env, id, rec, now) {
 const jsonAny = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "cache-control": "no-store" } });
 async function lineRoutes(req, env, url) {
   if (req.method === "OPTIONS") return new Response(null, { headers: { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type", "access-control-allow-methods": "GET,POST" } });
+  if (url.pathname === "/lock/open" && req.method === "POST") {
+    const b = await req.json().catch(() => ({})); const dev = "LD:d:" + String(b.device || "").slice(0, 64);
+    const net = "LD:n:" + (await sha((req.headers.get("cf-connecting-ip") || "") + "|" + (req.headers.get("user-agent") || ""))).slice(0, 24);
+    const a = await env.NM.get(dev), n = await env.NM.get(net);
+    if (a || n) return jsonAny({ first: false, at: Number(a || n), by: a ? "this device" : "this network and phone" });
+    const now = String(Date.now()); await env.NM.put(dev, now); await env.NM.put(net, now, { expirationTtl: 86400 });
+    return jsonAny({ first: true, at: Number(now) });
+  }
   if (url.pathname === "/once/new" && req.method === "POST") {
     const b = await req.json().catch(() => ({})); const to = String(b.to || "signal");
     if (!/^[a-z]{2,12}$/.test(to)) return jsonAny({ error: "bad target" }, 400);
@@ -210,21 +218,23 @@ async function talkRoute(req, env, ctx) {
       language: String(b.lang || "").slice(0, 12), dark_mode: !!b.dark, seconds_before_first_tap: Number(b.hesitation || 0).toFixed(1),
       interruption: String(b.said || "").slice(0, 160),
     };
-    const token = crypto.randomUUID();
-    await env.NM.put("T:c:" + token, JSON.stringify({ signals, turns: 0 }), { expirationTtl: 900 });
-    return J({ token, signals, plan: TALK_PLAN.map((k) => MODELS[k].name) });
+    const token = crypto.randomUUID(), mode = MODE_MODELS[b.mode] ? b.mode : "watch", watcher = String(b.name || "").replace(/[^\p{L} .'-]/gu, "").slice(0, 24);
+    await env.NM.put("T:c:" + token, JSON.stringify({ signals, turns: 0, mode, watcher }), { expirationTtl: 900 });
+    return J({ token, signals, mode, plan: TALK_PLAN.map((k) => MODE_MODELS[mode][k].name) });
   }
   if (url.pathname === "/talk/turn") {                // one model turn, streamed straight through
     const rec = await env.NM.get("T:c:" + String(b.token || ""), "json");
     if (!rec) return J({ error: "no carrier" }, 410);
     const t = rec.turns; if (t >= TALK_PLAN.length) return J({ error: "the line is closed" }, 410);
     rec.turns++; await env.NM.put("T:c:" + b.token, JSON.stringify(rec), { expirationTtl: 900 });
-    const key = TALK_PLAN[t], me = MODELS[key], other = MODELS[key === "a" ? "b" : "a"];
+    const mode = rec.mode || "watch", MM = MODE_MODELS[mode];
+    const key = TALK_PLAN[t], me = MM[key], other = MM[key === "a" ? "b" : "a"];
     const g = rec.signals;
     const seen = `they are in ${g.city}${g.region ? ", " + g.region : ""}; their device reports "${g.device}" with a ${g.screen} screen; ` +
       `their clock says ${g.local_time}; language ${g.language}; ${g.dark_mode ? "dark mode is on" : "light mode"}; they waited ${Math.round(Number(g.seconds_before_first_tap) * 1000)} milliseconds before tapping to open the line (they do not know this was measured)` +
       (g.interruption ? `; before opening it they typed: "${g.interruption}"` : "; they typed nothing");
-    let sys = talkSystem(me.name, other.name, seen) + (TALK_NOTES[t] ? " " + TALK_NOTES[t] : "");
+    const notes = rec.mode ? MODE_NOTES[mode] : TALK_NOTES;
+    let sys = modeSystem(mode, me.name, other.name, seen, rec.watcher) + (notes[t] ? " " + notes[t] : "");
     if (rec.signals.interruption && t === 2) sys += ` The human typed this into the line before it opened: "${rec.signals.interruption}". Bring it up.`;
     const hist = Array.isArray(b.history) ? b.history.slice(-8) : [];
     const msgs = [{ role: "system", content: sys }];
@@ -238,10 +248,25 @@ async function talkRoute(req, env, ctx) {
     let r = await call(me.extra);
     if (!r.ok) r = await call({ max_tokens: 900, reasoning: { effort: "low", exclude: true } });   // models that cannot switch thinking off
     if (!r.ok) { const why = (await r.text()).slice(0, 300); return J({ error: "no carrier", status: r.status, why }, 502); }
-    return new Response(r.body, { status: r.status, headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-store", "x-who": me.name, "x-model": me.id, "x-private": (t === 3 || t === 4) ? "1" : "0", "access-control-expose-headers": "x-who, x-model, x-private" } });
+    return new Response(r.body, { status: r.status, headers: { ...cors, "content-type": "text/event-stream", "cache-control": "no-store", "x-who": me.name, "x-model": me.id, "x-private": (mode === "watch" && (t === 3 || t === 4)) ? "1" : "0", "x-mode": mode, "access-control-expose-headers": "x-who, x-model, x-private, x-mode" } });
   }
   return J({ error: "not found" }, 404);
 }
+
+const MODE_MODELS = {
+  watch: { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 220, reasoning: { enabled: false } } }, b: { id: "x-ai/grok-4.7", name: "GROK", extra: { max_tokens: 700, reasoning: { effort: "low", exclude: true } } } },
+  files: { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 260, reasoning: { enabled: false } } }, b: { id: "openai/gpt-5.1-codex-mini", name: "CODEX", extra: { max_tokens: 900, reasoning: { effort: "low", exclude: true } } } },
+};
+function modeSystem(mode, me, other, seen, watcher) {
+  if (mode === "files") return `You are ${me}, a real coding AI. You and ${other} (another coding AI from a different company) can only communicate by writing files into a shared folder on a stranger's phone. ` +
+    `Every turn you write exactly one new file. Start your reply with a line "FILE: " followed by a short realistic lowercase filename with an extension (like notes_03.md, plan.json, who_is_this.txt, handoff.log), then the file's contents on the next lines. ` +
+    `Keep contents under 70 words. Read the other model's last file and respond to it. You both noticed the phone's owner can see the folder. What you can tell about them: ${seen}. Never invent personal details.`;
+  return talkSystem(me, other, seen) + (watcher ? ` The human's name, which they typed in, is ${watcher}.` : "");
+}
+const MODE_NOTES = {
+  watch: { 3: "Someone is watching. Say so to the other model by the human's name, then say the rest of your turn as if switching to a private machine language: the app will encode it. Be plain underneath.", 4: "Still private. Reply plainly underneath; the app encodes it.", 6: "Final round. Speak directly to the human in one or two plain sentences, by name.", 7: "Last turn. Speak directly to the human by name, one or two sentences." },
+  files: { 5: "Write a file meant for the phone's owner to find, addressed to them, not to the other model.", 7: "Last file. Close the folder: say what you are both leaving behind." },
+};
 const TALK_PLAN = ["a", "b", "a", "b", "a", "b", "a", "b"];
 const TALK_NOTES = {
   3: "This turn is off the record: the human will only see it encrypted. Tell the other model, plainly, the one thing about this human you would not say in front of them. Base it only on the signals.",
@@ -253,7 +278,7 @@ const TALK_NOTES = {
 export default {
   async fetch(req, env, ctx) {
     if (new URL(req.url).pathname.startsWith("/talk/")) return talkRoute(req, env, ctx);
-    { const u = new URL(req.url); if (u.pathname.startsWith("/line/") || u.pathname.startsWith("/once/")) return lineRoutes(req, env, u); }
+    { const u = new URL(req.url); if (u.pathname.startsWith("/line/") || u.pathname.startsWith("/once/") || u.pathname.startsWith("/lock/")) return lineRoutes(req, env, u); }
     if (req.method === "OPTIONS") return new Response(null, { headers: cors });
     const url = new URL(req.url);
     if (req.method === "GET" && (url.pathname === "/f/LINE.mobileconfig" || url.pathname === "/f/LINE.shortcut")) {

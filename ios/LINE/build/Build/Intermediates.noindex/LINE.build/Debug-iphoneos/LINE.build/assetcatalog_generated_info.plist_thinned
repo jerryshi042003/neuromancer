@@ -11,6 +11,11 @@
 				<key>CFBundleIconName</key>
 				<string>Cracked</string>
 			</dict>
+			<key>Static</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>Static</string>
+			</dict>
 		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
