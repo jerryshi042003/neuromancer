@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><title>LINE</title>
+<style>html,body{margin:0;min-height:100%;background:#000;color:#ddd;font:15px/1.6 Menlo,monospace}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:40px 20px;text-align:center}
+#q{background:#fff;padding:14px}b{color:#fff;font-size:20px;letter-spacing:.1em}</style></head><body>
+<b>THIS PHONE IS RINGING</b>
+<div id="q"></div>
+<div id="u" style="font-size:11px;color:#777;word-break:break-all"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var u="https://jerryshi042003.github.io/neuromancer/clip/?line=310-637-8714&at=2101%20Via%20Arado%2C%20Compton";
+new QRCode(document.getElementById("q"),{text:u,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
+document.getElementById("u").textContent=u;
+</script></body></html>
