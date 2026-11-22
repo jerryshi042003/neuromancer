@@ -2,7 +2,7 @@ name: LINE
 options:
   bundleIdPrefix: io.github.jerryshi042003
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "26.0"
 settings:
   base:
     DEVELOPMENT_TEAM: 39225XZQP2
@@ -24,6 +24,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: LINE
         INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        INFOPLIST_KEY_NSAlarmKitUsageDescription: "LINE rings when a payphone line opens."
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "LINE finds the nearest real payphone to you. Your location never leaves the phone."
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIStatusBarHidden: YES

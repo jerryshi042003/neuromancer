@@ -127,9 +127,12 @@ struct AILineDemo: View {
                     guard d != "[DONE]", let obj = try? JSONSerialization.jsonObject(with: Data(d.utf8)) as? [String: Any],
                           let ch = (obj["choices"] as? [[String: Any]])?.first, let delta = ch["delta"] as? [String: Any], let c = delta["content"] as? String, !c.isEmpty else { continue }
                     turns[idx].text += c
-                    if priv { GlyphSound.shared.chirp(c) }
                 }
             } catch { break }
+            if priv {
+                let secs = await GGWave.shared.say(turns[idx].text)
+                try? await Task.sleep(for: .seconds(secs + 0.4))
+            }
             if i == plan.count - 1 { Haptics.shared.heartbeat(beats: 3) }
         }
     }

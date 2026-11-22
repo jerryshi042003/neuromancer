@@ -9,6 +9,7 @@ struct LINEWidgets: WidgetBundle {
         RedactedWidget()
         DashboardWidget()
         LineLiveActivity()
+        HangUpControl()
     }
 }
 
@@ -210,5 +211,17 @@ struct LineLiveActivity: Widget {
             }
             .keylineTint(.red)
         }
+    }
+}
+
+// MARK: - Control Center / Lock Screen: the only way to hang up
+import AppIntents
+struct HangUpControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "io.github.jerryshi042003.line.hangup") {
+            ControlWidgetButton(action: HangUpIntent()) { Label("HANG UP", systemImage: "phone.down.fill") }
+        }
+        .displayName("LINE: Hang Up")
+        .description("Ends every open LINE call.")
     }
 }

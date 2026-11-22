@@ -7,19 +7,24 @@ struct Board: View {
         .init(id: "notify", title: "NOTIFICATIONS", styles: ["real lock screen", "iOS 4 banner", "iOS 6 alert", "kernel failure"]),
         .init(id: "haptic", title: "HAPTICS", styles: ["morse", "heartbeat", "phone bell", "static"]),
         .init(id: "takeover", title: "TAKEOVER", styles: ["screen melt", "crt off", "cracks"]),
-        .init(id: "watch", title: "THEY ARE WATCHING", styles: ["claude + grok, live"]),
+        .init(id: "watch", title: "THEY ARE WATCHING", styles: ["claude + grok, live", "gibberlink chirps"]),
         .init(id: "files", title: "FILES BETWEEN AIs", styles: ["claude + codex, live"]),
         .init(id: "live", title: "DYNAMIC ISLAND", styles: ["call", "uploading you", "redacted"]),
         .init(id: "icon", title: "APP ICON", styles: ["clean", "cracked", "static"]),
         .init(id: "lock", title: "READ ONCE", styles: ["real device lock"]),
         .init(id: "near", title: "NEAREST PAYPHONE", styles: ["location + compass"]),
+        .init(id: "alarm", title: "RINGS THROUGH SILENT", styles: ["real system alarm"]),
+        .init(id: "ghost", title: "NO SIGNAL", styles: ["on-device model, airplane mode"]),
+        .init(id: "time", title: "BACK IN TIME", styles: ["2010 lock screen"]),
         .init(id: "boot", title: "BOOT", styles: ["jailbreak log"]),
         .init(id: "pickup", title: "PICK UP", styles: ["the first call"]),
     ]
     @State private var open: Item.ID? = nil
+    @State private var booted = false
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
+            if !booted { BootLog { withAnimation(.easeOut(duration: 0.3)) { booted = true } }.zIndex(5) }
             StaticNoise(level: 0.05).ignoresSafeArea()
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
@@ -48,6 +53,7 @@ struct Board: View {
             }
             .statusBarHidden(true)
         }
+        .modifier(Watcher())
         .onAppear { Haptics.shared.prepare() }
     }
     @ViewBuilder func demo(_ id: String) -> some View {
@@ -61,6 +67,9 @@ struct Board: View {
         case "icon": IconDemo()
         case "lock": LockDemo()
         case "near": NearDemo()
+        case "alarm": AlarmDemo()
+        case "ghost": GhostDemo()
+        case "time": BackInTime()
         case "boot": BootLog { }
         default: ContentView()
         }

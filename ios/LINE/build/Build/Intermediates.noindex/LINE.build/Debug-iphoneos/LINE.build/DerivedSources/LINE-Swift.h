@@ -381,6 +381,13 @@ SWIFT_CLASS("_TtC4LINE6Finder")
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
+/// Real data-over-sound (ggwave, MIT) run inside a hidden web view, played through the speaker.
+/// The free Waver app can decode what it plays.
+SWIFT_CLASS("_TtC4LINE6GGWave")
+@interface GGWave : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
 #endif // defined(__OBJC__)
 #if __has_attribute(external_source_symbol)
 # pragma clang attribute pop

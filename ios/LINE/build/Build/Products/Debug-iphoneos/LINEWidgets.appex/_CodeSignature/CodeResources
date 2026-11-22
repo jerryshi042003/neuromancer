@@ -6,15 +6,23 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		3lRnpL95V0HuISIb1B8Uxz7X8Ys=
+		qnrKEFPHAsabRLhgJwWTmMCyMLg=
 		</data>
 		<key>LINEWidgets.debug.dylib</key>
 		<data>
-		3GjUKAWN+gEk03Y4JDyzmHBYALk=
+		gOHbkRKt6rvu4p6AlJcX6qfGvWQ=
+		</data>
+		<key>Metadata.appintents/extract.actionsdata</key>
+		<data>
+		caNrOcfzL0Cx4mNFSNx3TANBkeM=
+		</data>
+		<key>Metadata.appintents/version.json</key>
+		<data>
+		PFbTXKE++oaNDMAe6pe4WaYJGCA=
 		</data>
 		<key>__preview.dylib</key>
 		<data>
-		XhqSg/kP0hj/C6hIXe/7KLbb5Oc=
+		uzR6W9X2Uw9V9a04wkKomC7DN3w=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
@@ -27,14 +35,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HoVbfFovSLfknrcEkdMkHZHuP9QWhMAhfn7qNLFgMEg=
+			1pw0AOTjZ2gI2gDZfSdJl474owWnYmZZ/wK90ffH5Vw=
+			</data>
+		</dict>
+		<key>Metadata.appintents/extract.actionsdata</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			yUtsBJ8n75H/fjSWo0ppp+TbN49/8WuS0hjx3e2ne/I=
+			</data>
+		</dict>
+		<key>Metadata.appintents/version.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			bGEMLTRvWVvXxahROmLgL3ZVf6XYsEamPvgqyAHzT5M=
 			</data>
 		</dict>
 		<key>__preview.dylib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			U2J+WOcTt+tG8OBypgxDInymLWw2BPoB80Sv805KuLk=
+			5U5HLAm/HTdMCSPf8cY8IKf73CVT1PNPhSrY63W3E4Y=
 			</data>
 		</dict>
 		<key>embedded.mobileprovision</key>

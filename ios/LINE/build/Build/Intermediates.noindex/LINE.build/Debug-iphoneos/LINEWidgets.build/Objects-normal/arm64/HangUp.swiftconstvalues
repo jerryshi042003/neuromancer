@@ -1,0 +1,86 @@
+[
+  {
+    "typeName": "LINEWidgets.HangUpIntent",
+    "mangledTypeName": "11LINEWidgets12HangUpIntentV",
+    "kind": "struct",
+    "file": "/Users/jshi/Personal/playground/neuromancer/ios/LINE/Shared/HangUp.swift",
+    "line": 5,
+    "conformances": [
+      "AppIntents.LiveActivityIntent",
+      "AppIntents.SystemIntent",
+      "AppIntents.AppIntent",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents._SupportsAppDependencies",
+      "Swift.Sendable",
+      "Swift.SendableMetatype",
+      "Swift.BitwiseCopyable"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "AppIntents.LiveActivityIntent",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "AppIntents.SystemIntent",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "AppIntents.AppIntent",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "AppIntents._SupportsAppDependencies",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "LINEWidgets"
+      },
+      {
+        "protocolName": "Swift.BitwiseCopyable",
+        "conformanceDefiningModule": "LINEWidgets"
+      }
+    ],
+    "associatedTypeAliases": [
+      {
+        "typeAliasName": "PerformResult",
+        "substitutedTypeName": "some AppIntents.IntentResult",
+        "substitutedMangledTypeName": "11LINEWidgets12HangUpIntentV7performQryYaKFQOy_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.IntentResult"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      },
+      {
+        "typeAliasName": "SummaryContent",
+        "substitutedTypeName": "some AppIntents.ParameterSummary",
+        "substitutedMangledTypeName": "10AppIntents0A6IntentPAAE16parameterSummaryQrvpZQOy11LINEWidgets06HangUpC0V_Qo_",
+        "opaqueTypeProtocolRequirements": [
+          "AppIntents.ParameterSummary"
+        ],
+        "opaqueTypeSameTypeRequirements": []
+      }
+    ],
+    "properties": [
+      {
+        "label": "title",
+        "type": "Foundation.LocalizedStringResource",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "false",
+        "file": "/Users/jshi/Personal/playground/neuromancer/ios/LINE/Shared/HangUp.swift",
+        "line": 6,
+        "valueKind": "RawLiteral",
+        "value": "Hang Up"
+      }
+    ]
+  }
+]

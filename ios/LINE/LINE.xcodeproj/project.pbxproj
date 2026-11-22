@@ -12,16 +12,21 @@
 		4D0749A6DD874508ED8919C5 /* LINEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619743E348B38C82D9396066 /* LINEApp.swift */; };
 		56AFB52E7D4DFEEDBF757718 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6442140AEDD5CC90F523EE65 /* Haptics.swift */; };
 		71C90B35E16F5E559239A361 /* AILine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A606181BFFCD355AC923EE8 /* AILine.swift */; };
+		767A999D0644164C5AA5E75A /* HangUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */; };
 		76E5DEAFE712A39A1BBBB68C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF5CB71AFA3744CF70126EA /* Assets.xcassets */; };
+		8019B60C6847EA9A5A17BD93 /* HangUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */; };
+		89796256AC3928FE1AF08EB1 /* More.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29080DAE179F362043C15D84 /* More.swift */; };
 		8AF9D1B2825254E1467ADBD4 /* Glitch.metal in Sources */ = {isa = PBXBuildFile; fileRef = 52F44888FEA460D4F567725D /* Glitch.metal */; };
 		8FA4A57813DF067B47357A52 /* LineActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AFF9D995ADD6075CD6733A /* LineActivity.swift */; };
 		8FEFD7B28F2DD1C934F2F37E /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FEBA39EE1F606840A31AB8 /* Board.swift */; };
 		A297B1B81A555856D7FDFDCC /* payphones.json in Resources */ = {isa = PBXBuildFile; fileRef = 7335B332D0E1F1FD6403E13A /* payphones.json */; };
+		A6B12B260C1922BEC5D44159 /* ggwave.js in Resources */ = {isa = PBXBuildFile; fileRef = DED1AF61A66D0FA24922D6FE /* ggwave.js */; };
 		B56BA356662808082BE0119E /* LINEWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 51157995DA7593DD811509C1 /* LINEWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B5D1082D8B41BC3318C3F85F /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA08FED0A6BC59A25F5286E /* Haptic.swift */; };
 		C1527F87A89C5D87F39EA62A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93932EA6316573E34F15EF7 /* ContentView.swift */; };
 		D21164C9C2708DCF4BE81F3A /* LINEWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72478ECF08CD9F5420D7DB19 /* LINEWidgets.swift */; };
 		D486DC6447ABAD2B25C25A63 /* Takeover.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C47291B9365F8C00C452E4 /* Takeover.swift */; };
+		D72F9683CE9ABF3CA4972B6F /* GGWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21B514480C848AC05F66768 /* GGWave.swift */; };
 		F0A078E7E8C676A89D6DD731 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D24CFA377B16F928CE59CF /* Boot.swift */; };
 		FC83EFB30E27E9878B33AB74 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA8C956AC8C9451E95A7C9E /* Notify.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		1BA08FED0A6BC59A25F5286E /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
+		29080DAE179F362043C15D84 /* More.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = More.swift; sourceTree = "<group>"; };
 		31D24CFA377B16F928CE59CF /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		3B80C242EFC73051E715FF36 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		47FEBA39EE1F606840A31AB8 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
@@ -65,8 +71,11 @@
 		72478ECF08CD9F5420D7DB19 /* LINEWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LINEWidgets.swift; sourceTree = "<group>"; };
 		7335B332D0E1F1FD6403E13A /* payphones.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = payphones.json; sourceTree = "<group>"; };
 		7E62E67830E5E8D250178D24 /* LINE.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LINE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangUp.swift; sourceTree = "<group>"; };
 		AFA8C956AC8C9451E95A7C9E /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		D1C47291B9365F8C00C452E4 /* Takeover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Takeover.swift; sourceTree = "<group>"; };
+		DED1AF61A66D0FA24922D6FE /* ggwave.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ggwave.js; sourceTree = "<group>"; };
+		E21B514480C848AC05F66768 /* GGWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GGWave.swift; sourceTree = "<group>"; };
 		E93932EA6316573E34F15EF7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F4AA6D1E90EE08D8DF64A8D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,6 +84,7 @@
 		37B1E6B4E7AEAFA0D159B87A /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */,
 				67AFF9D995ADD6075CD6733A /* LineActivity.swift */,
 			);
 			path = Shared;
@@ -102,8 +112,10 @@
 			isa = PBXGroup;
 			children = (
 				5A606181BFFCD355AC923EE8 /* AILine.swift */,
+				E21B514480C848AC05F66768 /* GGWave.swift */,
 				1BA08FED0A6BC59A25F5286E /* Haptic.swift */,
 				3B80C242EFC73051E715FF36 /* Misc.swift */,
+				29080DAE179F362043C15D84 /* More.swift */,
 				AFA8C956AC8C9451E95A7C9E /* Notify.swift */,
 				D1C47291B9365F8C00C452E4 /* Takeover.swift */,
 			);
@@ -113,6 +125,7 @@
 		94B7180729F76D2323C203EE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DED1AF61A66D0FA24922D6FE /* ggwave.js */,
 				7335B332D0E1F1FD6403E13A /* payphones.json */,
 			);
 			path = Resources;
@@ -229,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76E5DEAFE712A39A1BBBB68C /* Assets.xcassets in Resources */,
+				A6B12B260C1922BEC5D44159 /* ggwave.js in Resources */,
 				A297B1B81A555856D7FDFDCC /* payphones.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				767A999D0644164C5AA5E75A /* HangUp.swift in Sources */,
 				D21164C9C2708DCF4BE81F3A /* LINEWidgets.swift in Sources */,
 				06A102E4FB2EB55526716A05 /* LineActivity.swift in Sources */,
 			);
@@ -253,12 +268,15 @@
 				8FEFD7B28F2DD1C934F2F37E /* Board.swift in Sources */,
 				F0A078E7E8C676A89D6DD731 /* Boot.swift in Sources */,
 				C1527F87A89C5D87F39EA62A /* ContentView.swift in Sources */,
+				D72F9683CE9ABF3CA4972B6F /* GGWave.swift in Sources */,
 				8AF9D1B2825254E1467ADBD4 /* Glitch.metal in Sources */,
+				8019B60C6847EA9A5A17BD93 /* HangUp.swift in Sources */,
 				B5D1082D8B41BC3318C3F85F /* Haptic.swift in Sources */,
 				56AFB52E7D4DFEEDBF757718 /* Haptics.swift in Sources */,
 				4D0749A6DD874508ED8919C5 /* LINEApp.swift in Sources */,
 				8FA4A57813DF067B47357A52 /* LineActivity.swift in Sources */,
 				052D94A9765E2F293DF5DC06 /* Misc.swift in Sources */,
+				89796256AC3928FE1AF08EB1 /* More.swift in Sources */,
 				FC83EFB30E27E9878B33AB74 /* Notify.swift in Sources */,
 				D486DC6447ABAD2B25C25A63 /* Takeover.swift in Sources */,
 			);
@@ -323,7 +341,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -344,6 +362,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = LINE;
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "LINE rings when a payphone line opens.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "LINE finds the nearest real payphone to you. Your location never leaves the phone.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -413,7 +432,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -471,6 +490,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = LINE;
+				INFOPLIST_KEY_NSAlarmKitUsageDescription = "LINE rings when a payphone line opens.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "LINE finds the nearest real payphone to you. Your location never leaves the phone.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

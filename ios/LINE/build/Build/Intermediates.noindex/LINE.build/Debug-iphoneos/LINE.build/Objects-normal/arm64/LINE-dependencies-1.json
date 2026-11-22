@@ -21,6 +21,11 @@
   },
   {
     "isFramework" : true,
+    "moduleName" : "AlarmKit",
+    "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/AlarmKit.swiftmodule\/arm64e-apple-ios.swiftmodule"
+  },
+  {
+    "isFramework" : true,
     "moduleName" : "AppIntents",
     "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/AppIntents.swiftmodule\/arm64e-apple-ios.swiftmodule"
   },
@@ -135,6 +140,11 @@
     "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/Foundation.swiftmodule\/arm64e-apple-ios.swiftmodule"
   },
   {
+    "isFramework" : true,
+    "moduleName" : "FoundationModels",
+    "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/FoundationModels.swiftmodule\/arm64e-apple-ios.swiftmodule"
+  },
+  {
     "isFramework" : false,
     "moduleName" : "Intents",
     "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/Intents.swiftmodule\/arm64e-apple-ios.swiftmodule"
@@ -231,6 +241,11 @@
   },
   {
     "isFramework" : true,
+    "moduleName" : "WebKit",
+    "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/WebKit.swiftmodule\/arm64e-apple-ios.swiftmodule"
+  },
+  {
+    "isFramework" : true,
     "moduleName" : "WidgetKit",
     "modulePath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Toolchains\/XcodeDefault.xctoolchain\/usr\/lib\/swift\/iphoneos\/prebuilt-modules\/26.5\/WidgetKit.swiftmodule\/arm64e-apple-ios.swiftmodule"
   },
@@ -318,6 +333,13 @@
     "isBridgingHeaderDependency" : false,
     "isFramework" : false,
     "moduleName" : "ActivityKit"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS.sdk\/System\/Library\/Frameworks\/AlarmKit.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/jshi\/Personal\/playground\/neuromancer\/ios\/LINE\/build\/ModuleCache.noindex\/AlarmKit-67983JHWVRRW8AA3L9ENOZALZ.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "AlarmKit"
   },
   {
     "clangModuleMapPath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS.sdk\/System\/Library\/Frameworks\/AppIntents.framework\/Modules\/module.modulemap",
@@ -640,6 +662,13 @@
     "isBridgingHeaderDependency" : false,
     "isFramework" : false,
     "moduleName" : "UserNotifications"
+  },
+  {
+    "clangModuleMapPath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS.sdk\/System\/Cryptexes\/OS\/System\/Library\/Frameworks\/WebKit.framework\/Modules\/module.modulemap",
+    "clangModulePath" : "\/Users\/jshi\/Personal\/playground\/neuromancer\/ios\/LINE\/build\/ModuleCache.noindex\/WebKit-RNJOLBZZMISQIMOAXH1X8ZA6.pcm",
+    "isBridgingHeaderDependency" : false,
+    "isFramework" : false,
+    "moduleName" : "WebKit"
   },
   {
     "clangModuleMapPath" : "\/Applications\/Xcode_26.6.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Developer\/SDKs\/iPhoneOS.sdk\/System\/Library\/Frameworks\/WidgetKit.framework\/Modules\/module.modulemap",
