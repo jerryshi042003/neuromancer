@@ -1,4 +1,0 @@
-Target dependency graph (2 targets)
-Target 'LINE' in project 'LINE'
-➜ Explicit dependency on target 'LINEWidgets' in project 'LINE'
-Target 'LINEWidgets' in project 'LINE' (no dependencies)

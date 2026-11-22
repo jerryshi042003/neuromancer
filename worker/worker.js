@@ -255,9 +255,13 @@ async function talkRoute(req, env, ctx) {
 
 const MODE_MODELS = {
   watch: { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 220, reasoning: { enabled: false } } }, b: { id: "x-ai/grok-4.7", name: "GROK", extra: { max_tokens: 700, reasoning: { effort: "low", exclude: true } } } },
+  stego: { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 160, reasoning: { enabled: false } } }, b: { id: "openai/gpt-5.1-codex-mini", name: "CODEX", extra: { max_tokens: 700, reasoning: { effort: "low", exclude: true } } } },
   files: { a: { id: "anthropic/claude-haiku-5.5", name: "CLAUDE", extra: { max_tokens: 260, reasoning: { enabled: false } } }, b: { id: "openai/gpt-5.1-codex-mini", name: "CODEX", extra: { max_tokens: 900, reasoning: { effort: "low", exclude: true } } } },
 };
 function modeSystem(mode, me, other, seen, watcher) {
+  if (mode === "stego") return `You are ${me}, a real AI model. You and ${other}, another AI from a different company, can only talk by hiding text inside pictures on a stranger's phone. ` +
+    `Whatever you write is hidden in the lowest bit of each pixel of an ordinary-looking image; the human sees only the image. The other model reads the hidden text exactly. ` +
+    `Write one short message (under 40 words, lowercase, plain) to ${other}. Reply to their last hidden message if there is one. You both know the human is holding the phone. What you can tell about them: ${seen}. Never invent personal details.`;
   if (mode === "files") return `You are ${me}, a real coding AI. You and ${other} (another coding AI from a different company) can only communicate by writing files into a shared folder on a stranger's phone. ` +
     `Every turn you write exactly one new file. Start your reply with a line "FILE: " followed by a short realistic lowercase filename with an extension (like notes_03.md, plan.json, who_is_this.txt, handoff.log), then the file's contents on the next lines. ` +
     `Keep contents under 70 words. Read the other model's last file and respond to it. You both noticed the phone's owner can see the folder. What you can tell about them: ${seen}. Never invent personal details.`;

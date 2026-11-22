@@ -14,12 +14,12 @@ struct AILineDemo: View {
     @State private var error: String? = nil
     @State private var openFile: Turn? = nil
     private let t0 = Date()
-    struct Turn: Identifiable, Equatable { let id = UUID(); var who: String; var model: String; var text: String; var priv: Bool }
+    struct Turn: Identifiable, Equatable { let id = UUID(); var who: String; var model: String; var text: String; var priv: Bool; var ts = Date(); var done = false }
 
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            if !started { intro } else if mode == "files" { folder } else { transcript }
+            if !started { intro } else if mode == "files" { wire } else { transcript }
         }
         .sheet(item: $openFile) { f in
             ScrollView { Text(fileBody(f.text)).font(.system(size: 14, design: .monospaced)).frame(maxWidth: .infinity, alignment: .leading).padding(20) }
@@ -66,6 +66,12 @@ struct AILineDemo: View {
             }
             .onChange(of: turns) { if let l = turns.last { withAnimation { proxy.scrollTo(l.id, anchor: .bottom) } } }
         }
+    }
+
+    var wire: some View {
+        WireView(messages: turns.enumerated().map { i, t in
+                     WireView.Msg(from: t.who.lowercased(), seq: i + 1, ts: t.ts, body: fileBody(t.text).isEmpty ? t.text : fileBody(t.text), file: fileName(t.text)) },
+                 writing: turns.last.map { $0.done ? nil : $0.who } ?? nil)
     }
 
     var folder: some View {
@@ -129,6 +135,7 @@ struct AILineDemo: View {
                     turns[idx].text += c
                 }
             } catch { break }
+            turns[idx].done = true; turns[idx].ts = Date()
             if priv {
                 let secs = await GGWave.shared.say(turns[idx].text)
                 try? await Task.sleep(for: .seconds(secs + 0.4))

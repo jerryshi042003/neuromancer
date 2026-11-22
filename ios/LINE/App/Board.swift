@@ -7,8 +7,11 @@ struct Board: View {
         .init(id: "notify", title: "NOTIFICATIONS", styles: ["real lock screen", "iOS 4 banner", "iOS 6 alert", "kernel failure"]),
         .init(id: "haptic", title: "HAPTICS", styles: ["morse", "heartbeat", "phone bell", "static"]),
         .init(id: "takeover", title: "TAKEOVER", styles: ["screen melt", "crt off", "cracks"]),
+        .init(id: "call", title: "IT CALLS YOU", styles: ["the iPhone's own call screen"]),
+        .init(id: "stego", title: "HIDDEN IN PICTURES", styles: ["claude + codex, live"]),
+        .init(id: "two", title: "FIND THE OTHER PHONE", styles: ["ultra-wideband, two iPhones"]),
         .init(id: "watch", title: "THEY ARE WATCHING", styles: ["claude + grok, live", "gibberlink chirps"]),
-        .init(id: "files", title: "FILES BETWEEN AIs", styles: ["claude + codex, live"]),
+        .init(id: "files", title: "THE WIRE", styles: ["claude + codex files, live"]),
         .init(id: "live", title: "DYNAMIC ISLAND", styles: ["call", "uploading you", "redacted"]),
         .init(id: "icon", title: "APP ICON", styles: ["clean", "cracked", "static"]),
         .init(id: "lock", title: "READ ONCE", styles: ["real device lock"]),
@@ -59,6 +62,9 @@ struct Board: View {
     @ViewBuilder func demo(_ id: String) -> some View {
         switch id {
         case "notify": NotifyDemo()
+        case "call": CallDemo()
+        case "stego": StegoDemo()
+        case "two": TwoPhonesDemo()
         case "haptic": HapticDemo()
         case "takeover": TakeoverDemo()
         case "watch": AILineDemo(mode: "watch")

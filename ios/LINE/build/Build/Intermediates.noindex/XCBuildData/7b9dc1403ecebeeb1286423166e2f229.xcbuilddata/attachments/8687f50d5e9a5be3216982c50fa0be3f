@@ -1,0 +1,29 @@
+{
+  "" : {
+    "diagnostics" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/LINEClip-primary.dia",
+    "emit-module-dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/LINEClip-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/LINEClip-primary-emit-module.dia",
+    "pch" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/LINEClip-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/LINEClip-primary.swiftdeps"
+  },
+  "/Users/jshi/Personal/playground/neuromancer/ios/LINE/Clip/ClipApp.swift" : {
+    "const-values" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.swiftconstvalues",
+    "dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.d",
+    "diagnostics" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.dia",
+    "index-unit-output-path" : "/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.o",
+    "llvm-bc" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.bc",
+    "object" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.o",
+    "swift-dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp.swiftdeps",
+    "swiftmodule" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/ClipApp~partial.swiftmodule"
+  },
+  "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/jshi/Personal/playground/neuromancer/ios/LINE/build/Build/Intermediates.noindex/LINE.build/Debug-iphoneos/LINEClip.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

@@ -9,8 +9,12 @@
 /* Begin PBXBuildFile section */
 		052D94A9765E2F293DF5DC06 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B80C242EFC73051E715FF36 /* Misc.swift */; };
 		06A102E4FB2EB55526716A05 /* LineActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AFF9D995ADD6075CD6733A /* LineActivity.swift */; };
+		09E2325AC7187AC445C9EBAE /* Near.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934286F99ED5B6EC304AFE7D /* Near.swift */; };
+		24C26581B6CF3DA04C27D1C5 /* Wire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C749DC18856697305C5757B /* Wire.swift */; };
 		4D0749A6DD874508ED8919C5 /* LINEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619743E348B38C82D9396066 /* LINEApp.swift */; };
+		502E4797B2AAA8C9AC1E0B62 /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA350F7836174CA4A90E31 /* Call.swift */; };
 		56AFB52E7D4DFEEDBF757718 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6442140AEDD5CC90F523EE65 /* Haptics.swift */; };
+		694C8D3B4967187E2E76E6CA /* Stego.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656FE4516E0EB3AC0AD80FAB /* Stego.swift */; };
 		71C90B35E16F5E559239A361 /* AILine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A606181BFFCD355AC923EE8 /* AILine.swift */; };
 		767A999D0644164C5AA5E75A /* HangUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */; };
 		76E5DEAFE712A39A1BBBB68C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF5CB71AFA3744CF70126EA /* Assets.xcassets */; };
@@ -21,17 +25,27 @@
 		8FEFD7B28F2DD1C934F2F37E /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FEBA39EE1F606840A31AB8 /* Board.swift */; };
 		A297B1B81A555856D7FDFDCC /* payphones.json in Resources */ = {isa = PBXBuildFile; fileRef = 7335B332D0E1F1FD6403E13A /* payphones.json */; };
 		A6B12B260C1922BEC5D44159 /* ggwave.js in Resources */ = {isa = PBXBuildFile; fileRef = DED1AF61A66D0FA24922D6FE /* ggwave.js */; };
+		ACA3BF4AB0AA6740BB31F1E0 /* ClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6152F6CE078059B128485E /* ClipApp.swift */; };
 		B56BA356662808082BE0119E /* LINEWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 51157995DA7593DD811509C1 /* LINEWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B5D1082D8B41BC3318C3F85F /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA08FED0A6BC59A25F5286E /* Haptic.swift */; };
 		C1527F87A89C5D87F39EA62A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93932EA6316573E34F15EF7 /* ContentView.swift */; };
 		D21164C9C2708DCF4BE81F3A /* LINEWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72478ECF08CD9F5420D7DB19 /* LINEWidgets.swift */; };
 		D486DC6447ABAD2B25C25A63 /* Takeover.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C47291B9365F8C00C452E4 /* Takeover.swift */; };
 		D72F9683CE9ABF3CA4972B6F /* GGWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21B514480C848AC05F66768 /* GGWave.swift */; };
+		EC6B82B50AE032F45E1A3D2A /* LINEClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = CB706C170DF2591A14494212 /* LINEClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F0A078E7E8C676A89D6DD731 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D24CFA377B16F928CE59CF /* Boot.swift */; };
+		F595C937D36F10CC9A5657F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8775840CC8FA2B78537D323 /* Assets.xcassets */; };
 		FC83EFB30E27E9878B33AB74 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA8C956AC8C9451E95A7C9E /* Notify.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0C6C86CCE0AE27E7FCD40426 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49F7421A3B50727629505A05 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A7058386D70508B8DAC5380;
+			remoteInfo = LINEClip;
+		};
 		A078AF259202B0D18197BF84 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49F7421A3B50727629505A05 /* Project object */;
@@ -53,11 +67,26 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		426E5B9B3312495FA672FEF6 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				EC6B82B50AE032F45E1A3D2A /* LINEClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09EA350F7836174CA4A90E31 /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		1BA08FED0A6BC59A25F5286E /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
+		1C749DC18856697305C5757B /* Wire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wire.swift; sourceTree = "<group>"; };
+		27A9619B11876E1665DD45E6 /* Clip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Clip.entitlements; sourceTree = "<group>"; };
 		29080DAE179F362043C15D84 /* More.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = More.swift; sourceTree = "<group>"; };
+		2F6152F6CE078059B128485E /* ClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipApp.swift; sourceTree = "<group>"; };
 		31D24CFA377B16F928CE59CF /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		3B80C242EFC73051E715FF36 /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		47FEBA39EE1F606840A31AB8 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
@@ -66,17 +95,22 @@
 		5A606181BFFCD355AC923EE8 /* AILine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AILine.swift; sourceTree = "<group>"; };
 		619743E348B38C82D9396066 /* LINEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LINEApp.swift; sourceTree = "<group>"; };
 		6442140AEDD5CC90F523EE65 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		656FE4516E0EB3AC0AD80FAB /* Stego.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stego.swift; sourceTree = "<group>"; };
 		67AFF9D995ADD6075CD6733A /* LineActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineActivity.swift; sourceTree = "<group>"; };
 		6FF5CB71AFA3744CF70126EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72478ECF08CD9F5420D7DB19 /* LINEWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LINEWidgets.swift; sourceTree = "<group>"; };
 		7335B332D0E1F1FD6403E13A /* payphones.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = payphones.json; sourceTree = "<group>"; };
 		7E62E67830E5E8D250178D24 /* LINE.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LINE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		929B97B4FC4DDB4B8546E1C0 /* HangUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangUp.swift; sourceTree = "<group>"; };
+		934286F99ED5B6EC304AFE7D /* Near.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Near.swift; sourceTree = "<group>"; };
 		AFA8C956AC8C9451E95A7C9E /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
+		CB706C170DF2591A14494212 /* LINEClip.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LINEClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1C47291B9365F8C00C452E4 /* Takeover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Takeover.swift; sourceTree = "<group>"; };
 		DED1AF61A66D0FA24922D6FE /* ggwave.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ggwave.js; sourceTree = "<group>"; };
 		E21B514480C848AC05F66768 /* GGWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GGWave.swift; sourceTree = "<group>"; };
+		E8775840CC8FA2B78537D323 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E93932EA6316573E34F15EF7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EB12529B89CE601AC313F111 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F4AA6D1E90EE08D8DF64A8D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				7E62E67830E5E8D250178D24 /* LINE.app */,
+				CB706C170DF2591A14494212 /* LINEClip.app */,
 				51157995DA7593DD811509C1 /* LINEWidgets.appex */,
 			);
 			name = Products;
@@ -112,12 +147,16 @@
 			isa = PBXGroup;
 			children = (
 				5A606181BFFCD355AC923EE8 /* AILine.swift */,
+				09EA350F7836174CA4A90E31 /* Call.swift */,
 				E21B514480C848AC05F66768 /* GGWave.swift */,
 				1BA08FED0A6BC59A25F5286E /* Haptic.swift */,
 				3B80C242EFC73051E715FF36 /* Misc.swift */,
 				29080DAE179F362043C15D84 /* More.swift */,
+				934286F99ED5B6EC304AFE7D /* Near.swift */,
 				AFA8C956AC8C9451E95A7C9E /* Notify.swift */,
+				656FE4516E0EB3AC0AD80FAB /* Stego.swift */,
 				D1C47291B9365F8C00C452E4 /* Takeover.swift */,
+				1C749DC18856697305C5757B /* Wire.swift */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -131,6 +170,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		985CD8AD3621D82E47C85618 /* Clip */ = {
+			isa = PBXGroup;
+			children = (
+				E8775840CC8FA2B78537D323 /* Assets.xcassets */,
+				27A9619B11876E1665DD45E6 /* Clip.entitlements */,
+				2F6152F6CE078059B128485E /* ClipApp.swift */,
+			);
+			path = Clip;
+			sourceTree = "<group>";
+		};
 		BF945F19BFF0772273DA0AC0 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +189,7 @@
 				E93932EA6316573E34F15EF7 /* ContentView.swift */,
 				52F44888FEA460D4F567725D /* Glitch.metal */,
 				6442140AEDD5CC90F523EE65 /* Haptics.swift */,
+				EB12529B89CE601AC313F111 /* Info.plist */,
 				619743E348B38C82D9396066 /* LINEApp.swift */,
 				809BCD21B4D6815EB9F75C63 /* Demos */,
 				94B7180729F76D2323C203EE /* Resources */,
@@ -151,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				BF945F19BFF0772273DA0AC0 /* App */,
+				985CD8AD3621D82E47C85618 /* Clip */,
 				37B1E6B4E7AEAFA0D159B87A /* Shared */,
 				5F2855C55740FC11AFFA0E37 /* Widget */,
 				4DCB3E4BDD6B45F7A626B83D /* Products */,
@@ -177,6 +228,24 @@
 			productReference = 51157995DA7593DD811509C1 /* LINEWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		6A7058386D70508B8DAC5380 /* LINEClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0800E44635EF26C5C40F9DD3 /* Build configuration list for PBXNativeTarget "LINEClip" */;
+			buildPhases = (
+				3D73DEF983C63DEE5E500EC9 /* Sources */,
+				A73FF79D60C4ADD1F1911591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LINEClip;
+			packageProductDependencies = (
+			);
+			productName = LINEClip;
+			productReference = CB706C170DF2591A14494212 /* LINEClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
 		9904376F04F07A770D9CFC5F /* LINE */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A87B33FD6D21E742D2D829CF /* Build configuration list for PBXNativeTarget "LINE" */;
@@ -184,11 +253,13 @@
 				CD0DD55BB1C8FA4239169EC3 /* Sources */,
 				9E39F7F8D0F4196C6620596D /* Resources */,
 				0BC3EA8A86FAC2CAAF4D2CB0 /* Embed Foundation Extensions */,
+				426E5B9B3312495FA672FEF6 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				CBA7EF7C5271C36432A2B45A /* PBXTargetDependency */,
+				82817B0750501ED66B6FBDE9 /* PBXTargetDependency */,
 			);
 			name = LINE;
 			packageProductDependencies = (
@@ -207,6 +278,10 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					55C7170C6B314C1BD417A177 = {
+						DevelopmentTeam = 39225XZQP2;
+						ProvisioningStyle = Automatic;
+					};
+					6A7058386D70508B8DAC5380 = {
 						DevelopmentTeam = 39225XZQP2;
 						ProvisioningStyle = Automatic;
 					};
@@ -232,6 +307,7 @@
 			targets = (
 				9904376F04F07A770D9CFC5F /* LINE */,
 				55C7170C6B314C1BD417A177 /* LINEWidgets */,
+				6A7058386D70508B8DAC5380 /* LINEClip */,
 			);
 		};
 /* End PBXProject section */
@@ -244,6 +320,14 @@
 				76E5DEAFE712A39A1BBBB68C /* Assets.xcassets in Resources */,
 				A6B12B260C1922BEC5D44159 /* ggwave.js in Resources */,
 				A297B1B81A555856D7FDFDCC /* payphones.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A73FF79D60C4ADD1F1911591 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F595C937D36F10CC9A5657F4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +344,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3D73DEF983C63DEE5E500EC9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACA3BF4AB0AA6740BB31F1E0 /* ClipApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD0DD55BB1C8FA4239169EC3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -267,6 +359,7 @@
 				71C90B35E16F5E559239A361 /* AILine.swift in Sources */,
 				8FEFD7B28F2DD1C934F2F37E /* Board.swift in Sources */,
 				F0A078E7E8C676A89D6DD731 /* Boot.swift in Sources */,
+				502E4797B2AAA8C9AC1E0B62 /* Call.swift in Sources */,
 				C1527F87A89C5D87F39EA62A /* ContentView.swift in Sources */,
 				D72F9683CE9ABF3CA4972B6F /* GGWave.swift in Sources */,
 				8AF9D1B2825254E1467ADBD4 /* Glitch.metal in Sources */,
@@ -277,14 +370,22 @@
 				8FA4A57813DF067B47357A52 /* LineActivity.swift in Sources */,
 				052D94A9765E2F293DF5DC06 /* Misc.swift in Sources */,
 				89796256AC3928FE1AF08EB1 /* More.swift in Sources */,
+				09E2325AC7187AC445C9EBAE /* Near.swift in Sources */,
 				FC83EFB30E27E9878B33AB74 /* Notify.swift in Sources */,
+				694C8D3B4967187E2E76E6CA /* Stego.swift in Sources */,
 				D486DC6447ABAD2B25C25A63 /* Takeover.swift in Sources */,
+				24C26581B6CF3DA04C27D1C5 /* Wire.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		82817B0750501ED66B6FBDE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6A7058386D70508B8DAC5380 /* LINEClip */;
+			targetProxy = 0C6C86CCE0AE27E7FCD40426 /* PBXContainerItemProxy */;
+		};
 		CBA7EF7C5271C36432A2B45A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 55C7170C6B314C1BD417A177 /* LINEWidgets */;
@@ -361,9 +462,12 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = LINE;
 				INFOPLIST_KEY_NSAlarmKitUsageDescription = "LINE rings when a payphone line opens.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "LINE finds another phone running LINE nearby.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "LINE finds the nearest real payphone to you. Your location never leaves the phone.";
+				INFOPLIST_KEY_NSNearbyInteractionUsageDescription = "LINE points to another phone running LINE.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -481,6 +585,24 @@
 			};
 			name = Release;
 		};
+		34F57627AFF7715CDAD753DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Clip/Clip.entitlements;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LINE;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.jerryshi042003.line.Clip;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		61917A8B31E12391C6A594BC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -489,9 +611,12 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = LINE;
 				INFOPLIST_KEY_NSAlarmKitUsageDescription = "LINE rings when a payphone line opens.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "LINE finds another phone running LINE nearby.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "LINE finds the nearest real payphone to you. Your location never leaves the phone.";
+				INFOPLIST_KEY_NSNearbyInteractionUsageDescription = "LINE points to another phone running LINE.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -506,9 +631,36 @@
 			};
 			name = Release;
 		};
+		E5AED69DF2F6702E0A349F0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Clip/Clip.entitlements;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = LINE;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.jerryshi042003.line.Clip;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0800E44635EF26C5C40F9DD3 /* Build configuration list for PBXNativeTarget "LINEClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5AED69DF2F6702E0A349F0E /* Debug */,
+				34F57627AFF7715CDAD753DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		707F3F85E855EB25E95FA0B0 /* Build configuration list for PBXNativeTarget "LINEWidgets" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

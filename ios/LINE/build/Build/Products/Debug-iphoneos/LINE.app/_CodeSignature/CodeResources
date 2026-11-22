@@ -4,6 +4,38 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>AppClips/LINEClip.app/Assets.car</key>
+		<data>
+		6+o3irbnMoJXwEC76BW8K1PTlZA=
+		</data>
+		<key>AppClips/LINEClip.app/Info.plist</key>
+		<data>
+		6FNNuBVyxhvYMXut4oTQwAPaeUI=
+		</data>
+		<key>AppClips/LINEClip.app/LINEClip</key>
+		<data>
+		NiCMeRwYFJKLF7AwFObbfySWQ2I=
+		</data>
+		<key>AppClips/LINEClip.app/LINEClip.debug.dylib</key>
+		<data>
+		NKchVuAnSpYSCYNfh5ma2OrrHys=
+		</data>
+		<key>AppClips/LINEClip.app/PkgInfo</key>
+		<data>
+		n57qDP4tZfLD1rCS43W0B4LQjzE=
+		</data>
+		<key>AppClips/LINEClip.app/_CodeSignature/CodeResources</key>
+		<data>
+		SCb8kgLguZftCL39W4X5l34qVGU=
+		</data>
+		<key>AppClips/LINEClip.app/__preview.dylib</key>
+		<data>
+		Dxv2bylPx4aFhOikIZmACyF1oM4=
+		</data>
+		<key>AppClips/LINEClip.app/embedded.mobileprovision</key>
+		<data>
+		9k5HQ+nlJLcxKX+UubxE1y7B0P4=
+		</data>
 		<key>AppIcon60x60@2x.png</key>
 		<data>
 		gDviFB5dGJ6PYDfE5K4BojCkMn8=
@@ -18,11 +50,11 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		6bp338/H4GIMy8d1iPN0ZPwSXmQ=
+		GYdUrXxvZ00YYW3sL7IrUR8RKbA=
 		</data>
 		<key>LINE.debug.dylib</key>
 		<data>
-		nZFCtZx2SKd/qRW3LHuK+s4jpwM=
+		CBxSWRaN9vwZ4dMRFHkgiuPaSzQ=
 		</data>
 		<key>Metadata.appintents/extract.actionsdata</key>
 		<data>
@@ -30,7 +62,7 @@
 		</data>
 		<key>Metadata.appintents/version.json</key>
 		<data>
-		eX845NZBkIpwlA6oT14P97sPaYE=
+		PFbTXKE++oaNDMAe6pe4WaYJGCA=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -70,7 +102,7 @@
 		</data>
 		<key>__preview.dylib</key>
 		<data>
-		bX8AZFstzYK0iTwcGYta1hc26lg=
+		IVqDH8edkad8mqIO+tZi1YD+Gk8=
 		</data>
 		<key>default.metallib</key>
 		<data>
@@ -91,6 +123,62 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>AppClips/LINEClip.app/Assets.car</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Xq+bGwZTtHy+vdG6U6KX2afPt9kQFULlZJmUlWSt3cM=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/Info.plist</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			qbK38Gva34rpwyQHaYCOZCp21dgYWDMLq8OJ/GKkxo8=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/LINEClip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			XQbNjlYgm8BrPfHw84RzoejtBqn4iLtgBOfCu9Cx5hY=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/LINEClip.debug.dylib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			KvFfTnUUG7kS3x7m21MoVdODe3VBZqN2EoSwIxkCWVQ=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/PkgInfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			glAhkclISwTWhTdPmHmgBmBpxJuKyuegSwHTjQfo7KA=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/_CodeSignature/CodeResources</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			O4PFKsky+8DedsDgfKzu6wDsmXoZR5nmaj/f9kRaKaU=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/__preview.dylib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			FsSgnfAxoTtZZ5Kbd1jE7f+qE2szbqMCp/0HTxX2aKQ=
+			</data>
+		</dict>
+		<key>AppClips/LINEClip.app/embedded.mobileprovision</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			eLq6RsK7OSTz+H4xoPmtw/IeNsazMabkz8jhgfIvc9o=
+			</data>
+		</dict>
 		<key>AppIcon60x60@2x.png</key>
 		<dict>
 			<key>hash2</key>
@@ -116,7 +204,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ApR4Kbs17oJIZXmrLtaY1LcvhMYJnCT8rJ8WlWGmQ3E=
+			Ev9AXilbpdiJmtbDgW93JFwMQ+6zJ6+dVN19j761vaA=
 			</data>
 		</dict>
 		<key>Metadata.appintents/extract.actionsdata</key>
@@ -130,7 +218,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			P7sdfoAmXiAQcQF3sPyVmNsG+gFrzxEnNkB8p2zt2yE=
+			bGEMLTRvWVvXxahROmLgL3ZVf6XYsEamPvgqyAHzT5M=
 			</data>
 		</dict>
 		<key>PlugIns/LINEWidgets.appex/Info.plist</key>
@@ -193,7 +281,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			bqCY0VasA5v15l28ykWF6LTqf6AVFmVpnxHe9Xm3gK4=
+			XiZKGXjEmoMIcDw6s78t2KTTh6oO0pYmftr4VoEfH2w=
 			</data>
 		</dict>
 		<key>default.metallib</key>

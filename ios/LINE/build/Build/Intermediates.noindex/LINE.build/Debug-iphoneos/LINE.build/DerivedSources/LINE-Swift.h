@@ -346,8 +346,11 @@ extern "C" {
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
+@import CallKit;
 @import CoreLocation;
 @import Foundation;
+@import MultipeerConnectivity;
+@import NearbyInteraction;
 @import ObjectiveC;
 #endif
 
@@ -385,6 +388,46 @@ SWIFT_CLASS("_TtC4LINE6Finder")
 /// The free Waver app can decode what it plays.
 SWIFT_CLASS("_TtC4LINE6GGWave")
 @interface GGWave : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@class CXProvider;
+@class CXAnswerCallAction;
+@class CXEndCallAction;
+@class AVAudioSession;
+/// A real incoming call on the iPhone’s own call screen, placed by LINE itself.
+SWIFT_CLASS("_TtC4LINE8LineCall")
+@interface LineCall : NSObject <CXProviderDelegate>
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+- (void)providerDidReset:(CXProvider * _Nonnull)provider;
+- (void)provider:(CXProvider * _Nonnull)provider performAnswerCallAction:(CXAnswerCallAction * _Nonnull)action;
+- (void)provider:(CXProvider * _Nonnull)provider performEndCallAction:(CXEndCallAction * _Nonnull)action;
+- (void)provider:(CXProvider * _Nonnull)provider didActivateAudioSession:(AVAudioSession * _Nonnull)audioSession;
+@end
+
+@class MCNearbyServiceAdvertiser;
+@class MCPeerID;
+@class NSData;
+@class MCSession;
+@class MCNearbyServiceBrowser;
+@class NSString;
+@class NSInputStream;
+@class NSProgress;
+@class NSURL;
+@class NISession;
+@class NINearbyObject;
+/// Two iPhones running LINE find each other: distance and direction from the ultra-wideband chips.
+SWIFT_CLASS("_TtC4LINE9TwoPhones")
+@interface TwoPhones : NSObject <MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCSessionDelegate, NISessionDelegate>
+- (void)advertiser:(MCNearbyServiceAdvertiser * _Nonnull)a didReceiveInvitationFromPeer:(MCPeerID * _Nonnull)p withContext:(NSData * _Nullable)c invitationHandler:(void (^ _Nonnull)(BOOL, MCSession * _Nullable))h;
+- (void)browser:(MCNearbyServiceBrowser * _Nonnull)b foundPeer:(MCPeerID * _Nonnull)p withDiscoveryInfo:(NSDictionary<NSString *, NSString *> * _Nullable)i;
+- (void)browser:(MCNearbyServiceBrowser * _Nonnull)b lostPeer:(MCPeerID * _Nonnull)p;
+- (void)session:(MCSession * _Nonnull)s peer:(MCPeerID * _Nonnull)p didChangeState:(MCSessionState)st;
+- (void)session:(MCSession * _Nonnull)s didReceiveData:(NSData * _Nonnull)data fromPeer:(MCPeerID * _Nonnull)p;
+- (void)session:(MCSession * _Nonnull)s didReceiveStream:(NSInputStream * _Nonnull)st withName:(NSString * _Nonnull)n fromPeer:(MCPeerID * _Nonnull)p;
+- (void)session:(MCSession * _Nonnull)s didStartReceivingResourceWithName:(NSString * _Nonnull)n fromPeer:(MCPeerID * _Nonnull)p withProgress:(NSProgress * _Nonnull)pr;
+- (void)session:(MCSession * _Nonnull)s didFinishReceivingResourceWithName:(NSString * _Nonnull)n fromPeer:(MCPeerID * _Nonnull)p atURL:(NSURL * _Nullable)u withError:(NSError * _Nullable)e;
+- (void)session:(NISession * _Nonnull)s didUpdateNearbyObjects:(NSArray<NINearbyObject *> * _Nonnull)objs;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
